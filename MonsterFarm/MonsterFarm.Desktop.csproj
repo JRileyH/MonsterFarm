@@ -1,0 +1,253 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>905b6b3b-33b1-49fb-b691-ae30f88cb4f5</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MonsterFarm</RootNamespace>
+    <AssemblyName>MonsterFarm</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MonoGamePlatform>DesktopGL</MonoGamePlatform>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>bin\$(MonoGamePlatform)\$(Platform)\$(Configuration)\</OutputPath>
+    <DefineConstants>TRACE;LINUX</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Game\Entites\Entity.cs" />
+    <Compile Include="Game\Entites\Monster.cs" />
+    <Compile Include="UI\UserInterface.cs" />
+    <Compile Include="UI\Entities\Button.cs" />
+    <Compile Include="UI\Entities\Entity.cs" />
+    <Compile Include="UI\Entities\Paragraph.cs" />
+    <Compile Include="UI\DataTypes\CursorTextureData.cs" />
+    <Compile Include="UI\DataTypes\TextureData.cs" />
+    <Compile Include="UI\DataTypes\ThemeSettings.cs" />
+    <Compile Include="UI\DataTypes\StyleProperty.cs" />
+    <Compile Include="UI\DataTypes\DefaultStyles.cs" />
+    <Compile Include="UI\InputHelper.cs" />
+    <Compile Include="UI\Entities\MulticolorParagraph.cs" />
+    <Compile Include="UI\Entities\RootPanel.cs" />
+    <Compile Include="UI\Entities\Panel.cs" />
+    <Compile Include="UI\Entities\PanelBase.cs" />
+    <Compile Include="UI\Resources.cs" />
+    <Compile Include="UI\DrawUtils.cs" />
+    <Compile Include="UI\Exceptions.cs" />
+    <Compile Include="UI\Utils\MessageBox.cs" />
+    <Compile Include="UI\Utils\SerializedDictionary.cs" />
+    <Compile Include="UI\Utils\SimpleFileMenu.cs" />
+    <Compile Include="UI\Entities\CheckBox.cs" />
+    <Compile Include="UI\Entities\ColoredRectangle.cs" />
+    <Compile Include="UI\Entities\DropDown.cs" />
+    <Compile Include="UI\Entities\Header.cs" />
+    <Compile Include="UI\Entities\HorizontalLine.cs" />
+    <Compile Include="UI\Entities\Icon.cs" />
+    <Compile Include="UI\Entities\Image.cs" />
+    <Compile Include="UI\Entities\Label.cs" />
+    <Compile Include="UI\Entities\LineSpace.cs" />
+    <Compile Include="UI\Entities\PanelTabs.cs" />
+    <Compile Include="UI\Entities\ProgressBar.cs" />
+    <Compile Include="UI\Entities\RadioButtons.cs" />
+    <Compile Include="UI\Entities\SelectList.cs" />
+    <Compile Include="UI\Entities\Slider.cs" />
+    <Compile Include="UI\Entities\StyleSheet.cs" />
+    <Compile Include="UI\Entities\TextInput.cs" />
+    <Compile Include="UI\Entities\TextInputValidators.cs" />
+    <Compile Include="UI\Entities\VerticalScrollbar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icon.ico" />
+    <EmbeddedResource Include="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <None Include="app.manifest" />
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\SDL2.dll">
+      <Link>x86\SDL2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x64\SDL2.dll">
+      <Link>x64\SDL2.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\soft_oal.dll">
+      <Link>x86\soft_oal.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x64\soft_oal.dll">
+      <Link>x64\soft_oal.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\libSDL2-2.0.so.0">
+      <Link>x86\libSDL2-2.0.so.0</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x64\libSDL2-2.0.so.0">
+      <Link>x64\libSDL2-2.0.so.0</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\libopenal.so.1">
+      <Link>x86\libopenal.so.1</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x64\libopenal.so.1">
+      <Link>x64\libopenal.so.1</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\libSDL2-2.0.0.dylib">
+      <Link>libSDL2-2.0.0.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\libopenal.1.dylib">
+      <Link>libopenal.1.dylib</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll.config">
+      <Link>MonoGame.Framework.dll.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\UI\textures\arrow_down.png" />
+    <None Include="Content\UI\textures\arrow_up.png" />
+    <None Include="Content\UI\textures\button_alternative.png" />
+    <None Include="Content\UI\textures\button_alternative_down.png" />
+    <None Include="Content\UI\textures\button_alternative_hover.png" />
+    <None Include="Content\UI\textures\button_default.png" />
+    <None Include="Content\UI\textures\button_default_down.png" />
+    <None Include="Content\UI\textures\button_default_hover.png" />
+    <None Include="Content\UI\textures\button_fancy.png" />
+    <None Include="Content\UI\textures\button_fancy_down.png" />
+    <None Include="Content\UI\textures\button_fancy_hover.png" />
+    <None Include="Content\UI\textures\checkbox.png" />
+    <None Include="Content\UI\textures\checkbox_down.png" />
+    <None Include="Content\UI\textures\checkbox_hover.png" />
+    <None Include="Content\UI\textures\cursor_default.png" />
+    <None Include="Content\UI\textures\cursor_ibeam.png" />
+    <None Include="Content\UI\textures\cursor_pointer.png" />
+    <None Include="Content\UI\textures\horizontal_line.png" />
+    <None Include="Content\UI\textures\panel_default.png" />
+    <None Include="Content\UI\textures\panel_fancy.png" />
+    <None Include="Content\UI\textures\panel_golden.png" />
+    <None Include="Content\UI\textures\panel_listbackground.png" />
+    <None Include="Content\UI\textures\panel_simple.png" />
+    <None Include="Content\UI\textures\progressbar.png" />
+    <None Include="Content\UI\textures\progressbar_fill.png" />
+    <None Include="Content\UI\textures\radio.png" />
+    <None Include="Content\UI\textures\radio_down.png" />
+    <None Include="Content\UI\textures\radio_hover.png" />
+    <None Include="Content\UI\textures\scrollbar.png" />
+    <None Include="Content\UI\textures\scrollbar_mark.png" />
+    <None Include="Content\UI\textures\slider_default.png" />
+    <None Include="Content\UI\textures\slider_default_mark.png" />
+    <None Include="Content\UI\textures\slider_fancy.png" />
+    <None Include="Content\UI\textures\slider_fancy_mark.png" />
+    <None Include="Content\UI\textures\white_texture.png" />
+    <None Include="Content\UI\textures\icons\Apple.png" />
+    <None Include="Content\UI\textures\icons\Armor.png" />
+    <None Include="Content\UI\textures\icons\Axe.png" />
+    <None Include="Content\UI\textures\icons\BloodySword.png" />
+    <None Include="Content\UI\textures\icons\Bone.png" />
+    <None Include="Content\UI\textures\icons\Book.png" />
+    <None Include="Content\UI\textures\icons\Cubes.png" />
+    <None Include="Content\UI\textures\icons\Diamond.png" />
+    <None Include="Content\UI\textures\icons\Explanation.png" />
+    <None Include="Content\UI\textures\icons\Feather.png" />
+    <None Include="Content\UI\textures\icons\FloppyDisk.png" />
+    <None Include="Content\UI\textures\icons\GoldCoins.png" />
+    <None Include="Content\UI\textures\icons\GoldShard.png" />
+    <None Include="Content\UI\textures\icons\Heart.png" />
+    <None Include="Content\UI\textures\icons\Helmet.png" />
+    <None Include="Content\UI\textures\icons\Key.png" />
+    <None Include="Content\UI\textures\icons\MagicBook.png" />
+    <None Include="Content\UI\textures\icons\MagicWand.png" />
+    <None Include="Content\UI\textures\icons\Map.png" />
+    <None Include="Content\UI\textures\icons\None.png" />
+    <None Include="Content\UI\textures\icons\OrbBlue.png" />
+    <None Include="Content\UI\textures\icons\OrbGreen.png" />
+    <None Include="Content\UI\textures\icons\OrbRed.png" />
+    <None Include="Content\UI\textures\icons\Pistol.png" />
+    <None Include="Content\UI\textures\icons\PotionBlue.png" />
+    <None Include="Content\UI\textures\icons\PotionCyan.png" />
+    <None Include="Content\UI\textures\icons\PotionGreen.png" />
+    <None Include="Content\UI\textures\icons\PotionPurple.png" />
+    <None Include="Content\UI\textures\icons\PotionRed.png" />
+    <None Include="Content\UI\textures\icons\PotionYellow.png" />
+    <None Include="Content\UI\textures\icons\Ring.png" />
+    <None Include="Content\UI\textures\icons\RingGold.png" />
+    <None Include="Content\UI\textures\icons\RingGoldRuby.png" />
+    <None Include="Content\UI\textures\icons\RingRuby.png" />
+    <None Include="Content\UI\textures\icons\RubyBlue.png" />
+    <None Include="Content\UI\textures\icons\RubyGreen.png" />
+    <None Include="Content\UI\textures\icons\RubyPink.png" />
+    <None Include="Content\UI\textures\icons\RubyPurple.png" />
+    <None Include="Content\UI\textures\icons\RubyRed.png" />
+    <None Include="Content\UI\textures\icons\Sack.png" />
+    <None Include="Content\UI\textures\icons\Scroll.png" />
+    <None Include="Content\UI\textures\icons\Shield.png" />
+    <None Include="Content\UI\textures\icons\ShieldAndSword.png" />
+    <None Include="Content\UI\textures\icons\Shovel.png" />
+    <None Include="Content\UI\textures\icons\SilverShard.png" />
+    <None Include="Content\UI\textures\icons\Skull.png" />
+    <None Include="Content\UI\textures\icons\Sword.png" />
+    <None Include="Content\UI\textures\icons\Trap.png" />
+    <None Include="Content\UI\textures\icons\ZoomIn.png" />
+    <None Include="Content\UI\textures\icons\ZoomOut.png" />
+    <None Include="Content\UI\textures\icons\background.png" />
+    <None Include="Content\UI\fonts\Bold.spritefont" />
+    <None Include="Content\UI\fonts\Italic.spritefont" />
+    <None Include="Content\UI\fonts\Regular.spritefont" />
+    <None Include="Content\UI\effects\disabled.xnb" />
+    <None Include="Content\UI\effects\silhouette.xnb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Game\" />
+    <Folder Include="Game\Entites\" />
+    <Folder Include="UI\" />
+    <Folder Include="UI\Entities\" />
+    <Folder Include="UI\DataTypes\" />
+    <Folder Include="UI\Utils\" />
+    <Folder Include="Content\UI\" />
+    <Folder Include="Content\UI\textures\" />
+    <Folder Include="Content\UI\fonts\" />
+    <Folder Include="Content\UI\effects\" />
+    <Folder Include="Content\UI\textures\icons\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+</Project>
