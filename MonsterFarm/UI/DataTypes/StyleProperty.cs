@@ -27,13 +27,13 @@ namespace MonsterFarm.UI.DataTypes
         public Vector2 asVector { get { return _vector != null ? (Vector2)_vector : Vector2.One; } set { _vector = value; } }
 
         /// <summary>helper function to get / set float value.</summary>
-        public float asFloat { get { return _float.Value; } set { _float = value; } }
+        public float asFloat { get { return _float != null ? _float.Value : 0.0f; } set { _float = value; } }
 
         /// <summary>helper function to get / set int value.</summary>
-        public int asInt { get { return (int)_float.Value; } set { _float = value; } }
+        public int asInt { get { return _float != null ? (int)_float.Value : 0; } set { _float = value; } }
 
         /// <summary>helper function to get / set bool value.</summary>
-        public bool asBool { get { return _float.Value > 0f; } set { _float = value ? 1f : 0f; } }
+        public bool asBool { get { return _float != null ? _float.Value > 0f : false; } set { _float = value ? 1f : 0f; } }
 
         public object _Value
         {

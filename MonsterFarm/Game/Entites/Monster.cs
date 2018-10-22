@@ -66,7 +66,6 @@ namespace MonsterFarm.Game.Entites
             )
             {
                 Exception ex = new InvalidMonsterNameException().AddMessage("Found: " + _id_);
-                Debug.WriteLine(_id_);
                 throw ex;
             }
         }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using MonsterFarm.UI.Entities;
 using MonsterFarm.UI.DataTypes;
+using System.Diagnostics;
 
 namespace MonsterFarm.UI
 {

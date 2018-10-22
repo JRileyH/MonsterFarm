@@ -141,6 +141,8 @@ namespace MonsterFarm.UI
             // default color
             color = FixColorOpacity(color);
 
+            if (frameScale <= 0) frameScale = 1f;
+
             // if frame width Y is 0, use DrawSurfaceHorizontal()
             if (textureFrameWidth.Y == 0)
             {

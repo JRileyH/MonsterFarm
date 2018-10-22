@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MonsterFarm.UI.DataTypes;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace MonsterFarm.UI.Entities
 {
@@ -21,16 +22,35 @@ namespace MonsterFarm.UI.Entities
             Dictionary<string, StyleProperty> _mousedown = null,
             Dictionary<string, StyleProperty> _mousehover = null
         ){
-            if (_default != null) { _defaultSheet = _default; } else { _defaultSheet = _blankSheet(); }
-            if (_mousedown != null) { _mousedownSheet = _mousedown; } else { _mousedownSheet = _blankSheet(); }
-            if (_mousehover != null) { _mousehoverSheet = _mousehover; } else { _mousehoverSheet = _blankSheet(); }
+            if (_default != null) { _defaultSheet = _default; } else { _defaultSheet = _makeDefaultSheet(); }
+            if (_mousedown != null) { _mousedownSheet = _mousedown; } else { _mousedownSheet = _makeBlankSheet(); }
+            if (_mousehover != null) { _mousehoverSheet = _mousehover; } else { _mousehoverSheet = _makeBlankSheet(); }
             _allStates = new Dictionary<string, StyleProperty>[3];
             _allStates[(int)EntityState.Default] = _defaultSheet;
             _allStates[(int)EntityState.MouseDown] = _mousedownSheet;
             _allStates[(int)EntityState.MouseHover] = _mousehoverSheet;
         }
 
-        private Dictionary<string, StyleProperty> _blankSheet()
+        private Dictionary<string, StyleProperty> _makeDefaultSheet()
+        {
+            return new Dictionary<string, StyleProperty> {
+                { "Scale", new StyleProperty(1)},
+                { "FillColor", new StyleProperty(new Color(255, 255, 255, 255))},
+                { "OutlineColor", new StyleProperty(new Color(0, 0, 0, 0))},
+                { "OutlineWidth", new StyleProperty(0)},
+                { "ForceAlignCenter", new StyleProperty(false)},
+                { "FontStyle", new StyleProperty((int)FontStyle.Regular)},
+                { "SelectedHighlightColor", new StyleProperty(new Color(0, 0, 0, 0))},
+                { "ShadowColor", new StyleProperty(new Color(0, 0, 0, 0))},
+                { "ShadowOffset", new StyleProperty(new Vector2(0, 0))},
+                { "Padding", new StyleProperty(new Vector2(30, 30))},
+                { "SpaceBefore", new StyleProperty(new Vector2(0, 0))},
+                { "SpaceAfter", new StyleProperty(new Vector2(0, 8))},
+                { "ShadowScale", new StyleProperty(1)},
+            };
+        }
+
+        private Dictionary<string, StyleProperty> _makeBlankSheet()
         {
             return new Dictionary<string, StyleProperty> {
                 { "Scale", new StyleProperty()},
@@ -91,8 +111,6 @@ namespace MonsterFarm.UI.Entities
         {
             int _index = (int)state;
             if (scale != null && scale is StyleProperty) {
-                Debug.WriteLine(scale);
-                Debug.WriteLine(_allStates[_index]);
                 _allStates[_index]["Scale"] = (StyleProperty)scale;
             }
             if (fillColor != null && fillColor is StyleProperty)
