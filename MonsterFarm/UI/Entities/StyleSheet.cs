@@ -75,8 +75,8 @@ namespace MonsterFarm.UI.Entities
 
         public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default)
         {
-            StyleProperty found = _allStates[(int)state][property];
-            if (found.isEmpty()) return _defaultSheet[property];
+            if(!_allStates[(int)state].ContainsKey(property)) return _defaultSheet[property];
+            if (_allStates[(int)state][property].isEmpty()) return _defaultSheet[property];
             return _allStates[(int)state][property];
         }
 

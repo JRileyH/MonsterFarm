@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using MonsterFarm.UI.Entities;
 
 namespace MonsterFarm.Game.Entites
 {
@@ -22,6 +24,31 @@ namespace MonsterFarm.Game.Entites
         private char _line;
         private int _tier;
         private char[] _cousins;
+
+        private IconType _monsterIcon;
+        private IconType _familyIcon;
+        private string _name;
+
+        private Dictionary<string, string> _temp_name_map = new Dictionary<string, string>
+        {
+            { "es2", "Fire Snake" },
+            { "ss1", "Slimey Boy" },
+            { "bp2", "ManBagPig" }
+        };
+
+        private Dictionary<string, IconType> _temp_monster_icon_map = new Dictionary<string, IconType>
+        {
+            { "es2", IconType.RubyPink },
+            { "ss1", IconType.PotionBlue },
+            { "bp2", IconType.Sack }
+        };
+
+        private Dictionary<char, IconType> _temp_family_icon_map = new Dictionary<char, IconType>
+        {
+            { 'e', IconType.OrbRed },
+            { 's', IconType.OrbBlue },
+            { 'b', IconType.OrbGreen }
+        };
 
         public Monster(string id)
         {
@@ -48,9 +75,15 @@ namespace MonsterFarm.Game.Entites
             int c2 = fam_pos + 1;
             if (c2 >= _families.Length) c2 = 0;
             _cousins = new char[] { _families[c1], _families[c2] };
+            _name = _temp_name_map.ContainsKey(_id) ? _temp_name_map[_id_] : "Unknown";
+            _monsterIcon = _temp_monster_icon_map.ContainsKey(_id_) ? _temp_monster_icon_map[_id_] : IconType.None;
+            _familyIcon = _temp_family_icon_map.ContainsKey(_family) ? _temp_family_icon_map[_family] : IconType.None;
         }
 
         //Getters
+        public string name { get { return _name; }}
+        public IconType monsterIcon { get { return _monsterIcon; } }
+        public IconType familyIcon { get { return _familyIcon; } }
         public string id { get { return _id; } }
         public int purity { get { return _purity; } }
         public char family { get { return _family; } }

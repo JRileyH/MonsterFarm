@@ -58,7 +58,7 @@ namespace MonsterFarm.UI.Entities
         /// <param name="anchor">Position anchor.</param>
         /// <param name="size">Button size (if not defined will use default size).</param>
         /// <param name="offset">Offset from anchor position.</param>
-        public Button(string text, ButtonSkin skin = ButtonSkin.Default, Anchor anchor = Anchor.Auto, Vector2? size = null, Vector2? offset = null) :
+        public Button(string text, ButtonSkin skin = ButtonSkin.Default, Anchor anchor = Anchor.Auto, Vector2? size = null, Vector2? offset = null, float? textScale = null, bool nobreak = false) :
             base(size, anchor, offset)
         {
             // store style
@@ -72,6 +72,8 @@ namespace MonsterFarm.UI.Entities
                 // create and set button paragraph
                 ButtonParagraph = UserInterface.DefaultParagraph(text, Anchor.Center);
                 ButtonParagraph._hiddenInternalEntity = true;
+                if (textScale != null) DefaultParagraphStyle.SetStyleProperty("Scale", new StyleProperty((float)textScale));
+                if (nobreak) ButtonParagraph.WrapWords = false;
                 ButtonParagraph.UpdateStyle(DefaultParagraphStyle);
                 ButtonParagraph.Identifier = "_button_caption";
                 AddChild(ButtonParagraph, true);
