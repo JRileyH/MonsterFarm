@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Different sliders skins (textures).
@@ -16,9 +16,9 @@ namespace MonsterFarm.UI.Entities
     }
 
     /// <summary>
-    /// Slider entity looks like a horizontal scrollbar that the user can drag left and right to select a numeric value from range.
+    /// Slider element looks like a horizontal scrollbar that the user can drag left and right to select a numeric value from range.
     /// </summary>
-    public class Slider : Entity
+    public class Slider : Element
     {
         // slider style
         SliderSkin _skin;
@@ -194,7 +194,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the slider a natrually-interactable entity.
+        /// Is the slider a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()
@@ -203,8 +203,8 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every frame while mouse button is down over this entity.
-        /// The slider entity override this function to handle slider value change (eg slider mark dragging).
+        /// Called every frame while mouse button is down over this element.
+        /// The slider element override this function to handle slider value change (eg slider mark dragging).
         /// </summary>
         override protected void DoWhileMouseDown()
         {
@@ -243,11 +243,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get textures based on skin
             Texture2D texture = Resources.SliderTextures[_skin];
@@ -278,12 +278,12 @@ namespace MonsterFarm.UI.Entities
             UserInterface.Active.DrawUtils.DrawImage(spriteBatch, markTexture, markDest, FillColor);
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
 
         /// <summary>
-        /// Handle when mouse wheel scroll and this entity is the active entity.
-        /// Note: Slider entity override this function to change slider value based on wheel scroll.
+        /// Handle when mouse wheel scroll and this element is the active element.
+        /// Note: Slider element override this function to change slider value based on wheel scroll.
         /// </summary>
         override protected void DoOnMouseWheelScroll()
         {

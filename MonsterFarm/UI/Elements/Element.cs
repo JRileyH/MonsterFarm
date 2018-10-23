@@ -4,26 +4,26 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
 
     /// <summary>
-    /// Different draw phases of the entity.
+    /// Different draw phases of the element.
     /// </summary>
     public enum DrawPhase
     {
         /// <summary>
-        /// Drawing the entity itself.
+        /// Drawing the element itself.
         /// </summary>
         Base,
 
         /// <summary>
-        /// Drawing entity outline.
+        /// Drawing element outline.
         /// </summary>
         Outline,
 
         /// <summary>
-        /// Drawing entity's shadow.
+        /// Drawing element's shadow.
         /// </summary>
         Shadow,
     }
@@ -46,9 +46,9 @@ namespace MonsterFarm.UI.Entities
     }
 
     /// <summary>
-    /// An Anchor is a pre-defined position in parent entity that we use to position a child.
-    /// For eample, we can use anchors to position an entity at the bottom-center point of its parent.
-    /// Note: anchor affect both the position relative to parent and also the offset origin point of the entity.
+    /// An Anchor is a pre-defined position in parent element that we use to position a child.
+    /// For eample, we can use anchors to position an element at the bottom-center point of its parent.
+    /// Note: anchor affect both the position relative to parent and also the offset origin point of the element.
     /// </summary>
     public enum Anchor
     {
@@ -79,58 +79,58 @@ namespace MonsterFarm.UI.Entities
         /// <summary>Center-Right of parent element.</summary>
         CenterRight,
 
-        /// <summary>Automatically position this entity below its older sibling.</summary>
+        /// <summary>Automatically position this element below its older sibling.</summary>
         Auto,
 
-        /// <summary>Automatically position this entity to the right side of its older sibling, and begin a new row whenever
+        /// <summary>Automatically position this element to the right side of its older sibling, and begin a new row whenever
         /// exceeding the parent container width.</summary>
         AutoInline,
 
-        /// <summary>Automatically position this entity to the right side of its older sibling, even if exceeding parent container width.</summary>
+        /// <summary>Automatically position this element to the right side of its older sibling, even if exceeding parent container width.</summary>
         AutoInlineNoBreak,
 
-        /// <summary>Position of the older sibling bottom, eg align this entity based on its older sibling, but center on X axis.
-        /// Use this property to place entities one after another but keep them aligned to center (especially paragraphs).</summary>
+        /// <summary>Position of the older sibling bottom, eg align this element based on its older sibling, but center on X axis.
+        /// Use this property to place elements one after another but keep them aligned to center (especially paragraphs).</summary>
         AutoCenter,
     };
 
     /// <summary>
-    /// Possible entity states and interactions with user.
+    /// Possible element states and interactions with user.
     /// </summary>
-    public enum EntityState
+    public enum ElementState
     {
         /// <summary>Default state, eg currently not interacting.</summary>
         Default = 0,
 
-        /// <summary>Mouse is hovering over this entity.</summary>
+        /// <summary>Mouse is hovering over this element.</summary>
         MouseHover = 1,
 
-        /// <summary>Mouse button is pressed down over this entity.</summary>
+        /// <summary>Mouse button is pressed down over this element.</summary>
         MouseDown = 2,
     };
 
     /// <summary>
-    /// Basic UI entity.
-    /// All entities inherit from this class and share this API.
+    /// Basic UI element.
+    /// All elements inherit from this class and share this API.
     /// </summary>
     [System.Serializable]
-    public abstract class Entity
+    public abstract class Element
     {
         /// <summary>
         /// Static ctor.
         /// </summary>
-        static Entity()
+        static Element()
         {
-            Entity.MakeSerializable(typeof(Entity));
+            Element.MakeSerializable(typeof(Element));
         }
 
         // list of child elements
-        private List<Entity> _children = new List<Entity>();
+        private List<Element> _children = new List<Element>();
 
         /// <summary>
         /// Get / set children list.
         /// </summary>
-        public List<Entity> Children
+        public List<Element> Children
         {
             get
             {
@@ -144,15 +144,15 @@ namespace MonsterFarm.UI.Entities
         }
 
         // list of sorted children
-        private List<Entity> _sortedChildren;
+        private List<Element> _sortedChildren;
 
         // all child types
         internal static List<System.Type> _serializableTypes = new List<System.Type>();
 
         /// <summary>
-        /// Make an entity type serializable.
+        /// Make an element type serializable.
         /// </summary>
-        /// <param name="type">Entity type to make serializable.</param>
+        /// <param name="type">Element type to make serializable.</param>
         public static void MakeSerializable(System.Type type)
         {
             _serializableTypes.Add(type);
@@ -162,18 +162,18 @@ namespace MonsterFarm.UI.Entities
         internal bool _needToSortChildren = true;
 
         /// <summary>
-        /// If true, will not show this entity when searching.
-        /// Used for internal entities.
+        /// If true, will not show this element when searching.
+        /// Used for internal elements.
         /// </summary>
-        internal bool _hiddenInternalEntity = false;
+        internal bool _hiddenInternalElement = false;
 
         /// <summary>
-        /// A special size used value to use when you want to get the entity default size.
+        /// A special size used value to use when you want to get the element default size.
         /// </summary>
         public static readonly Vector2 USE_DEFAULT_SIZE = new Vector2(-1, -1);
 
-        /// <summary>The direct parent of this entity.</summary>
-        protected Entity _parent = null;
+        /// <summary>The direct parent of this element.</summary>
+        protected Element _parent = null;
 
         /// <summary>Index inside parent.</summary>
         protected int _indexInParent;
@@ -183,57 +183,57 @@ namespace MonsterFarm.UI.Entities
         /// </summary>
         public int PriorityBonus = 0;
 
-        /// <summary>Is the entity currently interactable.</summary>
+        /// <summary>Is the element currently interactable.</summary>
         protected bool _isInteractable = false;
 
-        /// <summary>Optional identifier you can attach to entities so you can later search and retrieve by.</summary>
+        /// <summary>Optional identifier you can attach to elements so you can later search and retrieve by.</summary>
         public string Identifier = string.Empty;
 
         /// <summary>
-        /// Last known scroll value, when entities are inside scrollable panels.
+        /// Last known scroll value, when elements are inside scrollable panels.
         /// </summary>
         protected Point _lastScrollVal = Point.Zero;
 
         /// <summary>
-        /// If this boolean is true, events will just "go through" this entity to its children or entities behind it.
+        /// If this boolean is true, events will just "go through" this element to its children or elements behind it.
         /// This bool comes to solve conditions where you have two panels without skin that hide each other but you want
         /// users to be able to click on the bottom panel through the upper panel, provided it doesn't hit any of the first
         /// panel's children.
         /// </summary>
         public bool ClickThrough = false;
 
-        /// <summary>If in promiscuous mode, mouse button is pressed *outside* the entity and then released on the entity, click event will be fired.
-        /// If false, in order to fire click event the mouse button must be pressed AND released over this entity (but can travel outside while being
+        /// <summary>If in promiscuous mode, mouse button is pressed *outside* the element and then released on the element, click event will be fired.
+        /// If false, in order to fire click event the mouse button must be pressed AND released over this element (but can travel outside while being
         /// held down, as long as its released inside).
         /// Note: Windows default behavior is non promiscuous mode.</summary>
         public bool PromiscuousClicksMode = false;
 
         /// <summary>
-        /// If this set to true, this entity will still react to events if its direct parent is locked.
+        /// If this set to true, this element will still react to events if its direct parent is locked.
         /// This setting is mostly for scrollbars etc, that even if parent is locked should still be scrollable.
         /// </summary>
         protected bool DoEventsIfDirectParentIsLocked = false;
 
         /// <summary>
-        /// If true, this entity will always inherit its parent state.
+        /// If true, this element will always inherit its parent state.
         /// This is useful for stuff like a paragraph that's attached to a button etc.
-        /// NOTE!!! entities that inherit parent state will not trigger any events either.
+        /// NOTE!!! elements that inherit parent state will not trigger any events either.
         /// </summary>
         public bool InheritParentState = false;
 
-        // optional background object for this entity.
-        // the background will be rendered on the full size of this entity, behind it, and will not respond to events etc.
-        private Entity _background = null;
+        // optional background object for this element.
+        // the background will be rendered on the full size of this element, behind it, and will not respond to events etc.
+        private Element _background = null;
 
-        // mark the first update call on this entity.
+        // mark the first update call on this element.
         private bool _isFirstUpdate = true;
 
         /// <summary>
-        /// Mark if this entity is dirty and need to recalculate its destination rect.
+        /// Mark if this element is dirty and need to recalculate its destination rect.
         /// </summary>
         private bool _isDirty = true;
 
-        // entity current style properties
+        // element current style properties
         private StyleSheet _style = new StyleSheet();
 
         /// <summary>
@@ -257,16 +257,16 @@ namespace MonsterFarm.UI.Entities
         private Vector2? _maxSize;
 
         /// <summary>
-        /// If defined, will limit the minimum size of this entity when calculating size.
-        /// This is especially useful for entities with size that depends on their parent entity size, for example
-        /// if you define an entity to take 20% of its parent space but can't be less than 200 pixels width.
+        /// If defined, will limit the minimum size of this element when calculating size.
+        /// This is especially useful for elements with size that depends on their parent element size, for example
+        /// if you define an element to take 20% of its parent space but can't be less than 200 pixels width.
         /// </summary>
         public Vector2? MinSize { get { return _minSize; } set { _minSize = value; MarkAsDirty(); } }
 
         /// <summary>
-        /// If defined, will limit the maximum size of this entity when calculating size.
-        /// This is especially useful for entities with size that depends on their parent entity size, for example
-        /// if you define an entity to take 20% of its parent space but can't be more than 200 pixels width.
+        /// If defined, will limit the maximum size of this element when calculating size.
+        /// This is especially useful for elements with size that depends on their parent element size, for example
+        /// if you define an element to take 20% of its parent space but can't be more than 200 pixels width.
         /// </summary>
         public Vector2? MaxSize { get { return _maxSize; } set { _maxSize = value; MarkAsDirty(); } }
 
@@ -282,7 +282,7 @@ namespace MonsterFarm.UI.Entities
         /// </summary>
         private uint _parentLastDestRectVersion = 0;
 
-        /// <summary>Optional data you can attach to this entity and retrieve later (for example when handling events).</summary>
+        /// <summary>Optional data you can attach to this element and retrieve later (for example when handling events).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public object AttachedData = null;
 
@@ -293,7 +293,7 @@ namespace MonsterFarm.UI.Entities
         /// </summary>
         public bool UseActualSizeForCollision = true;
 
-        /// <summary>Entity size (in pixels). Value of 0 will take parent's full size. -1 will take defaults.</summary>
+        /// <summary>element size (in pixels). Value of 0 will take parent's full size. -1 will take defaults.</summary>
         protected Vector2 _size;
 
         /// <summary>Offset, in pixels, from the anchor position.</summary>
@@ -308,7 +308,7 @@ namespace MonsterFarm.UI.Entities
             set { SetOffset(value); }
         }
 
-        /// <summary>Anchor to position this entity based on (see Anchor enum for more info).</summary>
+        /// <summary>Anchor to position this element based on (see Anchor enum for more info).</summary>
         protected Anchor _anchor;
 
         /// <summary>
@@ -320,109 +320,109 @@ namespace MonsterFarm.UI.Entities
             set { SetAnchor(value); }
         }
 
-        /// <summary>Basic default style that all entities share. Note: loaded from UI theme xml file.</summary>
+        /// <summary>Basic default style that all elements share. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultStyle = new StyleSheet();
 
-        /// <summary>Callback to execute when mouse button is pressed over this entity (called once when button is pressed).</summary>
+        /// <summary>Callback to execute when mouse button is pressed over this element (called once when button is pressed).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnMouseDown = null;
 
-        /// <summary>Callback to execute when right mouse button is pressed over this entity (called once when button is pressed).</summary>
+        /// <summary>Callback to execute when right mouse button is pressed over this element (called once when button is pressed).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnRightMouseDown = null;
 
-        /// <summary>Callback to execute when mouse button is released over this entity (called once when button is released).</summary>
+        /// <summary>Callback to execute when mouse button is released over this element (called once when button is released).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnMouseReleased = null;
 
-        /// <summary>Callback to execute every frame while mouse button is pressed over the entity.</summary>
+        /// <summary>Callback to execute every frame while mouse button is pressed over the element.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback WhileMouseDown = null;
 
-        /// <summary>Callback to execute every frame while right mouse button is pressed over the entity.</summary>
+        /// <summary>Callback to execute every frame while right mouse button is pressed over the element.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback WhileRightMouseDown = null;
 
-        /// <summary>Callback to execute every frame while mouse is hovering over the entity (not called while mouse button is down).</summary>
+        /// <summary>Callback to execute every frame while mouse is hovering over the element (not called while mouse button is down).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback WhileMouseHover = null;
 
-        /// <summary>Callback to execute every frame while mouse is hovering over the entity, even if mouse is down.</summary>
+        /// <summary>Callback to execute every frame while mouse is hovering over the element, even if mouse is down.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback WhileMouseHoverOrDown = null;
 
-        /// <summary>Callback to execute when user clicks on this entity (eg release mouse over it).</summary>
+        /// <summary>Callback to execute when user clicks on this element (eg release mouse over it).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnClick = null;
 
-        /// <summary>Callback to execute when user clicks on this entity with right mouse button (eg release mouse over it).</summary>
+        /// <summary>Callback to execute when user clicks on this element with right mouse button (eg release mouse over it).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnRightClick = null;
 
-        /// <summary>Callback to execute when entity value changes (relevant only for entities with value).</summary>
+        /// <summary>Callback to execute when element value changes (relevant only for elements with value).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnValueChange = null;
 
-        /// <summary>Callback to execute when mouse start hovering over this entity (eg enters its region).</summary>
+        /// <summary>Callback to execute when mouse start hovering over this element (eg enters its region).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnMouseEnter = null;
 
-        /// <summary>Callback to execute when mouse stop hovering over this entity (eg leaves its region).</summary>
+        /// <summary>Callback to execute when mouse stop hovering over this element (eg leaves its region).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnMouseLeave = null;
 
-        /// <summary>Callback to execute when mouse wheel scrolls and this entity is the active entity.</summary>
+        /// <summary>Callback to execute when mouse wheel scrolls and this element is the active element.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnMouseWheelScroll = null;
 
-        /// <summary>Called when entity starts getting dragged (only if draggable).</summary>
+        /// <summary>Called when element starts getting dragged (only if draggable).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnStartDrag = null;
 
-        /// <summary>Called when entity stop getting dragged (only if draggable).</summary>
+        /// <summary>Called when element stop getting dragged (only if draggable).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnStopDrag = null;
 
-        /// <summary>Called every frame while the entity is being dragged.</summary>
+        /// <summary>Called every frame while the element is being dragged.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback WhileDragging = null;
 
-        /// <summary>Callback to execute every frame before this entity is rendered.</summary>
+        /// <summary>Callback to execute every frame before this element is rendered.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback BeforeDraw = null;
 
-        /// <summary>Callback to execute every frame after this entity is rendered.</summary>
+        /// <summary>Callback to execute every frame after this element is rendered.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback AfterDraw = null;
 
-        /// <summary>Callback to execute every frame before this entity updates.</summary>
+        /// <summary>Callback to execute every frame before this element updates.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback BeforeUpdate = null;
 
-        /// <summary>Callback to execute every frame after this entity updates.</summary>
+        /// <summary>Callback to execute every frame after this element updates.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback AfterUpdate = null;
 
-        /// <summary>Callback to execute every time the visibility of this entity changes (also invokes when parent becomes invisible / visible again).</summary>
+        /// <summary>Callback to execute every time the visibility of this element changes (also invokes when parent becomes invisible / visible again).</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnVisiblityChange = null;
 
-        /// <summary>Callback to execute every time this entity focus / unfocus.</summary>
+        /// <summary>Callback to execute every time this element focus / unfocus.</summary>
         [System.Xml.Serialization.XmlIgnore]
         public EventCallback OnFocusChange = null;
 
         /// <summary>
-        /// Optional tooltip text to show if the user points on this entity for long enough.
+        /// Optional tooltip text to show if the user points on this element for long enough.
         /// </summary>
         public string ToolTipText;
 
-        /// <summary>Is mouse currently pointing on this entity.</summary>
+        /// <summary>Is mouse currently pointing on this element.</summary>
         protected bool _isMouseOver = false;
 
-        /// <summary>Is the entity currently enabled? If false, will not be interactive and be rendered with a greyscale effect.</summary>
+        /// <summary>Is the element currently enabled? If false, will not be interactive and be rendered with a greyscale effect.</summary>
         public bool Enabled = true;
 
-        /// <summary>Disable entities - will be removed in future versions!</summary>
+        /// <summary>Disable elements - will be removed in future versions!</summary>
         [System.Obsolete("'Disabled' is deprecated, please use 'Enabled' instead.")]
         public bool Disabled
         {
@@ -430,22 +430,22 @@ namespace MonsterFarm.UI.Entities
             set { Enabled = !value; }
         }
 
-        /// <summary>If true, this entity and its children will not respond to events (but will be drawn normally, unlike when disabled).</summary>
+        /// <summary>If true, this element and its children will not respond to events (but will be drawn normally, unlike when disabled).</summary>
         public bool Locked = false;
 
-        /// <summary>Is the entity currently visible.</summary>
+        /// <summary>Is the element currently visible.</summary>
         private bool _visible = true;
 
-        /// <summary>Is this entity currently disabled?</summary>
+        /// <summary>Is this element currently disabled?</summary>
         private bool _isCurrentlyDisabled = false;
 
-        /// <summary>Current entity state.</summary>
-        protected EntityState _entityState = EntityState.Default;
+        /// <summary>Current element state.</summary>
+        protected ElementState _elementState = ElementState.Default;
 
-        // is this entity currently focused?
+        // is this element currently focused?
         bool _isFocused = false;
 
-        /// <summary>Does this entity or one of its children currently focused?</summary>
+        /// <summary>Does this element or one of its children currently focused?</summary>
         [System.Xml.Serialization.XmlIgnore]
         public bool IsFocused
         {
@@ -466,10 +466,10 @@ namespace MonsterFarm.UI.Entities
             }
         }
 
-        /// <summary>Currently calculated destination rect (eg the region this entity is drawn on).</summary>
+        /// <summary>Currently calculated destination rect (eg the region this element is drawn on).</summary>
         internal Rectangle _destRect;
 
-        /// <summary>Currently calculated internal destination rect (eg the region this entity children are positioned in).</summary>
+        /// <summary>Currently calculated internal destination rect (eg the region this element children are positioned in).</summary>
         protected Rectangle _destRectInternal;
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace MonsterFarm.UI.Entities
             }
         }
 
-        // is this entity draggable?
+        // is this element draggable?
         private bool _draggable = false;
 
         // do we need to init drag offset from current position?
@@ -492,28 +492,28 @@ namespace MonsterFarm.UI.Entities
         // current dragging offset.
         private Vector2 _dragOffset = Vector2.Zero;
 
-        // true if this entity is currently being dragged.
+        // true if this element is currently being dragged.
         private bool _isBeingDragged = false;
 
-        /// <summary>Default size this entity will have when no size is provided or when -1 is set for either width or height.</summary>
+        /// <summary>Default size this element will have when no size is provided or when -1 is set for either width or height.</summary>
         public static Vector2 DefaultSize = Vector2.Zero;
 
-        /// <summary>If true, users will not be able to drag this entity outside its parent boundaries.</summary>
+        /// <summary>If true, users will not be able to drag this element outside its parent boundaries.</summary>
         public bool LimitDraggingToParentBoundaries = true;
 
         /// <summary>
-        /// Create the entity.
+        /// Create the element.
         /// </summary>
-        /// <param name="size">Entity size, in pixels.</param>
+        /// <param name="size">element size, in pixels.</param>
         /// <param name="anchor">Poisition anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
-        public Entity(Vector2? size = null, Anchor anchor = Anchor.Auto, Vector2? offset = null)
+        public Element(Vector2? size = null, Anchor anchor = Anchor.Auto, Vector2? offset = null)
         {
             // set as dirty (eg need to recalculate destination rect)
             MarkAsDirty();
 
             // store size, anchor and offset
-            Vector2 defaultSize = EntityDefaultSize;
+            Vector2 defaultSize = elementDefaultSize;
             _size = size ?? defaultSize;
             _offset = offset ?? Vector2.Zero;
             _anchor = anchor;
@@ -527,9 +527,9 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return the default size for this entity.
+        /// Return the default size for this element.
         /// </summary>
-        public Vector2 EntityDefaultSize
+        public Vector2 elementDefaultSize
         {
             get
             {
@@ -537,7 +537,7 @@ namespace MonsterFarm.UI.Entities
                 System.Type type = GetType();
 
                 // try to get default size static property, and if not found, climb to parent class until DefaultSize is defined.
-                // note: eventually it will stop at Entity, since we have defined default size here.
+                // note: eventually it will stop at element, since we have defined default size here.
                 while (true)
                 {
                     // try to get DefaultSize field and if found return it
@@ -593,7 +593,7 @@ namespace MonsterFarm.UI.Entities
         protected virtual void DoOnFirstUpdate()
         {
             // call the spawn event
-            UserInterface.Active.OnEntitySpawn?.Invoke(this);
+            UserInterface.Active.OnElementSpawn?.Invoke(this);
 
             // make parent dirty
             if (_parent != null) { _parent.MarkAsDirty(); }
@@ -605,7 +605,7 @@ namespace MonsterFarm.UI.Entities
         /// <param name="property">Property identifier.</param>
         /// <param name="state">State to get property for (if undefined will fallback to default state).</param>
         /// <returns>Style property value for given state or default, or null if undefined.</returns>
-        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default)
+        public StyleProperty GetStyleProperty(string property, ElementState state = ElementState.Default)
         {
             return _style.GetStyleProperty(property, state);
         }
@@ -616,21 +616,21 @@ namespace MonsterFarm.UI.Entities
         /// <param name="property">Property identifier.</param>
         /// <param name="value">Property value.</param>
         /// <param name="state">State to set property for.</param>
-        /// <param name="markAsDirty">If true, will mark this entity as dirty after this style change.</param>
-        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default, bool markAsDirty = true)
+        /// <param name="markAsDirty">If true, will mark this element as dirty after this style change.</param>
+        public void SetStyleProperty(string property, StyleProperty value, ElementState state = ElementState.Default, bool markAsDirty = true)
         {
             _style.SetStyleProperty(property, value, state);
             if (markAsDirty) { MarkAsDirty(); }
         }
 
         /// <summary>
-        /// Return stylesheet property for current entity state (or default if undefined for state).
+        /// Return stylesheet property for current element state (or default if undefined for state).
         /// </summary>
         /// <param name="property">Property identifier.</param>
-        /// <returns>Stylesheet property value for current entity state, or default if not defined.</returns>
+        /// <returns>Stylesheet property value for current element state, or default if not defined.</returns>
         public StyleProperty GetActiveStyle(string property)
         {
-            return GetStyleProperty(property, _entityState);
+            return GetStyleProperty(property, _elementState);
         }
 
         /// <summary>
@@ -660,8 +660,8 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Adds extra space outside the dest rect for collision detection.
-        /// In other words, if extra margin is set to 10 and the user points with its mouse 5 pixels above this entity,
-        /// it would still think the user points on the entity.
+        /// In other words, if extra margin is set to 10 and the user points with its mouse 5 pixels above this element,
+        /// it would still think the user points on the element.
         /// </summary>
         public Point ExtraMargin = Point.Zero;
 
@@ -675,7 +675,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return entity priority in drawing order and event handling.
+        /// Return element priority in drawing order and event handling.
         /// </summary>
         public virtual int Priority
         {
@@ -683,7 +683,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Get if this entity needs to recalculate destination rect.
+        /// Get if this element needs to recalculate destination rect.
         /// </summary>
         public bool IsDirty
         {
@@ -691,7 +691,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the entity draggable (eg can a user grab it and drag it around).
+        /// Is the element draggable (eg can a user grab it and drag it around).
         /// </summary>
         public bool Draggable
         {
@@ -700,48 +700,48 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Optional background entity that will not respond to events and will always be rendered right behind this entity.
+        /// Optional background element that will not respond to events and will always be rendered right behind this element.
         /// </summary>
-        public Entity Background
+        public Element Background
         {
             get { return _background; }
             set
             {
                 if (value != null && value._parent != null)
                 {
-                    throw new Exceptions.InvalidStateException("Cannot set background entity that have a parent!");
+                    throw new Exceptions.InvalidStateException("Cannot set background element that have a parent!");
                 }
                 _background = value;
             }
         }
 
         /// <summary>
-        /// Current entity state (default / mouse hover / mouse down..).
+        /// Current element state (default / mouse hover / mouse down..).
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
-        public EntityState State
+        public ElementState State
         {
-            get { return _entityState; }
-            set { _entityState = value; }
+            get { return _elementState; }
+            set { _elementState = value; }
         }
 
         /// <summary>
-        /// Find and return first occurance of a child entity with a given identifier and specific type.
+        /// Find and return first occurance of a child element with a given identifier and specific type.
         /// </summary>
-        /// <typeparam name="T">Entity type to get.</typeparam>
+        /// <typeparam name="T">element type to get.</typeparam>
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
-        /// <returns>First found entity with given identifier and type, or null if nothing found.</returns>
-        public T Find<T>(string identifier, bool recursive = false) where T : Entity
+        /// <returns>First found element with given identifier and type, or null if nothing found.</returns>
+        public T Find<T>(string identifier, bool recursive = false) where T : Element
         {
-            // should we return any entity type?
-            bool anyType = typeof(T) == typeof(Entity);
+            // should we return any element type?
+            bool anyType = typeof(T) == typeof(Element);
 
             // iterate children
-            foreach (Entity child in _children)
+            foreach (Element child in _children)
             {
-                // skip hidden entities
-                if (child._hiddenInternalEntity)
+                // skip hidden elements
+                if (child._hiddenInternalElement)
                     continue;
 
                 // check if identifier and type matches - if so, return it
@@ -769,30 +769,30 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Find and return first occurance of a child entity with a given identifier.
+        /// Find and return first occurance of a child element with a given identifier.
         /// </summary>
         /// <param name="identifier">Identifier to find.</param>
         /// <param name="recursive">If true, will search recursively in children of children. If false, will search only in direct children.</param>
-        /// <returns>First found entity with given identifier, or null if nothing found.</returns>
-        public Entity Find(string identifier, bool recursive = false)
+        /// <returns>First found element with given identifier, or null if nothing found.</returns>
+        public Element Find(string identifier, bool recursive = false)
         {
-            return Find<Entity>(identifier, recursive);
+            return Find<Element>(identifier, recursive);
         }
 
         /// <summary>
-        /// Iterate over children and call 'callback' for every direct child of this entity.
+        /// Iterate over children and call 'callback' for every direct child of this element.
         /// </summary>
-        /// <param name="callback">Callback function to call with every child of this entity.</param>
+        /// <param name="callback">Callback function to call with every child of this element.</param>
         public void IterateChildren(EventCallback callback)
         {
-            foreach (Entity child in _children)
+            foreach (Element child in _children)
             {
                 callback(child);
             }
         }
 
         /// <summary>
-        /// Entity current size property.
+        /// element current size property.
         /// </summary>
         public Vector2 Size
         {
@@ -801,7 +801,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Extra space (in pixels) to reserve *after* this entity when using Auto Anchors.
+        /// Extra space (in pixels) to reserve *after* this element when using Auto Anchors.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 SpaceAfter
@@ -811,7 +811,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Extra space (in pixels) to reserve *before* this entity when using Auto Anchors.
+        /// Extra space (in pixels) to reserve *before* this element when using Auto Anchors.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 SpaceBefore
@@ -821,7 +821,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity fill color - this is just a sugarcoat to access the default fill color style property.
+        /// element fill color - this is just a sugarcoat to access the default fill color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Color FillColor
@@ -831,7 +831,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity fill color opacity - this is just a sugarcoat to access the default fill color alpha style property.
+        /// element fill color opacity - this is just a sugarcoat to access the default fill color alpha style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public byte Opacity
@@ -849,7 +849,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity outline color opacity - this is just a sugarcoat to access the default outline color alpha style property.
+        /// element outline color opacity - this is just a sugarcoat to access the default outline color alpha style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public byte OutlineOpacity
@@ -867,7 +867,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity padding - this is just a sugarcoat to access the default padding style property.
+        /// element padding - this is just a sugarcoat to access the default padding style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 Padding
@@ -877,7 +877,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity shadow color - this is just a sugarcoat to access the default shadow color style property.
+        /// element shadow color - this is just a sugarcoat to access the default shadow color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Color ShadowColor
@@ -887,7 +887,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity shadow scale - this is just a sugarcoat to access the default shadow scale style property.
+        /// element shadow scale - this is just a sugarcoat to access the default shadow scale style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public float ShadowScale
@@ -897,7 +897,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity shadow offset - this is just a sugarcoat to access the default shadow offset style property.
+        /// element shadow offset - this is just a sugarcoat to access the default shadow offset style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Vector2 ShadowOffset
@@ -907,7 +907,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity scale - this is just a sugarcoat to access the default scale style property.
+        /// element scale - this is just a sugarcoat to access the default scale style property.
         /// </summary>
         public float Scale
         {
@@ -916,7 +916,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity outline color - this is just a sugarcoat to access the default outline color style property.
+        /// element outline color - this is just a sugarcoat to access the default outline color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public Color OutlineColor
@@ -926,7 +926,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Entity outline width - this is just a sugarcoat to access the default outline color style property.
+        /// element outline width - this is just a sugarcoat to access the default outline color style property.
         /// </summary>
         [System.Xml.Serialization.XmlIgnore]
         public int OutlineWidth
@@ -936,14 +936,14 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return if this entity is currently disabled, due to self or one of the parents / grandparents being disabled.
+        /// Return if this element is currently disabled, due to self or one of the parents / grandparents being disabled.
         /// </summary>
-        /// <returns>True if entity is disabled.</returns>
+        /// <returns>True if element is disabled.</returns>
         public bool IsDisabled()
         {
             // iterate over parents until root, starting with self.
-            // if any entity along the way is disabled we return true.
-            Entity parent = this;
+            // if any element along the way is disabled we return true.
+            Element parent = this;
             while (parent != null)
             {
                 if (!parent.Enabled) { return true; }
@@ -956,16 +956,16 @@ namespace MonsterFarm.UI.Entities
 
 
         /// <summary>
-        /// Check if this entity is a descendant of another entity.
+        /// Check if this element is a descendant of another element.
         /// This goes up all the way to root.
         /// </summary>
-        /// <param name="other">Entity to check if this entity is descendant of.</param>
-        /// <returns>True if this entity is descendant of the other entity.</returns>
-        public bool IsDeepChildOf(Entity other)
+        /// <param name="other">element to check if this element is descendant of.</param>
+        /// <returns>True if this element is descendant of the other element.</returns>
+        public bool IsDeepChildOf(Element other)
         {
             // iterate over parents until root, starting with self.
-            // if any entity along the way is child of 'other', we return true.
-            Entity parent = this;
+            // if any element along the way is child of 'other', we return true.
+            Element parent = this;
             while (parent != null)
             {
                 if (parent._parent == other) { return true; }
@@ -977,14 +977,14 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return if this entity is currently locked, due to self or one of the parents / grandparents being locked.
+        /// Return if this element is currently locked, due to self or one of the parents / grandparents being locked.
         /// </summary>
-        /// <returns>True if entity is disabled.</returns>
+        /// <returns>True if element is disabled.</returns>
         public bool IsLocked()
         {
             // iterate over parents until root, starting with self.
-            // if any entity along the way is locked we return true.
-            Entity parent = this;
+            // if any element along the way is locked we return true.
+            Element parent = this;
             while (parent != null)
             {
                 if (parent.Locked)
@@ -1012,14 +1012,14 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return if this entity is currently visible, eg this and all its parents and grandparents are visible.
+        /// Return if this element is currently visible, eg this and all its parents and grandparents are visible.
         /// </summary>
-        /// <returns>True if entity is really visible.</returns>
+        /// <returns>True if element is really visible.</returns>
         public bool IsVisible()
         {
             // iterate over parents until root, starting with self.
-            // if any entity along the way is not visible we return false.
-            Entity parent = this;
+            // if any element along the way is not visible we return false.
+            Element parent = this;
             while (parent != null)
             {
                 if (!parent.Visible) { return false; }
@@ -1031,7 +1031,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Set the position and anchor of this entity.
+        /// Set the position and anchor of this element.
         /// </summary>
         /// <param name="anchor">New anchor to set.</param>
         /// <param name="offset">Offset from new anchor position.</param>
@@ -1042,7 +1042,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Set the anchor of this entity.
+        /// Set the anchor of this element.
         /// </summary>
         /// <param name="anchor">New anchor to set.</param>
         public void SetAnchor(Anchor anchor)
@@ -1052,7 +1052,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Set the offset of this entity.
+        /// Set the offset of this element.
         /// </summary>
         /// <param name="offset">New offset to set.</param>
         public void SetOffset(Vector2 offset)
@@ -1068,13 +1068,13 @@ namespace MonsterFarm.UI.Entities
         /// Return children in a sorted list by priority.
         /// </summary>
         /// <returns>List of children sorted by priority.</returns>
-        protected List<Entity> GetSortedChildren()
+        protected List<Element> GetSortedChildren()
         {
             // if need to sort children, rebuild the sorted list
             if (_needToSortChildren)
             {
                 // create list to sort and return
-                _sortedChildren = new List<Entity>(_children);
+                _sortedChildren = new List<Element>(_children);
 
                 // get children in a sorted list
                 _sortedChildren.Sort((x, y) =>
@@ -1090,7 +1090,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Update dest rect and internal dest rect.
-        /// This is called internally whenever a change is made to the entity or its parent.
+        /// This is called internally whenever a change is made to the element or its parent.
         /// </summary>
         virtual public void UpdateDestinationRects()
         {
@@ -1119,7 +1119,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw this entity and its children.
+        /// Draw this element and its children.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
         virtual public void Draw(SpriteBatch spriteBatch)
@@ -1149,14 +1149,14 @@ namespace MonsterFarm.UI.Entities
             UpdateDestinationRectsIfDirty();
 
             // draw shadow
-            DrawEntityShadow(spriteBatch);
+            DrawElementShadow(spriteBatch);
 
-            // draw entity outline
-            DrawEntityOutline(spriteBatch);
+            // draw element outline
+            DrawElementOutline(spriteBatch);
 
-            // draw the entity itself
+            // draw the element itself
             UserInterface.Active.DrawUtils.StartDraw(spriteBatch, _isCurrentlyDisabled);
-            DrawEntity(spriteBatch, DrawPhase.Base);
+            DrawElement(spriteBatch, DrawPhase.Base);
             UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 
             // do debug drawing
@@ -1165,7 +1165,7 @@ namespace MonsterFarm.UI.Entities
                 DrawDebugStuff(spriteBatch);
             }
 
-            // draw all child entities
+            // draw all child elements
             DrawChildren(spriteBatch);
 
             // do after draw event
@@ -1173,7 +1173,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw debug stuff for this entity.
+        /// Draw debug stuff for this element.
         /// </summary>
         /// <param name="spriteBatch">Spritebatch to use for drawing.</param>
         protected virtual void DrawDebugStuff(SpriteBatch spriteBatch)
@@ -1227,10 +1227,10 @@ namespace MonsterFarm.UI.Entities
             BeforeDrawChildren(spriteBatch);
 
             // get sorted children list
-            List<Entity> childrenSorted = GetSortedChildren();
+            List<Element> childrenSorted = GetSortedChildren();
 
             // draw all children
-            foreach (Entity child in childrenSorted)
+            foreach (Element child in childrenSorted)
             {
                 child.Draw(spriteBatch);
             }
@@ -1240,13 +1240,13 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected virtual void InitAfterDeserialize()
         {
             // fix children parent
             var temp = _children;
-            _children = new List<Entity>();
+            _children = new List<Element>();
             foreach (var child in temp)
             {
                 child._parent = null;
@@ -1264,11 +1264,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Put all entities that have identifier property in a dictionary.
-        /// Note: if multiple entities share the same identifier, the deepest entity in hirarchy will end up in dict.
+        /// Put all elements that have identifier property in a dictionary.
+        /// Note: if multiple elements share the same identifier, the deepest element in hirarchy will end up in dict.
         /// </summary>
-        /// <param name="dict">Dictionary to put entities into.</param>
-        public void PopulateDict(ref Dictionary<string, Entity> dict)
+        /// <param name="dict">Dictionary to put elements into.</param>
+        public void PopulateDict(ref Dictionary<string, Element> dict)
         {
             // add self if got identifier
             if (Identifier != null && Identifier.Length > 0)
@@ -1282,26 +1282,26 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called before drawing child entities of this entity.
+        /// Called before drawing child elements of this element.
         /// </summary>
-        /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
+        /// <param name="spriteBatch">SpriteBatch used to draw elements.</param>
         protected virtual void BeforeDrawChildren(SpriteBatch spriteBatch)
         {
         }
 
         /// <summary>
-        /// Called after drawing child entities of this entity.
+        /// Called after drawing child elements of this element.
         /// </summary>
-        /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
+        /// <param name="spriteBatch">SpriteBatch used to draw elements.</param>
         protected virtual void AfterDrawChildren(SpriteBatch spriteBatch)
         {
         }
 
         /// <summary>
-        /// Draw entity shadow (if defined shadow).
+        /// Draw element shadow (if defined shadow).
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityShadow(SpriteBatch spriteBatch)
+        virtual protected void DrawElementShadow(SpriteBatch spriteBatch)
         {
             // store current 'is-dirty' flag, because it changes internally while drawing shadow
             bool isDirty = _isDirty;
@@ -1322,14 +1322,14 @@ namespace MonsterFarm.UI.Entities
             Color oldOutline = OutlineColor;
             float oldScale = Scale;
             int oldOutlineWidth = OutlineWidth;
-            EntityState oldState = _entityState;
+            ElementState oldState = _elementState;
 
             // set default colors and state for shadow pass
             FillColor = shadowColor;
             OutlineColor = Color.Transparent;
             OutlineWidth = 0;
             Scale = shadowScale;
-            _entityState = EntityState.Default;
+            _elementState = ElementState.Default;
 
             // if disabled, turn color into greyscale
             if (_isCurrentlyDisabled)
@@ -1339,7 +1339,7 @@ namespace MonsterFarm.UI.Entities
 
             // draw with shadow effect
             UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
-            DrawEntity(spriteBatch, DrawPhase.Shadow);
+            DrawElement(spriteBatch, DrawPhase.Shadow);
             UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 
             // return position and colors back to what they were
@@ -1349,17 +1349,17 @@ namespace MonsterFarm.UI.Entities
             Scale = oldScale;
             OutlineColor = oldOutline;
             OutlineWidth = oldOutlineWidth;
-            _entityState = oldState;
+            _elementState = oldState;
 
             // restore is-dirty flag
             _isDirty = isDirty;
         }
 
         /// <summary>
-        /// Draw entity outline.
+        /// Draw element outline.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        virtual protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        virtual protected void DrawElementOutline(SpriteBatch spriteBatch)
         {
             // get outline width and if 0 return
             int outlineWidth = OutlineWidth;
@@ -1381,22 +1381,22 @@ namespace MonsterFarm.UI.Entities
             Rectangle originalDest = _destRect;
             Rectangle originalIntDest = _destRectInternal;
 
-            // store entity previous state
-            EntityState oldState = _entityState;
+            // store element previous state
+            ElementState oldState = _elementState;
 
             // set fill color
             SetStyleProperty(StylePropertyIds.FillColor, new StyleProperty(outlineColor), oldState, markAsDirty: false);
 
-            // draw the entity outline
+            // draw the element outline
             UserInterface.Active.DrawUtils.StartDrawSilhouette(spriteBatch);
             _destRect.Location = originalDest.Location + new Point(-outlineWidth, 0);
-            DrawEntity(spriteBatch, DrawPhase.Outline);
+            DrawElement(spriteBatch, DrawPhase.Outline);
             _destRect.Location = originalDest.Location + new Point(0, -outlineWidth);
-            DrawEntity(spriteBatch, DrawPhase.Outline);
+            DrawElement(spriteBatch, DrawPhase.Outline);
             _destRect.Location = originalDest.Location + new Point(outlineWidth, 0);
-            DrawEntity(spriteBatch, DrawPhase.Outline);
+            DrawElement(spriteBatch, DrawPhase.Outline);
             _destRect.Location = originalDest.Location + new Point(0, outlineWidth);
-            DrawEntity(spriteBatch, DrawPhase.Outline);
+            DrawElement(spriteBatch, DrawPhase.Outline);
             UserInterface.Active.DrawUtils.EndDraw(spriteBatch);
 
             // turn back to previous fill color
@@ -1408,12 +1408,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// The internal function to draw the entity itself.
-        /// Implemented by inheriting entity types.
+        /// The internal function to draw the element itself.
+        /// Implemented by inheriting element types.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        virtual protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        virtual protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
         }
 
@@ -1438,21 +1438,21 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Get the direct parent of this entity.
+        /// Get the direct parent of this element.
         /// </summary>
-        public Entity Parent
+        public Element Parent
         {
             get { return _parent; }
         }
 
         /// <summary>
-        /// Add a child entity.
+        /// Add a child element.
         /// </summary>
-        /// <param name="child">Entity to add as child.</param>
-        /// <param name="inheritParentState">If true, this entity will inherit the parent's state (set InheritParentState property).</param>
-        /// <param name="index">If provided, will be the index in the children array to push the new entity.</param>
-        /// <returns>The newly added entity.</returns>
-        public Entity AddChild(Entity child, bool inheritParentState = false, int index = -1)
+        /// <param name="child">element to add as child.</param>
+        /// <param name="inheritParentState">If true, this element will inherit the parent's state (set InheritParentState property).</param>
+        /// <param name="index">If provided, will be the index in the children array to push the new element.</param>
+        /// <returns>The newly added element.</returns>
+        public Element AddChild(Element child, bool inheritParentState = false, int index = -1)
         {
             // make sure don't already have a parent
             if (child._parent != null)
@@ -1496,26 +1496,26 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Bring this entity to be on front (inside its parent).
+        /// Bring this element to be on front (inside its parent).
         /// </summary>
         public void BringToFront()
         {
-            Entity parent = _parent;
+            Element parent = _parent;
             parent.RemoveChild(this);
             parent.AddChild(this);
         }
 
         /// <summary>
-        /// Remove child entity.
+        /// Remove child element.
         /// </summary>
-        /// <param name="child">Entity to remove.</param>
-        public void RemoveChild(Entity child)
+        /// <param name="child">element to remove.</param>
+        public void RemoveChild(Element child)
         {
             // make sure don't already have a parent
             if (child._parent != this)
             {
                 if (UserInterface.Active.SilentSoftErrors) return;
-                throw new Exceptions.InvalidStateException("Child element to remove does not belong to this entity!");
+                throw new Exceptions.InvalidStateException("Child element to remove does not belong to this element!");
             }
 
             // need to sort children
@@ -1528,7 +1528,7 @@ namespace MonsterFarm.UI.Entities
 
             // reset index for all children
             int index = 0;
-            foreach (Entity itrChild in _children)
+            foreach (Element itrChild in _children)
             {
                 itrChild._indexInParent = index++;
             }
@@ -1539,12 +1539,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Remove all children entities.
+        /// Remove all children elements.
         /// </summary>
         public void ClearChildren()
         {
             // remove all children
-            foreach (Entity child in _children)
+            foreach (Element child in _children)
             {
                 child._parent = null;
                 child._indexInParent = -1;
@@ -1597,7 +1597,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Calculate and return the destination rectangle, eg the space this entity is rendered on.
+        /// Calculate and return the destination rectangle, eg the space this element is rendered on.
         /// </summary>
         /// <returns>Destination rectangle.</returns>
         virtual public Rectangle CalcDestRect()
@@ -1721,20 +1721,20 @@ namespace MonsterFarm.UI.Entities
             // special case for auto anchors
             if ((anchor == Anchor.Auto || anchor == Anchor.AutoInline || anchor == Anchor.AutoCenter || anchor == Anchor.AutoInlineNoBreak) && _parent != null)
             {
-                // get previous entity before this
-                Entity prevEntity = GetPreviousEntity(true);
+                // get previous element before this
+                Element prevelement = GetPreviouselement(true);
 
-                // if found entity before this one, align based on it
-                if (prevEntity != null)
+                // if found element before this one, align based on it
+                if (prevelement != null)
                 {
                     // make sure sibling is up-to-date
-                    prevEntity.UpdateDestinationRectsIfDirty();
+                    prevelement.UpdateDestinationRectsIfDirty();
 
                     // handle inline align
                     if (anchor == Anchor.AutoInline || anchor == Anchor.AutoInlineNoBreak)
                     {
-                        ret.X = prevEntity._destRect.Right + (int)(offset.X + prevEntity._scaledSpaceAfter.X + _scaledSpaceBefore.X);
-                        ret.Y = prevEntity._destRect.Y;
+                        ret.X = prevelement._destRect.Right + (int)(offset.X + prevelement._scaledSpaceAfter.X + _scaledSpaceBefore.X);
+                        ret.Y = prevelement._destRect.Y;
                     }
 
                     // handle inline align that ran out of width / or auto anchor not inline
@@ -1748,12 +1748,12 @@ namespace MonsterFarm.UI.Entities
                         }
 
                         // align y
-                        ret.Y = prevEntity.GetDestRectForAutoAnchors().Bottom + (int)(offset.Y +
-                            prevEntity._scaledSpaceAfter.Y +
+                        ret.Y = prevelement.GetDestRectForAutoAnchors().Bottom + (int)(offset.Y +
+                            prevelement._scaledSpaceAfter.Y +
                             _scaledSpaceBefore.Y);
                     }
                 }
-                // if this is the first entity in parent, apply space-before only
+                // if this is the first element in parent, apply space-before only
                 else
                 {
                     ret.X += (int)_scaledSpaceBefore.X;
@@ -1803,7 +1803,7 @@ namespace MonsterFarm.UI.Entities
         /// <summary>
         /// Return the actual dest rect for auto-anchoring purposes.
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
-        /// want it to push down other entities.
+        /// want it to push down other elements.
         /// </summary>
         virtual protected Rectangle GetDestRectForAutoAnchors()
         {
@@ -1811,7 +1811,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Remove this entity from its parent.
+        /// Remove this element from its parent.
         /// </summary>
         public void RemoveFromParent()
         {
@@ -1822,39 +1822,39 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Propagate all events trigger by this entity to a given other entity.
-        /// For example, if "OnClick" will be called on this entity, it will trigger OnClick on 'other' as well.
+        /// Propagate all events trigger by this element to a given other element.
+        /// For example, if "OnClick" will be called on this element, it will trigger OnClick on 'other' as well.
         /// </summary>
-        /// <param name="other">Entity to propagate events to.</param>
-        public virtual void PropagateEventsTo(Entity other)
+        /// <param name="other">element to propagate events to.</param>
+        public virtual void PropagateEventsTo(Element other)
         {
-            OnMouseDown += (Entity entity) => { other.OnMouseDown?.Invoke(other); };
-            OnRightMouseDown += (Entity entity) => { other.OnRightMouseDown?.Invoke(other); };
-            OnMouseReleased += (Entity entity) => { other.OnMouseReleased?.Invoke(other); };
-            WhileMouseDown += (Entity entity) => { other.WhileMouseDown?.Invoke(other); };
-            WhileRightMouseDown += (Entity entity) => { other.WhileRightMouseDown?.Invoke(other); };
-            WhileMouseHover += (Entity entity) => { other.WhileMouseHover?.Invoke(other); };
-            WhileMouseHoverOrDown += (Entity entity) => { other.WhileMouseHoverOrDown?.Invoke(other); };
-            OnRightClick += (Entity entity) => { other.OnRightClick?.Invoke(other); };
-            OnClick += (Entity entity) => { other.OnClick?.Invoke(other); };
-            OnValueChange += (Entity entity) => { other.OnValueChange?.Invoke(other); };
-            OnMouseEnter += (Entity entity) => { other.OnMouseEnter?.Invoke(other); };
-            OnMouseLeave += (Entity entity) => { other.OnMouseLeave?.Invoke(other); };
-            OnMouseWheelScroll += (Entity entity) => { other.OnMouseWheelScroll?.Invoke(other); };
-            OnStartDrag += (Entity entity) => { other.OnStartDrag?.Invoke(other); };
-            OnStopDrag += (Entity entity) => { other.OnStopDrag?.Invoke(other); };
-            WhileDragging += (Entity entity) => { other.WhileDragging?.Invoke(other); };
-            BeforeDraw += (Entity entity) => { other.BeforeDraw?.Invoke(other); };
-            AfterDraw += (Entity entity) => { other.AfterDraw?.Invoke(other); };
-            BeforeUpdate += (Entity entity) => { other.BeforeUpdate?.Invoke(other); };
-            AfterUpdate += (Entity entity) => { other.AfterUpdate?.Invoke(other); };
+            OnMouseDown += (Element element) => { other.OnMouseDown?.Invoke(other); };
+            OnRightMouseDown += (Element element) => { other.OnRightMouseDown?.Invoke(other); };
+            OnMouseReleased += (Element element) => { other.OnMouseReleased?.Invoke(other); };
+            WhileMouseDown += (Element element) => { other.WhileMouseDown?.Invoke(other); };
+            WhileRightMouseDown += (Element element) => { other.WhileRightMouseDown?.Invoke(other); };
+            WhileMouseHover += (Element element) => { other.WhileMouseHover?.Invoke(other); };
+            WhileMouseHoverOrDown += (Element element) => { other.WhileMouseHoverOrDown?.Invoke(other); };
+            OnRightClick += (Element element) => { other.OnRightClick?.Invoke(other); };
+            OnClick += (Element element) => { other.OnClick?.Invoke(other); };
+            OnValueChange += (Element element) => { other.OnValueChange?.Invoke(other); };
+            OnMouseEnter += (Element element) => { other.OnMouseEnter?.Invoke(other); };
+            OnMouseLeave += (Element element) => { other.OnMouseLeave?.Invoke(other); };
+            OnMouseWheelScroll += (Element element) => { other.OnMouseWheelScroll?.Invoke(other); };
+            OnStartDrag += (Element element) => { other.OnStartDrag?.Invoke(other); };
+            OnStopDrag += (Element element) => { other.OnStopDrag?.Invoke(other); };
+            WhileDragging += (Element element) => { other.WhileDragging?.Invoke(other); };
+            BeforeDraw += (Element element) => { other.BeforeDraw?.Invoke(other); };
+            AfterDraw += (Element element) => { other.AfterDraw?.Invoke(other); };
+            BeforeUpdate += (Element element) => { other.BeforeUpdate?.Invoke(other); };
+            AfterUpdate += (Element element) => { other.AfterUpdate?.Invoke(other); };
         }
 
         /// <summary>
         /// Return the relative offset, in pixels, from parent top-left corner.
         /// </summary>
         /// <remarks>
-        /// This return the offset between the top left corner of this entity regardless of anchor type.
+        /// This return the offset between the top left corner of this element regardless of anchor type.
         /// </remarks>
         /// <returns>Calculated offset from parent top-left corner.</returns>
         public Vector2 GetRelativeOffset()
@@ -1865,19 +1865,19 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return the entity before this one in parent container, aka the next older sibling.
+        /// Return the element before this one in parent container, aka the next older sibling.
         /// </summary>
-        /// <returns>Entity before this in parent, or null if first in parent or if orphan entity.</returns>
-        /// <param name="skipInvisibles">If true, will skip invisible entities, eg will return the first visible older sibling.</param>
-        protected Entity GetPreviousEntity(bool skipInvisibles = false)
+        /// <returns>element before this in parent, or null if first in parent or if orphan element.</returns>
+        /// <param name="skipInvisibles">If true, will skip invisible elements, eg will return the first visible older sibling.</param>
+        protected Element GetPreviouselement(bool skipInvisibles = false)
         {
             // no parent? skip
             if (_parent == null) { return null; }
 
             // get siblings and iterate them
-            List<Entity> siblings = _parent.Children;
-            Entity prev = null;
-            foreach (Entity sibling in siblings)
+            List<Element> siblings = _parent.Children;
+            Element prev = null;
+            foreach (Element sibling in siblings)
             {
                 // when getting to self, break the loop
                 if (sibling == this)
@@ -1895,7 +1895,7 @@ namespace MonsterFarm.UI.Entities
                 prev = sibling;
             }
 
-            // return the previous entity (or null if wasn't found)
+            // return the previous element (or null if wasn't found)
             return prev;
         }
 
@@ -1974,7 +1974,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Handle value change event (for entities with value).
+        /// Handle value change event (for elements with value).
         /// </summary>
         virtual protected void DoOnValueChange()
         {
@@ -2028,7 +2028,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Handle when mouse wheel scroll and this entity is the active entity.
+        /// Handle when mouse wheel scroll and this element is the active element.
         /// </summary>
         virtual protected void DoOnMouseWheelScroll()
         {
@@ -2046,7 +2046,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every time the visibility property of this entity changes.
+        /// Called every time the visibility property of this element changes.
         /// </summary>
         virtual protected void DoOnVisibilityChange()
         {
@@ -2065,7 +2065,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every time this entity is focused / unfocused.
+        /// Called every time this element is focused / unfocused.
         /// </summary>
         virtual protected void DoOnFocusChange()
         {
@@ -2074,12 +2074,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Test if a given point is inside entity's boundaries.
+        /// Test if a given point is inside element's boundaries.
         /// </summary>
         /// <remarks>This function result is affected by the 'UseActualSizeForCollision' flag.</remarks>
         /// <param name="point">Point to test.</param>
-        /// <returns>True if point is in entity's boundaries (destination rectangle)</returns>
-        virtual public bool IsInsideEntity(Vector2 point)
+        /// <returns>True if point is in element's boundaries (destination rectangle)</returns>
+        virtual public bool IsInsideElement(Vector2 point)
         {
             // adjust scrolling
             point += _lastScrollVal.ToVector2();
@@ -2093,28 +2093,28 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Return true if this entity is naturally interactable, like buttons, lists, etc.
-        /// Entities that are not naturally interactable are things like paragraph, colored rectangle, icon, etc.
+        /// Return true if this element is naturally interactable, like buttons, lists, etc.
+        /// Elements that are not naturally interactable are things like paragraph, colored rectangle, icon, etc.
         /// </summary>
-        /// <remarks>This function should be overrided and implemented by different entities, and either return constant True or False.</remarks>
-        /// <returns>True if entity is naturally interactable.</returns>
+        /// <remarks>This function should be overrided and implemented by different elements, and either return constant True or False.</remarks>
+        /// <returns>True if element is naturally interactable.</returns>
         virtual public bool IsNaturallyInteractable()
         {
             return false;
         }
 
         /// <summary>
-        /// Return if the mouse is currently pressing on this entity (eg over it and left mouse button is down).
+        /// Return if the mouse is currently pressing on this element (eg over it and left mouse button is down).
         /// </summary>
-        public bool IsMouseDown { get { return _entityState == EntityState.MouseDown; } }
+        public bool IsMouseDown { get { return _elementState == ElementState.MouseDown; } }
 
         /// <summary>
-        /// Return if the mouse is currently over this entity (regardless of whether or not mouse button is down).
+        /// Return if the mouse is currently over this element (regardless of whether or not mouse button is down).
         /// </summary>
         public bool IsMouseOver { get { return _isMouseOver; } }
 
         /// <summary>
-        /// Mark that this entity boundaries or style changed and it need to recalculate cached destination rect and other things.
+        /// Mark that this element boundaries or style changed and it need to recalculate cached destination rect and other things.
         /// </summary>
         public void MarkAsDirty()
         {
@@ -2135,30 +2135,30 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every frame to update the children of this entity.
+        /// Called every frame to update the children of this element.
         /// </summary>
-        /// <param name="targetEntity">The deepest child entity with highest priority that we point on and can be interacted with.</param>
-        /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
+        /// <param name="targetElement">The deepest child element with highest priority that we point on and can be interacted with.</param>
+        /// <param name="dragTargetElement">The deepest child dragable element with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        virtual protected void UpdateChildren(ref Element targetElement, ref Element dragTargetElement, ref bool wasEventHandled, Point scrollVal)
         {
-            // update all children (note: we go in reverse order so that entities on front will receive events before entites on back.
-            List<Entity> childrenSorted = GetSortedChildren();
+            // update all children (note: we go in reverse order so that elements on front will receive events before entites on back.
+            List<Element> childrenSorted = GetSortedChildren();
             for (int i = childrenSorted.Count - 1; i >= 0; i--)
             {
-                childrenSorted[i].Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+                childrenSorted[i].Update(ref targetElement, ref dragTargetElement, ref wasEventHandled, scrollVal);
             }
         }
 
         /// <summary>
-        /// Called every frame to update entity state and call events.
+        /// Called every frame to update element state and call events.
         /// </summary>
-        /// <param name="targetEntity">The deepest child entity with highest priority that we point on and can be interacted with.</param>
-        /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
+        /// <param name="targetElement">The deepest child element with highest priority that we point on and can be interacted with.</param>
+        /// <param name="dragTargetElement">The deepest child dragable element with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        virtual public void Update(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        virtual public void Update(ref Element targetElement, ref Element dragTargetElement, ref bool wasEventHandled, Point scrollVal)
         {
             // set last scroll var
             _lastScrollVal = scrollVal;
@@ -2173,7 +2173,7 @@ namespace MonsterFarm.UI.Entities
             // if inherit parent state just copy it and stop
             if (InheritParentState)
             {
-                _entityState = _parent._entityState;
+                _elementState = _parent._elementState;
                 _isMouseOver = _parent._isMouseOver;
                 IsFocused = _parent.IsFocused;
                 _isCurrentlyDisabled = _parent._isCurrentlyDisabled;
@@ -2192,7 +2192,7 @@ namespace MonsterFarm.UI.Entities
             // if disabled, invisible, or locked - skip
             if (_isCurrentlyDisabled || IsLocked() || !IsVisible())
             {
-                // if this very entity is locked (eg not locked due to parent being locked),
+                // if this very element is locked (eg not locked due to parent being locked),
                 // iterate children and invoke those with DoEventsIfDirectParentIsLocked setting
                 if (Locked)
                 {
@@ -2200,7 +2200,7 @@ namespace MonsterFarm.UI.Entities
                     {
                         if (_children[i].DoEventsIfDirectParentIsLocked)
                         {
-                            _children[i].Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+                            _children[i].Update(ref targetElement, ref dragTargetElement, ref wasEventHandled, scrollVal);
                         }
                     }
                 }
@@ -2209,12 +2209,12 @@ namespace MonsterFarm.UI.Entities
                 if (_isInteractable)
                 {
                     // if mouse was over, trigger mouse leave event
-                    if (_entityState == EntityState.MouseHover)
+                    if (_elementState == ElementState.MouseHover)
                     {
                         DoOnMouseLeave();
                     }
                     // if mouse was down, trigger mouse up and leave events
-                    else if (_entityState == EntityState.MouseDown)
+                    else if (_elementState == ElementState.MouseDown)
                     {
                         DoOnMouseReleased();
                         DoOnMouseLeave();
@@ -2223,14 +2223,14 @@ namespace MonsterFarm.UI.Entities
 
                 // set to default and return
                 _isInteractable = false;
-                _entityState = EntityState.Default;
+                _elementState = ElementState.Default;
                 return;
             }
 
             // if click-through is true, update children and stop here
             if (ClickThrough)
             {
-                UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+                UpdateChildren(ref targetElement, ref dragTargetElement, ref wasEventHandled, scrollVal);
                 return;
             }
 
@@ -2245,14 +2245,14 @@ namespace MonsterFarm.UI.Entities
             DoBeforeUpdate();
 
             // store previous state
-            EntityState prevState = _entityState;
+            ElementState prevState = _elementState;
 
             // store previous mouse-over state
             bool prevMouseOver = _isMouseOver;
 
-            // STEP 1: FIRST WE CALCULATE ENTITY STATE (EG MOUST HOVER / MOUSE DOWN / ..)
+            // STEP 1: FIRST WE CALCULATE ELEMENT STATE (EG MOUST HOVER / MOUSE DOWN / ..)
 
-            // only if event was not already catched by another entity, check for events
+            // only if event was not already catched by another element, check for events
             if (!wasEventHandled)
             {
                 // if need to calculate state locally:
@@ -2260,23 +2260,23 @@ namespace MonsterFarm.UI.Entities
                 {
                     // reset the mouse-over flag
                     _isMouseOver = false;
-                    _entityState = EntityState.Default;
+                    _elementState = ElementState.Default;
 
                     // set mouse state
-                    if (IsInsideEntity(mousePos))
+                    if (IsInsideElement(mousePos))
                     {
                         // set self as the current target, unless a sibling got the event first
-                        if (targetEntity == null || targetEntity._parent != _parent)
+                        if (targetElement == null || targetElement._parent != _parent)
                         {
-                            targetEntity = this;
+                            targetElement = this;
                         }
 
-                        // mouse is over entity
+                        // mouse is over element
                         _isMouseOver = true;
 
                         // update mouse state
-                        _entityState = (IsFocused || PromiscuousClicksMode || Input.MouseButtonPressed()) &&
-                            Input.MouseButtonDown() ? EntityState.MouseDown : EntityState.MouseHover;
+                        _elementState = (IsFocused || PromiscuousClicksMode || Input.MouseButtonPressed()) &&
+                            Input.MouseButtonDown() ? ElementState.MouseDown : ElementState.MouseHover;
                     }
                 }
 
@@ -2286,7 +2286,7 @@ namespace MonsterFarm.UI.Entities
                     IsFocused = _isMouseOver;
                 }
             }
-            // if currently other entity is targeted and mouse clicked, set focused to false
+            // if currently other element is targeted and mouse clicked, set focused to false
             else if (Input.MouseButtonClick())
             {
                 IsFocused = false;
@@ -2295,18 +2295,18 @@ namespace MonsterFarm.UI.Entities
             // STEP 2: NOW WE CALL ALL CHILDREN'S UPDATE
 
             // update all children
-            UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+            UpdateChildren(ref targetElement, ref dragTargetElement, ref wasEventHandled, scrollVal);
 
-            // check dragging after children so that the most nested entity gets priority
-            if ((_draggable || IsNaturallyInteractable()) && dragTargetEntity == null && _isMouseOver && Input.MouseButtonPressed(MouseButton.Left))
+            // check dragging after children so that the most nested element gets priority
+            if ((_draggable || IsNaturallyInteractable()) && dragTargetElement == null && _isMouseOver && Input.MouseButtonPressed(MouseButton.Left))
             {
-                dragTargetEntity = this;
+                dragTargetElement = this;
             }
 
             // STEP 3: CALL EVENTS
 
             // if selected target is this
-            if (targetEntity == this)
+            if (targetElement == this)
             {
                 // handled events
                 wasEventHandled = true;
@@ -2321,7 +2321,7 @@ namespace MonsterFarm.UI.Entities
                 }
 
                 // generate events
-                if (prevState != _entityState)
+                if (prevState != _elementState)
                 {
                     // mouse down
                     if (Input.MouseButtonPressed())
@@ -2341,7 +2341,7 @@ namespace MonsterFarm.UI.Entities
                 }
 
                 // call the while-mouse-down / while-mouse-hover events
-                if (_entityState == EntityState.MouseDown)
+                if (_elementState == ElementState.MouseDown)
                 {
                     DoWhileMouseDown();
                 }
@@ -2350,10 +2350,10 @@ namespace MonsterFarm.UI.Entities
                     DoWhileMouseHover();
                 }
             }
-            // if not current target, clear entity state
+            // if not current target, clear element state
             else
             {
-                _entityState = EntityState.Default;
+                _elementState = ElementState.Default;
             }
 
             // mouse leave events
@@ -2362,8 +2362,8 @@ namespace MonsterFarm.UI.Entities
                 DoOnMouseLeave();
             }
 
-            // handle mouse wheel scroll over this entity
-            if (targetEntity == this || UserInterface.Active.ActiveEntity == this)
+            // handle mouse wheel scroll over this element
+            if (targetElement == this || UserInterface.Active.ActiveElement == this)
             {
                 if (Input.MouseWheelChange != 0)
                 {
@@ -2374,13 +2374,13 @@ namespace MonsterFarm.UI.Entities
             // STEP 4: HANDLE DRAGGING FOR DRAGABLES
 
             // if draggable, and after calling all the children target is self, it means we are being dragged!
-            if (_draggable && (dragTargetEntity == this) && IsFocused)
+            if (_draggable && (dragTargetElement == this) && IsFocused)
             {
-                // check if we need to start dragging the entity that was not dragged before
+                // check if we need to start dragging the element that was not dragged before
                 if (!_isBeingDragged && Input.MousePositionDiff.Length() != 0)
                 {
-                    // remove self from parent and add again. this trick is to keep the dragged entity always on-top
-                    Entity parent = _parent;
+                    // remove self from parent and add again. this trick is to keep the dragged element always on-top
+                    Element parent = _parent;
                     RemoveFromParent();
                     parent.AddChild(this);
 

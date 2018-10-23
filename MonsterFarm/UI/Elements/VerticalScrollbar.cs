@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Used internally as a scrollbar for lists, text boxes, etc..
@@ -53,7 +53,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Handle mouse down event.
-        /// The Scrollbar entity override this function to handle sliding mark up and down, instead of left-right.
+        /// The Scrollbar element override this function to handle sliding mark up and down, instead of left-right.
         /// </summary>
         override protected void DoOnMouseReleased()
         {
@@ -77,7 +77,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Handle while mouse is down event.
-        /// The Scrollbar entity override this function to handle sliding mark up and down, instead of left-right.
+        /// The Scrollbar element override this function to handle sliding mark up and down, instead of left-right.
         /// </summary>
         override protected void DoWhileMouseDown()
         {
@@ -99,14 +99,14 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // if needed, recalc max (but not if currently interacting with this object).
-            if (UserInterface.Active.ActiveEntity != this)
+            if (UserInterface.Active.ActiveElement != this)
             {
                 CalcAutoMaxValue();
             }
@@ -139,15 +139,15 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Called every frame after update.
-        /// Scrollbar override this function to handle wheel scroll while pointing on parent entity - we still want to capture that.
+        /// Scrollbar override this function to handle wheel scroll while pointing on parent element - we still want to capture that.
         /// </summary>
         override protected void DoAfterUpdate()
         {
-            // if the active entity is self or parent, listen to mousewheel
+            // if the active element is self or parent, listen to mousewheel
             if (_isInteractable &&
-                (UserInterface.Active.ActiveEntity == this ||
-                UserInterface.Active.ActiveEntity == _parent ||
-                (UserInterface.Active.ActiveEntity != null && UserInterface.Active.ActiveEntity.IsDeepChildOf(_parent))))
+                (UserInterface.Active.ActiveElement == this ||
+                UserInterface.Active.ActiveElement == _parent ||
+                (UserInterface.Active.ActiveElement != null && UserInterface.Active.ActiveElement.IsDeepChildOf(_parent))))
             {
                 if (Input.MouseWheelChange != 0)
                 {
@@ -175,7 +175,7 @@ namespace MonsterFarm.UI.Entities
                     if (child == this) continue;
 
                     // skip internals
-                    if (child._hiddenInternalEntity) continue;
+                    if (child._hiddenInternalElement) continue;
 
                     // get current child bottom
                     int bottom = child.GetActualDestRect().Bottom;
@@ -201,8 +201,8 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Handle when mouse wheel scroll and this entity is the active entity.
-        /// Note: Scrollbar entity override this function to change scrollbar value based on wheel scroll, which is inverted.
+        /// Handle when mouse wheel scroll and this element is the active element.
+        /// Note: Scrollbar element override this function to change scrollbar value based on wheel scroll, which is inverted.
         /// </summary>
         override protected void DoOnMouseWheelScroll()
         {

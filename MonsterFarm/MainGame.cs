@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game.Entites;
 
 using MonsterFarm.UI;
-using MonsterFarm.UI.Entities;
+using MonsterFarm.UI.Elements;
 
 namespace MonsterFarm.Desktop
 {
@@ -53,9 +53,9 @@ namespace MonsterFarm.Desktop
                 createMonsterRow(m);
             }
 
-            UserInterface.Active.AddEntity(MonsterListPanel);
-            UserInterface.Active.AddEntity(MonsterSelectionPanel);
-            UserInterface.Active.AddEntity(MonsterBreedingPanel);
+            UserInterface.Active.AddElement(MonsterListPanel);
+            UserInterface.Active.AddElement(MonsterSelectionPanel);
+            UserInterface.Active.AddElement(MonsterBreedingPanel);
 
             base.Initialize();
         }
@@ -76,7 +76,7 @@ namespace MonsterFarm.Desktop
             MonsterSelectionPanel.AddChild(new Icon(monster.familyIcon, anchor: Anchor.AutoInline, offset: new Vector2(10, 0)));
             MonsterSelectionPanel.AddChild(new Paragraph(monster.name, anchor: Anchor.AutoInline, size: new Vector2(200, 50), offset: new Vector2(10, 30)));
             Button monsterDeselectButton = new Button("X", anchor: Anchor.AutoInline, size: new Vector2(40, 40), textScale: 0.7f, nobreak: true);
-            monsterDeselectButton.OnClick = (UI.Entities.Entity btn) => {
+            monsterDeselectButton.OnClick = (UI.Elements.Element btn) => {
                 deselectMonster();
             };
             MonsterSelectionPanel.AddChild(monsterDeselectButton);
@@ -93,7 +93,7 @@ namespace MonsterFarm.Desktop
             Button monsterSelectButton = new Button("Select", anchor: Anchor.AutoInline, size: new Vector2(90, 40), textScale: 0.7f, nobreak: true);
             MonsterListPanel.AddChild(monsterSelectButton);
             MonsterListPanel.AddChild(new HorizontalLine(Anchor.Auto, offset: new Vector2(0, 15)));
-            monsterSelectButton.OnClick = (UI.Entities.Entity btn) => {
+            monsterSelectButton.OnClick = (UI.Elements.Element btn) => {
                 selectMonster(ref monster);
             };
         }

@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// An horizontal line, used to separate between different sections of a panel or to emphasize headers.
     /// </summary>
-    public class HorizontalLine : Entity
+    public class HorizontalLine : Element
     {
         // frame width in texture size, in percents.
         static Vector2 FRAME_WIDTH = new Vector2(0.2f, 0f);
@@ -41,11 +41,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get line texture
             Texture2D texture = Resources.HorizontalLineTexture;
@@ -54,7 +54,7 @@ namespace MonsterFarm.UI.Entities
             UserInterface.Active.DrawUtils.DrawSurface(spriteBatch, texture, _destRect, FRAME_WIDTH, 1, FillColor);
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
     }
 }

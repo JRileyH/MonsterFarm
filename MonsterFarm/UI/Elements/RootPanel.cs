@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// A special panel used as the root panel that covers the entire screen.
-    /// This panel is used internally to serve as the constant root entity in the entities tree.
+    /// This panel is used internally to serve as the constant root element in the entities tree.
     /// </summary>
     public class RootPanel : Panel
     {
@@ -46,7 +46,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw this entity and its children.
+        /// Draw this element and its children.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch to use for drawing.</param>
         override public void Draw(SpriteBatch spriteBatch)
@@ -64,10 +64,10 @@ namespace MonsterFarm.UI.Entities
             UpdateDestinationRectsIfDirty();
 
             // get sorted children list
-            List<Entity> childrenSorted = GetSortedChildren();
+            List<Element> childrenSorted = GetSortedChildren();
 
             // draw all children
-            foreach (Entity child in childrenSorted)
+            foreach (Element child in childrenSorted)
             {
                 child.Draw(spriteBatch);
             }

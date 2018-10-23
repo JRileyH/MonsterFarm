@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// Label entity is a subclass of Paragraph. Basically its the same, but with a different
+    /// Label element is a subclass of Paragraph. Basically its the same, but with a different
     /// default styling, and serves as a sugarcoat to quickly create labels for widgets.
     /// </summary>
     public class Label : Paragraph

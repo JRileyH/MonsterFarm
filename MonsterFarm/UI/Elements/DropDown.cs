@@ -2,13 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// DropDown is just like a list, but it only shows the currently selected value unless clicked on (the list is
     /// only revealed while interacted with).
     /// </summary>
-    public class DropDown : Entity
+    public class DropDown : Element
     {
         /// <summary>Default text to show when no value is selected from the list.</summary>
         public string DefaultText
@@ -81,7 +81,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Get the image entity of the arrow on the side of the Selected Text Panel.
+        /// Get the image element of the arrow on the side of the Selected Text Panel.
         /// </summary>
         public Image ArrowDownImage
         {
@@ -145,13 +145,13 @@ namespace MonsterFarm.UI.Entities
                 _selectedTextParagraph.UpdateStyle(DefaultSelectedParagraphStyle);
                 _selectedTextParagraph.Identifier = "_selectedTextParagraph";
                 _selectedTextPanel.AddChild(_selectedTextParagraph, true);
-                _selectedTextPanel._hiddenInternalEntity = true;
+                _selectedTextPanel._hiddenInternalElement = true;
                 _selectedTextPanel.Identifier = "_selectedTextPanel";
 
                 // create the arrow down icon
                 _arrowDownImage = new Image(Resources.ArrowDown, new Vector2(ArrowSize, ArrowSize), ImageDrawMode.Stretch, Anchor.CenterRight, new Vector2(-10, 0));
                 _selectedTextPanel.AddChild(_arrowDownImage, true);
-                _arrowDownImage._hiddenInternalEntity = true;
+                _arrowDownImage._hiddenInternalElement = true;
                 _arrowDownImage.Identifier = "_arrowDownImage";
                 _arrowDownImage.Visible = showArrow;
 
@@ -161,7 +161,7 @@ namespace MonsterFarm.UI.Entities
                 // update list offset and space before
                 _selectList.SetOffset(new Vector2(0, SelectedPanelHeight));
                 _selectList.SpaceBefore = Vector2.Zero;
-                _selectList._hiddenInternalEntity = true;
+                _selectList._hiddenInternalElement = true;
                 _selectList.Identifier = "_selectList";
 
                 // add the header and select list as children
@@ -185,12 +185,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Init event-related stuff after all sub-entities are created.
+        /// Init event-related stuff after all sub-elements are created.
         /// </summary>
         private void InitEvents()
         {
             // add callback on list value change
-            _selectList.OnValueChange = (Entity entity) =>
+            _selectList.OnValueChange = (Element element) =>
             {
                 // hide list
                 ListVisible = false;
@@ -200,7 +200,7 @@ namespace MonsterFarm.UI.Entities
             };
 
             // on click, always hide the selectlist
-            _selectList.OnClick = (Entity entity) =>
+            _selectList.OnClick = (Element element) =>
             {
                 ListVisible = false;
             };
@@ -209,7 +209,7 @@ namespace MonsterFarm.UI.Entities
             _selectList.Visible = false;
 
             // setup the callback to show / hide the list when clicking the dropbox
-            _selectedTextPanel.OnClick = (Entity self) =>
+            _selectedTextPanel.OnClick = (Element self) =>
             {
                 // change visibility
                 ListVisible = !ListVisible;
@@ -229,20 +229,20 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
 
             _selectedTextPanel = Find<Panel>("_selectedTextPanel");
-            _selectedTextPanel._hiddenInternalEntity = true;
+            _selectedTextPanel._hiddenInternalElement = true;
 
             _arrowDownImage = _selectedTextPanel.Find<Image>("_arrowDownImage");
-            _arrowDownImage._hiddenInternalEntity = true;
+            _arrowDownImage._hiddenInternalElement = true;
 
             _selectList = Find<SelectList>("_selectList");
-            _selectList._hiddenInternalEntity = true;
+            _selectList._hiddenInternalElement = true;
 
             _selectedTextParagraph = _selectedTextPanel.Find("_selectedTextParagraph") as Paragraph;
 
@@ -290,7 +290,7 @@ namespace MonsterFarm.UI.Entities
         /// <summary>
         /// Return the actual dest rect for auto-anchoring purposes.
         /// This is useful for things like DropDown, that when opened they take a larger part of the screen, but we don't
-        /// want it to push down other entities.
+        /// want it to push down other elements
         /// </summary>
         override protected Rectangle GetDestRectForAutoAnchors()
         {
@@ -299,12 +299,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Test if a given point is inside entity's boundaries.
+        /// Test if a given point is inside element's boundaries.
         /// </summary>
         /// <remarks>This function result is affected by the 'UseActualSizeForCollision' flag.</remarks>
         /// <param name="point">Point to test.</param>
-        /// <returns>True if point is in entity's boundaries (destination rectangle)</returns>
-        override public bool IsInsideEntity(Vector2 point)
+        /// <returns>True if point is in element's boundaries (destination rectangle)</returns>
+        override public bool IsInsideElement(Vector2 point)
         {
             // adjust scrolling
             point += _lastScrollVal.ToVector2();
@@ -333,8 +333,8 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Set entity render and update priority.
-        /// DropDown entity override this function to give some bonus priority, since when list is opened it needs to override entities
+        /// Set element render and update priority.
+        /// DropDown element override this function to give some bonus priority, since when list is opened it needs to override elements
         /// under it, which usually have bigger index in container.
         /// </summary>
         override public int Priority
@@ -357,7 +357,7 @@ namespace MonsterFarm.UI.Entities
 
             // focus on selectlist
             _selectList.IsFocused = true;
-            UserInterface.Active.ActiveEntity = _selectList;
+            UserInterface.Active.ActiveElement = _selectList;
 
             // update destination rectangles
             _selectList.UpdateDestinationRects();
@@ -376,11 +376,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             if (SelectedIndex == -1 && _selectedTextParagraph.Text != _placeholderText)
             {
@@ -390,7 +390,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Called every frame after update.
-        /// DropDown entity override this function to close the list if necessary and to remove the selected item panel from self.
+        /// DropDown element override this function to close the list if necessary and to remove the selected item panel from self.
         /// </summary>
         override protected void DoAfterUpdate()
         {
@@ -399,7 +399,7 @@ namespace MonsterFarm.UI.Entities
             {
                 // check if mouse down and not inside list
                 var mousePosition = GetMousePos();
-                if (Input.AnyMouseButtonPressed() && !IsInsideEntity(mousePosition))
+                if (Input.AnyMouseButtonPressed() && !IsInsideElement(mousePosition))
                 {
                     ListVisible = false;
                 }
@@ -539,7 +539,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the list a natrually-interactable entity.
+        /// Is the list a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()

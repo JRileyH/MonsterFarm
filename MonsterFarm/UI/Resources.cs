@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using System;
-using MonsterFarm.UI.Entities;
+using MonsterFarm.UI.Elements;
 using MonsterFarm.UI.DataTypes;
 using System.Diagnostics;
 
@@ -46,13 +46,13 @@ namespace MonsterFarm.UI
         }
 
         /// <summary>
-        /// Get texture for enum state and entity state.
+        /// Get texture for enum state and element state.
         /// This is for textures that don't have different states, like mouse hover, down, or default.
         /// </summary>
         /// <param name="i">Texture enum identifier.</param>
-        /// <param name="s">Entity state to get texture for.</param>
+        /// <param name="s">element state to get texture for.</param>
         /// <returns>Loaded texture.</returns>
-        public Texture2D this[TEnum i, EntityState s]
+        public Texture2D this[TEnum i, ElementState s]
         {
             // get texture for a given type and state
             get
@@ -77,7 +77,7 @@ namespace MonsterFarm.UI
         /// <summary>
         /// Get index from enum type with optional state.
         /// </summary>
-        private int GetIndex(TEnum i, EntityState? s = null)
+        private int GetIndex(TEnum i, ElementState? s = null)
         {
             if (s != null)
                 return (int)(object)i + (_typesCount * (int)s);
@@ -89,10 +89,10 @@ namespace MonsterFarm.UI
         /// </summary>
         private string EnumToString(TEnum e)
         {
-            // entity state enum
-            if (typeof(TEnum) == typeof(EntityState))
+            // element state enum
+            if (typeof(TEnum) == typeof(ElementState))
             {
-                return StateEnumToString((EntityState)(object)e);
+                return StateEnumToString((ElementState)(object)e);
             }
 
             // icon type enum
@@ -106,17 +106,17 @@ namespace MonsterFarm.UI
         }
 
         /// <summary>
-        /// Convert entity state enum to string.
+        /// Convert element state enum to string.
         /// </summary>
-        private string StateEnumToString(EntityState e)
+        private string StateEnumToString(ElementState e)
         {
             switch (e)
             {
-                case EntityState.MouseDown:
+                case ElementState.MouseDown:
                     return "_down";
-                case EntityState.MouseHover:
+                case ElementState.MouseHover:
                     return "_hover";
-                case EntityState.Default:
+                case ElementState.Default:
                     return string.Empty;
             }
             return null;
@@ -177,10 +177,10 @@ namespace MonsterFarm.UI
         public static TextureData[] ButtonData;
 
         /// <summary>CheckBox textures.</summary>
-        public static TexturesGetter<EntityState> CheckBoxTextures = new TexturesGetter<EntityState>("textures/checkbox");
+        public static TexturesGetter<ElementState> CheckBoxTextures = new TexturesGetter<ElementState>("textures/checkbox");
 
         /// <summary>Radio button textures.</summary>
-        public static TexturesGetter<EntityState> RadioTextures = new TexturesGetter<EntityState>("textures/radio");
+        public static TexturesGetter<ElementState> RadioTextures = new TexturesGetter<ElementState>("textures/radio");
 
         /// <summary>ProgressBar texture.</summary>
         public static Texture2D ProgressBarTexture { get { return _content.Load<Texture2D>(_root + "textures/progressbar"); } }
@@ -295,7 +295,7 @@ namespace MonsterFarm.UI
             SilhouetteEffect = content.Load<Effect>(_root + "effects/silhouette");
 
             // Load default stylessheets up with values
-            Entity.DefaultStyle.SetStyleProperties(
+            Element.DefaultStyle.SetStyleProperties(
                 scale: new StyleProperty(1),
                 fillColor: new StyleProperty(new Color(255, 255, 255, 255)),
                 outlineColor: new StyleProperty(new Color(0, 0, 0, 0)),
@@ -325,18 +325,18 @@ namespace MonsterFarm.UI
                 scale: new StyleProperty(1.2f)
             );
             Button.DefaultParagraphStyle.SetStyleProperties(
-                state: EntityState.MouseDown,
+                state: ElementState.MouseDown,
                 fillColor: new StyleProperty(new Color(170, 170, 170, 255))
             );
             CheckBox.DefaultParagraphStyle.SetStyleProperties(
                 scale: new StyleProperty(1.15f)
             );
             CheckBox.DefaultParagraphStyle.SetStyleProperties(
-                state: EntityState.MouseDown,
+                state: ElementState.MouseDown,
                 fillColor: new StyleProperty(new Color(255, 255, 0, 255))
             );
             CheckBox.DefaultParagraphStyle.SetStyleProperties(
-                state: EntityState.MouseHover,
+                state: ElementState.MouseHover,
                 fillColor: new StyleProperty(new Color(255, 255, 0, 255))
             );
             ColoredRectangle.DefaultStyle.SetStyleProperties(
@@ -352,7 +352,7 @@ namespace MonsterFarm.UI
                 scale: new StyleProperty(1)
             );
             Icon.DefaultStyle.SetStyleProperties(
-                state: EntityState.MouseHover,
+                state: ElementState.MouseHover,
                 scale: new StyleProperty(1.1f)
             );
             Image.DefaultStyle.SetStyleProperties(
@@ -387,11 +387,11 @@ namespace MonsterFarm.UI
                 fontStyle: new StyleProperty((int)FontStyle.Regular)
             );
             SelectList.DefaultParagraphStyle.SetStyleProperties(
-                state: EntityState.MouseDown,
+                state: ElementState.MouseDown,
                 fillColor: new StyleProperty(new Color(255, 255, 0, 255))
             );
             SelectList.DefaultParagraphStyle.SetStyleProperties(
-                state: EntityState.MouseHover,
+                state: ElementState.MouseHover,
                 fillColor: new StyleProperty(new Color(255, 255, 0, 255))
             );
             TextInput.DefaultParagraphStyle.SetStyleProperties(

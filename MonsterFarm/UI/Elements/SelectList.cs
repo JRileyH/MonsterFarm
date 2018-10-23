@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using MonsterFarm.UI.Utils;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     // data we attach to paragraphs that are part of this selection list
     struct ParagraphData
@@ -59,9 +59,9 @@ namespace MonsterFarm.UI.Entities
         public string AddWhenClipping = "..";
 
         /// <summary>When set to true, users cannot change the currently selected value.
-        /// Note: unlike the basic entity "Locked" that prevent all input from entity and its children,
+        /// Note: unlike the basic element "Locked" that prevent all input from element and its children,
         /// this method of locking will still allow users to scroll through the list, thus making it useable
-        /// as a read-only list entity.</summary>
+        /// as a read-only list element.</summary>
         public bool LockSelection = false;
 
         /// <summary>Default styling for select list labels. Note: loaded from UI theme xml file.</summary>
@@ -119,7 +119,7 @@ namespace MonsterFarm.UI.Entities
             _scrollbar = new VerticalScrollbar(0, 10, Anchor.CenterRight, offset: new Vector2(-8, 0));
             _scrollbar.Value = 0;
             _scrollbar.Visible = false;
-            _scrollbar._hiddenInternalEntity = true;
+            _scrollbar._hiddenInternalElement = true;
             AddChild(_scrollbar, false);
         }
 
@@ -134,12 +134,12 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
-            _scrollbar._hiddenInternalEntity = true;
+            _scrollbar._hiddenInternalElement = true;
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the list a natrually-interactable entity.
+        /// Is the list a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()
@@ -283,7 +283,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called for every new paragraph entity created as part of the list, to allow children classes
+        /// Called for every new paragraph element created as part of the list, to allow children classes
         /// to add extra processing etc to list labels.
         /// </summary>
         /// <param name="paragraph">The newly created paragraph once ready (after added to list container).</param>
@@ -345,7 +345,7 @@ namespace MonsterFarm.UI.Entities
                 paragraph.Size = new Vector2(0, paragraph.GetCharacterActualSize().Y + ExtraSpaceBetweenLines);
                 paragraph.BackgroundColorPadding = new Point((int)Padding.X, 5);
                 paragraph.BackgroundColorUseBoxSize = true;
-                paragraph._hiddenInternalEntity = true;
+                paragraph._hiddenInternalElement = true;
                 paragraph.PropagateEventsTo(this);
                 AddChild(paragraph);
 
@@ -356,9 +356,9 @@ namespace MonsterFarm.UI.Entities
                 _paragraphs.Add(paragraph);
 
                 // add callback to selection
-                paragraph.OnClick += (Entity entity) =>
+                paragraph.OnClick += (Element element) =>
                 {
-                    ParagraphData data = (ParagraphData)entity.AttachedData;
+                    ParagraphData data = (ParagraphData)element.AttachedData;
                     if (!data.list.LockSelection)
                     {
                         data.list.Select(data.relativeIndex, true);
@@ -398,25 +398,25 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Propagate all events trigger by this entity to a given other entity.
-        /// For example, if "OnClick" will be called on this entity, it will trigger OnClick on 'other' as well.
+        /// Propagate all events trigger by this element to a given other element.
+        /// For example, if "OnClick" will be called on this element, it will trigger OnClick on 'other' as well.
         /// </summary>
-        /// <param name="other">Entity to propagate events to.</param>
+        /// <param name="other">element to propagate events to.</param>
         public void PropagateEventsTo(SelectList other)
         {
-            PropagateEventsTo((Entity)other);
-            OnListChange += (Entity entity) => { other.OnListChange?.Invoke(other); };
+            PropagateEventsTo((Element)other);
+            OnListChange += (Element element) => { other.OnListChange?.Invoke(other); };
         }
 
         /// <summary>
-        /// Propagate all events trigger by this entity to a given other entity.
-        /// For example, if "OnClick" will be called on this entity, it will trigger OnClick on 'other' as well.
+        /// Propagate all events trigger by this element to a given other element.
+        /// For example, if "OnClick" will be called on this element, it will trigger OnClick on 'other' as well.
         /// </summary>
-        /// <param name="other">Entity to propagate events to.</param>
+        /// <param name="other">element to propagate events to.</param>
         public void PropagateEventsTo(DropDown other)
         {
-            PropagateEventsTo((Entity)other);
-            OnListChange += (Entity entity) => { other.OnListChange?.Invoke(other); };
+            PropagateEventsTo((Element)other);
+            OnListChange += (Element element) => { other.OnListChange?.Invoke(other); };
         }
 
         /// <summary>
@@ -531,11 +531,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // if size changed, update paragraphs list
             if ((_prevSize.Y != _destRectInternal.Size.Y) || _hadResizeWhileNotVisible)
@@ -547,7 +547,7 @@ namespace MonsterFarm.UI.Entities
             _prevSize = _destRectInternal.Size;
 
             // call base draw function to draw the panel part
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
 
             // update paragraphs list values
             for (int i = 0; i < _paragraphs.Count; ++i)
@@ -612,7 +612,7 @@ namespace MonsterFarm.UI.Entities
                     // add background to selected paragraph
                     Paragraph paragraph = _paragraphs[i];
                     Rectangle destRect = paragraph.GetActualDestRect();
-                    paragraph.State = EntityState.MouseDown;
+                    paragraph.State = ElementState.MouseDown;
                     paragraph.BackgroundColor = GetActiveStyle("SelectedHighlightColor").asColor;
                 }
             }

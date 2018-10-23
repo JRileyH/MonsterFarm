@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// A Radio Button entity is like a checkbox (label with a box next to it that can be checked / unchecked) with the exception that whenever a radio button is checked, all its siblings are unchecked automatically.
+    /// A Radio Button element is like a checkbox (label with a box next to it that can be checked / unchecked) with the exception that whenever a radio button is checked, all its siblings are unchecked automatically.
     /// </summary>
     /// <remarks>
     /// Radio Buttons only affect their direct siblings, so if you need multiple groups of radio buttons on the same panel you can use internal panels to group them together.
@@ -54,8 +54,8 @@ namespace MonsterFarm.UI.Entities
         /// <returns>Which texture to use for the checkbox.</returns>
         override protected Texture2D GetTexture()
         {
-            EntityState state = _entityState;
-            if (state != EntityState.MouseDown && (bool)Checked) { state = EntityState.MouseDown; }
+            ElementState state = _elementState;
+            if (state != ElementState.MouseDown && (bool)Checked) { state = ElementState.MouseDown; }
             return Resources.RadioTextures[state];
         }
 
@@ -74,18 +74,18 @@ namespace MonsterFarm.UI.Entities
             // disable all sibling radio buttons
             if (_parent != null)
             {
-                foreach (Entity entity in _parent.Children)
+                foreach (Element element in _parent.Children)
                 {
                     // skip self
-                    if (entity == this)
+                    if (element == this)
                     {
                         continue;
                     }
 
-                    // if entity is a radio button make sure its disabled
-                    if (entity is RadioButton)
+                    // if element is a radio button make sure its disabled
+                    if (element is RadioButton)
                     {
-                        RadioButton radio = (RadioButton)entity;
+                        RadioButton radio = (RadioButton)element;
                         if (radio.Checked) { radio.Checked = false; }
                     }
                 }
@@ -97,7 +97,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Handle mouse click event. 
-        /// Radio buttons entity override this function to handle value toggle.
+        /// Radio buttons element override this function to handle value toggle.
         /// </summary>
         override protected void DoOnClick()
         {

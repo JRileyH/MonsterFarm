@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Different panel textures you can use.
@@ -33,7 +33,7 @@ namespace MonsterFarm.UI.Entities
     /// A graphical panel or form you can create and add entities to.
     /// Used to group together entities with common logic.
     /// </summary>
-    public class PanelBase : Entity
+    public class PanelBase : Element
     {
         // panel style
         PanelSkin _skin;
@@ -77,11 +77,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // draw panel itself, but only if got style
             if (_skin != PanelSkin.None)
@@ -96,7 +96,7 @@ namespace MonsterFarm.UI.Entities
             }
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
     }
 }

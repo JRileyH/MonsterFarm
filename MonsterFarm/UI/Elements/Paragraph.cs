@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 using System.Text;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Font styles.
@@ -22,7 +22,7 @@ namespace MonsterFarm.UI.Entities
     /// <summary>
     /// Paragraph is a renderable text. It can be multiline, wrap words, have outline, etc.
     /// </summary>
-    public class Paragraph : Entity
+    public class Paragraph : Element
     {
         /// <summary>Default styling for paragraphs. Note: loaded from UI theme xml file.</summary>
         new public static StyleSheet DefaultStyle = new StyleSheet();
@@ -350,7 +350,7 @@ namespace MonsterFarm.UI.Entities
 
         /// <summary>
         /// Update dest rect and internal dest rect.
-        /// This is called internally whenever a change is made to the entity or its parent.
+        /// This is called internally whenever a change is made to the element or its parent.
         /// </summary>
         override public void UpdateDestinationRects()
         {
@@ -492,19 +492,19 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
+        /// Draw element outline. Note: in paragraph its a special case and we implement it inside the Drawelement function.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        override protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        override protected void DrawElementOutline(SpriteBatch spriteBatch)
         {
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // update processed text if needed
             if (_processedText == null)
@@ -573,7 +573,7 @@ namespace MonsterFarm.UI.Entities
                 0, _fontOrigin, _actualScale, SpriteEffects.None, 0.5f);
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
     }
 }

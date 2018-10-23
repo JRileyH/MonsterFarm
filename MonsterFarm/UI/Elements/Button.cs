@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Button skins.
@@ -21,7 +21,7 @@ namespace MonsterFarm.UI.Entities
     /// <summary>
     /// A clickable button with label on it.
     /// </summary>
-    public class Button : Entity
+    public class Button : Element
     {
         // button skin
         ButtonSkin _skin;
@@ -71,7 +71,7 @@ namespace MonsterFarm.UI.Entities
             {
                 // create and set button paragraph
                 ButtonParagraph = UserInterface.DefaultParagraph(text, Anchor.Center);
-                ButtonParagraph._hiddenInternalEntity = true;
+                ButtonParagraph._hiddenInternalElement = true;
                 if (textScale != null) DefaultParagraphStyle.SetStyleProperty("Scale", new StyleProperty((float)textScale));
                 if (nobreak) ButtonParagraph.WrapWords = false;
                 ButtonParagraph.UpdateStyle(DefaultParagraphStyle);
@@ -88,13 +88,13 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             ButtonParagraph = Find("_button_caption") as Paragraph;
-            ButtonParagraph._hiddenInternalEntity = true;
+            ButtonParagraph._hiddenInternalElement = true;
         }
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace MonsterFarm.UI.Entities
         public void SetCustomSkin(Texture2D defaultTexture, Texture2D mouseHoverTexture, Texture2D mouseDownTexture, Vector2? frameWidth = null)
         {
             _customSkin = new Texture2D[3];
-            _customSkin[(int)EntityState.Default] = defaultTexture;
-            _customSkin[(int)EntityState.MouseHover] = mouseHoverTexture;
-            _customSkin[(int)EntityState.MouseDown] = mouseDownTexture;
+            _customSkin[(int)ElementState.Default] = defaultTexture;
+            _customSkin[(int)ElementState.MouseHover] = mouseHoverTexture;
+            _customSkin[(int)ElementState.MouseDown] = mouseDownTexture;
             _customFrame = frameWidth ?? _customFrame;
         }
 
@@ -124,7 +124,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the button a natrually-interactable entity.
+        /// Is the button a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()
@@ -157,15 +157,15 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get mouse state for graphics
-            EntityState state = _entityState;
-            if (Checked) { state = EntityState.MouseDown; }
+            ElementState state = _elementState;
+            if (Checked) { state = ElementState.MouseDown; }
 
             // get texture based on skin and state
             Texture2D texture = _customSkin == null ? Resources.ButtonTextures[_skin, state] : _customSkin[(int)state];
@@ -187,7 +187,7 @@ namespace MonsterFarm.UI.Entities
             }
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
     }
 }

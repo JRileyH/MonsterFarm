@@ -13,11 +13,11 @@ namespace MonsterFarm.UI.DataTypes
     };
 
     /// <summary>
-    /// All the stylesheet possible settings for an entity state.
+    /// All the stylesheet possible settings for an element state.
     /// </summary>
     public class DefaultStyles
     {
-        // entity scale
+        // element scale
         public float? Scale = null;
 
         // fill color

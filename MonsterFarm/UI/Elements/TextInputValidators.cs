@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MonsterFarm.UI.Entities.TextValidators
+namespace MonsterFarm.UI.Elements.TextValidators
 {
     /// <summary>
     /// A class that validates text input to make sure its valid.

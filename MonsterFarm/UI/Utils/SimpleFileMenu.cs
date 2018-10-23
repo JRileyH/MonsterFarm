@@ -89,17 +89,17 @@ namespace MonsterFarm.UI.Utils
         /// <param name="layout">Layout to create file menu for.</param>
         /// <param name="skin">Skin to use for panels and dropdown of this file menu.</param>
         /// <returns>Menu root panel.</returns>
-        static public Entities.Panel Create(MenuLayout layout, Entities.PanelSkin skin = Entities.PanelSkin.Simple)
+        static public Elements.Panel Create(MenuLayout layout, Elements.PanelSkin skin = Elements.PanelSkin.Simple)
         {
             // create the root panel
-            var rootPanel = new Entities.Panel(new Vector2(0, Entities.DropDown.SelectedPanelHeight), skin, Entities.Anchor.TopLeft);
+            var rootPanel = new Elements.Panel(new Vector2(0, Elements.DropDown.SelectedPanelHeight), skin, Elements.Anchor.TopLeft);
             rootPanel.Padding = Vector2.Zero;
 
             // create menus
             foreach (var menu in layout.Layout)
             {
                 // create dropdown and all its items
-                var dropdown = new Entities.DropDown(new Vector2(menu.Width, -1), Entities.Anchor.AutoInline, null, Entities.PanelSkin.None, skin, false);
+                var dropdown = new Elements.DropDown(new Vector2(menu.Width, -1), Elements.Anchor.AutoInline, null, Elements.PanelSkin.None, skin, false);
                 rootPanel.AddChild(dropdown);
                 foreach (var item in menu.Items)
                 {

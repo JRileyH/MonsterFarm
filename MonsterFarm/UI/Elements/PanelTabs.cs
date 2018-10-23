@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>Contains the button and panel of a single tab in the PanelTabs.</summary>
     public class TabData
@@ -36,7 +36,7 @@ namespace MonsterFarm.UI.Entities
     /// A graphical panel or form you can create and add entities to.
     /// Used to group together entities with common logic.
     /// </summary>
-    public class PanelTabs : Entity
+    public class PanelTabs : Element
     {
         /// <summary>Default styling for panel buttons. Note: loaded from UI theme xml file.</summary>
         public static StyleSheet DefaultButtonStyle = new StyleSheet();
@@ -103,14 +103,14 @@ namespace MonsterFarm.UI.Entities
                 _internalRoot.AddChild(_panelsPanel);
 
                 // make internal stuff hidden
-                _panelsPanel._hiddenInternalEntity = true;
-                _buttonsPanel._hiddenInternalEntity = true;
-                _internalRoot._hiddenInternalEntity = true;
+                _panelsPanel._hiddenInternalElement = true;
+                _buttonsPanel._hiddenInternalElement = true;
+                _internalRoot._hiddenInternalElement = true;
             }
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
@@ -120,14 +120,14 @@ namespace MonsterFarm.UI.Entities
             _internalRoot = Find<Panel>("_internalRoot");
             _buttonsPanel = _internalRoot.Find<Panel>("_buttonsPanel");
             _panelsPanel = _internalRoot.Find<Panel>("_panelsPanel");
-            _panelsPanel._hiddenInternalEntity = true;
-            _buttonsPanel._hiddenInternalEntity = true;
-            _internalRoot._hiddenInternalEntity = true;
+            _panelsPanel._hiddenInternalElement = true;
+            _buttonsPanel._hiddenInternalElement = true;
+            _internalRoot._hiddenInternalElement = true;
 
             // rebuild tabs
-            var buttons = new List<Entity>(_buttonsPanel.Children);
+            var buttons = new List<Element>(_buttonsPanel.Children);
             _buttonsPanel.ClearChildren();
-            var panels = new List<Entity>(_panelsPanel.Children);
+            var panels = new List<Element>(_panelsPanel.Children);
             _panelsPanel.ClearChildren();
             for (int i = 0; i < panels.Count; ++i)
             {
@@ -147,11 +147,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // negate parent's padding
             _internalRoot.Padding = -Parent.Padding;
@@ -170,7 +170,7 @@ namespace MonsterFarm.UI.Entities
             }
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
 
         /// <summary>
@@ -259,10 +259,10 @@ namespace MonsterFarm.UI.Entities
             newTab.panel.Visible = false;
 
             // attach callback to newly created button
-            newTab.button.OnValueChange = (Entity entity) =>
+            newTab.button.OnValueChange = (Element element) =>
             {
                 // get self as a button
-                Button self = (Button)(entity);
+                Button self = (Button)(element);
 
                 // clear the currently active panel
                 Panel prevActive = _activeTab != null ? _activeTab.panel : null;

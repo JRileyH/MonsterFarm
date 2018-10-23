@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// Image drawing modes, eg how to draw the image and fill the destination rectangle with its texture.
@@ -20,7 +20,7 @@ namespace MonsterFarm.UI.Entities
     /// <summary>
     /// A renderable image (draw custom texture on UI entities).
     /// </summary>
-    public class Image : Entity
+    public class Image : Element
     {
         /// <summary>How to draw the texture.</summary>
         public ImageDrawMode DrawMode;
@@ -48,7 +48,7 @@ namespace MonsterFarm.UI.Entities
         public Rectangle? SourceRectangle = null;
 
         /// <summary>
-        /// Create the new image entity.
+        /// Create the new image element.
         /// </summary>
         /// <param name="texture">Image texture.</param>
         /// <param name="size">Image size.</param>
@@ -87,9 +87,9 @@ namespace MonsterFarm.UI.Entities
             }
 
             // make sure in boundaries
-            if (!IsInsideEntity(pos))
+            if (!IsInsideElement(pos))
             {
-                throw new Exceptions.InvalidValueException("Position to get coords for must be inside entity boundaries!");
+                throw new Exceptions.InvalidValueException("Position to get coords for must be inside element boundaries!");
             }
 
             // get actual dest rect
@@ -155,11 +155,11 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // draw image based on DrawMode
             switch (DrawMode)
@@ -176,7 +176,7 @@ namespace MonsterFarm.UI.Entities
             }
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
     }
 }

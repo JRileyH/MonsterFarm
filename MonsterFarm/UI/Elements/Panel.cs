@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// How to treat entities that overflow panel boundaries.
@@ -11,7 +11,7 @@ namespace MonsterFarm.UI.Entities
     public enum PanelOverflowBehavior
     {
         /// <summary>
-        /// Entity will be rendered as usual outside the panel boundaries.
+        /// element will be rendered as usual outside the panel boundaries.
         /// </summary>
         Overflow,
 
@@ -90,7 +90,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
@@ -136,7 +136,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called before drawing child entities of this entity.
+        /// Called before drawing child entities of this element.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
         protected override void BeforeDrawChildren(SpriteBatch spriteBatch)
@@ -221,7 +221,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called after drawing child entities of this entity.
+        /// Called after drawing child entities of this element.
         /// </summary>
         /// <param name="spriteBatch">SpriteBatch used to draw entities.</param>
         protected override void AfterDrawChildren(SpriteBatch spriteBatch)
@@ -277,7 +277,7 @@ namespace MonsterFarm.UI.Entities
                         Padding = Vector2.Zero,
                         AdjustMaxAutomatically = true,
                         Identifier = "__scrollbar",
-                        _hiddenInternalEntity = true
+                        _hiddenInternalElement = true
                     };
                     bool prev_needToSortChildren = _needToSortChildren;
                     AddChild(_scrollbar);
@@ -307,13 +307,13 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every frame to update the children of this entity.
+        /// Called every frame to update the children of this element.
         /// </summary>
-        /// <param name="targetEntity">The deepest child entity with highest priority that we point on and can be interacted with.</param>
-        /// <param name="dragTargetEntity">The deepest child dragable entity with highest priority that we point on and can be drag if mouse down.</param>
+        /// <param name="targetelement">The deepest child element with highest priority that we point on and can be interacted with.</param>
+        /// <param name="dragTargetElement">The deepest child dragable element with highest priority that we point on and can be drag if mouse down.</param>
         /// <param name="wasEventHandled">Set to true if current event was already handled by a deeper child.</param>
         /// <param name="scrollVal">Combined scrolling value (panels with scrollbar etc) of all parents.</param>
-        override protected void UpdateChildren(ref Entity targetEntity, ref Entity dragTargetEntity, ref bool wasEventHandled, Point scrollVal)
+        override protected void UpdateChildren(ref Element targetelement, ref Element dragTargetElement, ref bool wasEventHandled, Point scrollVal)
         {
             // if not in overflow mode and mouse not on this panel boundaries, skip calling children
             bool skipChildren = false;
@@ -336,14 +336,14 @@ namespace MonsterFarm.UI.Entities
             // call base update children function
             if (!skipChildren)
             {
-                base.UpdateChildren(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal);
+                base.UpdateChildren(ref targetelement, ref dragTargetElement, ref wasEventHandled, scrollVal);
             }
 
             // re-enable scrollbar and update it
             if (_scrollbar != null)
             {
                 _scrollbar.Enabled = true;
-                _scrollbar.Update(ref targetEntity, ref dragTargetEntity, ref wasEventHandled, scrollVal - OverflowScrollVal);
+                _scrollbar.Update(ref targetelement, ref dragTargetElement, ref wasEventHandled, scrollVal - OverflowScrollVal);
             }
         }
     }

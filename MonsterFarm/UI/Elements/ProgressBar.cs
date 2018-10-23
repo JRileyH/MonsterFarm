@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// A sub-class of the slider entity, with graphics more fitting for a progress bar or things like hp bar etc.
+    /// A sub-class of the slider element, with graphics more fitting for a progress bar or things like hp bar etc.
     /// Behaves the same as a slider, if you want it to be for display only (and not changeable by user), simple set Locked = true.
     /// </summary>
     public class ProgressBar : Slider
@@ -29,7 +29,7 @@ namespace MonsterFarm.UI.Entities
         /// </summary>
         /// <param name="min">Min value.</param>
         /// <param name="max">Max value.</param>
-        /// <param name="size">Entity size.</param>
+        /// <param name="size">element size.</param>
         /// <param name="anchor">Position anchor.</param>
         /// <param name="offset">Offset from anchor position.</param>
         public ProgressBar(uint min, uint max, Vector2 size, Anchor anchor = Anchor.Auto, Vector2? offset = null) :
@@ -44,14 +44,14 @@ namespace MonsterFarm.UI.Entities
                 Padding = Vector2.Zero;
                 ProgressFill = new Image(Resources.ProgressBarFillTexture, Vector2.Zero, ImageDrawMode.Stretch, Anchor.CenterLeft);
                 ProgressFill.UpdateStyle(DefaultFillStyle);
-                ProgressFill._hiddenInternalEntity = true;
+                ProgressFill._hiddenInternalElement = true;
                 ProgressFill.Identifier = "_progress_fill";
                 AddChild(ProgressFill, true);
 
                 // create caption on progressbar
                 Caption = new Label(string.Empty, Anchor.Center);
                 Caption.ClickThrough = true;
-                Caption._hiddenInternalEntity = true;
+                Caption._hiddenInternalElement = true;
                 Caption.Identifier = "_progress_caption";
                 AddChild(Caption);
             }
@@ -76,23 +76,23 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             Caption = Find<Label>("_progress_caption", false);
-            Caption._hiddenInternalEntity = true;
+            Caption._hiddenInternalElement = true;
             ProgressFill = Find<Image>("_progress_fill");
-            ProgressFill._hiddenInternalEntity = true;
+            ProgressFill._hiddenInternalElement = true;
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // get progressbar frame width
             float progressbarFrameWidth = Resources.ProgressBarData.FrameWidth;

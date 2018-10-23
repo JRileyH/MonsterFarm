@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 namespace MonsterFarm.UI.DataTypes
 {
     /// <summary>
-    /// Represent a single style property to apply on entity and state.
+    /// Represent a single style property to apply on element and state.
     /// For example, coloring for paragraph when mouse is over.
     /// This class acts like a Union, eg we don't use all the fields.
     /// This is a waste of some memory, but we need it to be able to serialize / desrialize to XMLs.

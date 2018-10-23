@@ -4,10 +4,10 @@ using MonsterFarm.UI.DataTypes;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// Set of style properties for different entity states.
+    /// Set of style properties for different element states.
     /// For example, stylesheet can define that when mouse hover over a paragraph, its text turns red.
     /// </summary>
     public class StyleSheet
@@ -26,9 +26,9 @@ namespace MonsterFarm.UI.Entities
             if (_mousedown != null) { _mousedownSheet = _mousedown; } else { _mousedownSheet = _makeBlankSheet(); }
             if (_mousehover != null) { _mousehoverSheet = _mousehover; } else { _mousehoverSheet = _makeBlankSheet(); }
             _allStates = new Dictionary<string, StyleProperty>[3];
-            _allStates[(int)EntityState.Default] = _defaultSheet;
-            _allStates[(int)EntityState.MouseDown] = _mousedownSheet;
-            _allStates[(int)EntityState.MouseHover] = _mousehoverSheet;
+            _allStates[(int)ElementState.Default] = _defaultSheet;
+            _allStates[(int)ElementState.MouseDown] = _mousedownSheet;
+            _allStates[(int)ElementState.MouseHover] = _mousehoverSheet;
         }
 
         private Dictionary<string, StyleProperty> _makeDefaultSheet()
@@ -73,7 +73,7 @@ namespace MonsterFarm.UI.Entities
             return _allStates;
         }
 
-        public StyleProperty GetStyleProperty(string property, EntityState state = EntityState.Default)
+        public StyleProperty GetStyleProperty(string property, ElementState state = ElementState.Default)
         {
             if(!_allStates[(int)state].ContainsKey(property)) return _defaultSheet[property];
             if (_allStates[(int)state][property].isEmpty()) return _defaultSheet[property];
@@ -86,14 +86,14 @@ namespace MonsterFarm.UI.Entities
         /// <param name="property">Property identifier.</param>
         /// <param name="value">Property value.</param>
         /// <param name="state">State to set property for.</param>
-        public void SetStyleProperty(string property, StyleProperty value, EntityState state = EntityState.Default)
+        public void SetStyleProperty(string property, StyleProperty value, ElementState state = ElementState.Default)
         {
             _allStates[(int)state][property] = value;
         }
 
         //TODO: change this to accept the value of Style Property itself and set a new Style Property
         public void SetStyleProperties(
-            EntityState state = EntityState.Default,
+            ElementState state = ElementState.Default,
             object scale = null,
             object fillColor = null,
             object outlineColor = null,
@@ -170,14 +170,14 @@ namespace MonsterFarm.UI.Entities
         public void UpdateFrom(StyleSheet other)
         {
             Dictionary<string, StyleProperty>[] _otherStates = other.GetAllStates();
-            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)EntityState.Default]){
+            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)ElementState.Default]){
                 _defaultSheet[_prop.Key] = _prop.Value;
             }
-            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)EntityState.MouseDown])
+            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)ElementState.MouseDown])
             {
                 _mousedownSheet[_prop.Key] = _prop.Value;
             }
-            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)EntityState.MouseHover])
+            foreach (KeyValuePair<string, StyleProperty> _prop in _otherStates[(int)ElementState.MouseHover])
             {
                 _mousehoverSheet[_prop.Key] = _prop.Value;
             }

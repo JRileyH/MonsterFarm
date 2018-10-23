@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// A checkbox entity, eg a label with a square you can mark as checked or uncheck.
+    /// A checkbox element, eg a label with a square you can mark as checked or uncheck.
     /// Holds a boolean value.
     /// </summary>
-    public class CheckBox : Entity
+    public class CheckBox : Element
     {
         /// <summary>CheckBox label. Use this if you want to change the checkbox text or font style.</summary>
         public Paragraph TextParagraph;
@@ -30,7 +30,7 @@ namespace MonsterFarm.UI.Entities
         public static StyleSheet DefaultParagraphStyle = new StyleSheet();
 
         /// <summary>
-        /// Create a new checkbox entity.
+        /// Create a new checkbox element.
         /// </summary>
         /// <param name="text">CheckBox label text.</param>
         /// <param name="anchor">Position anchor.</param>
@@ -49,7 +49,7 @@ namespace MonsterFarm.UI.Entities
                 TextParagraph = UserInterface.DefaultParagraph(text, Anchor.CenterLeft);
                 TextParagraph.UpdateStyle(DefaultParagraphStyle);
                 TextParagraph.SetOffset(new Vector2(25, 0));
-                TextParagraph._hiddenInternalEntity = true;
+                TextParagraph._hiddenInternalElement = true;
                 TextParagraph.Identifier = "_checkbox_text";
                 AddChild(TextParagraph, true);
             }
@@ -69,17 +69,17 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
             base.InitAfterDeserialize();
             TextParagraph = Find("_checkbox_text") as Paragraph;
-            TextParagraph._hiddenInternalEntity = true;
+            TextParagraph._hiddenInternalElement = true;
         }
 
         /// <summary>
-        /// Is the checkbox a natrually-interactable entity.
+        /// Is the checkbox a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()
@@ -102,17 +102,17 @@ namespace MonsterFarm.UI.Entities
         /// <returns>Which texture to use for the checkbox.</returns>
         virtual protected Texture2D GetTexture()
         {
-            EntityState state = _entityState;
-            if (state != EntityState.MouseDown && Checked) { state = EntityState.MouseDown; }
+            ElementState state = _elementState;
+            if (state != ElementState.MouseDown && Checked) { state = ElementState.MouseDown; }
             return Resources.CheckBoxTextures[state];
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
 
             // get texture based on checkbox / mouse state
@@ -135,12 +135,12 @@ namespace MonsterFarm.UI.Entities
             spriteBatch.Draw(texture, dest, src, FillColor);
 
             // call base draw function
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
         }
 
         /// <summary>
         /// Handle mouse click event. 
-        /// CheckBox entity override this function to handle value toggle.
+        /// CheckBox element override this function to handle value toggle.
         /// </summary>
         override protected void DoOnClick()
         {

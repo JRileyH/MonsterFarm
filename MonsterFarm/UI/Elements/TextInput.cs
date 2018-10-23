@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using MonsterFarm.UI.Entities.TextValidators;
+using MonsterFarm.UI.Elements.TextValidators;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
     /// A textbox that allow users to put in free text.
@@ -116,14 +116,14 @@ namespace MonsterFarm.UI.Entities
                 // create paragraph to show current value
                 TextParagraph = UserInterface.DefaultParagraph(string.Empty, Anchor.TopLeft);
                 TextParagraph.UpdateStyle(DefaultParagraphStyle);
-                TextParagraph._hiddenInternalEntity = true;
+                TextParagraph._hiddenInternalElement = true;
                 TextParagraph.Identifier = "_TextParagraph";
                 AddChild(TextParagraph, true);
 
                 // create the placeholder paragraph
                 PlaceholderParagraph = UserInterface.DefaultParagraph(string.Empty, Anchor.TopLeft);
                 PlaceholderParagraph.UpdateStyle(DefaultPlaceholderStyle);
-                PlaceholderParagraph._hiddenInternalEntity = true;
+                PlaceholderParagraph._hiddenInternalElement = true;
                 PlaceholderParagraph.Identifier = "_PlaceholderParagraph";
                 AddChild(PlaceholderParagraph, true);
 
@@ -150,7 +150,7 @@ namespace MonsterFarm.UI.Entities
                 _scrollbar = new VerticalScrollbar(0, 0, Anchor.CenterRight, offset: new Vector2(-8, 0));
                 _scrollbar.Value = 0;
                 _scrollbar.Visible = false;
-                _scrollbar._hiddenInternalEntity = true;
+                _scrollbar._hiddenInternalElement = true;
                 _scrollbar.Identifier = "__inputScrollbar";
                 AddChild(_scrollbar, false);
             }
@@ -171,7 +171,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
@@ -179,16 +179,16 @@ namespace MonsterFarm.UI.Entities
 
             // set main text paragraph
             TextParagraph = Find("_TextParagraph") as Paragraph;
-            TextParagraph._hiddenInternalEntity = true;
+            TextParagraph._hiddenInternalElement = true;
 
             // set scrollbar
             _scrollbar = Find<VerticalScrollbar>("__inputScrollbar");
             if (_scrollbar != null)
-                _scrollbar._hiddenInternalEntity = true;
+                _scrollbar._hiddenInternalElement = true;
 
             // set placeholder paragraph
             PlaceholderParagraph = Find("_PlaceholderParagraph") as Paragraph;
-            PlaceholderParagraph._hiddenInternalEntity = true;
+            PlaceholderParagraph._hiddenInternalElement = true;
 
             // recalc dest rects
             UpdateMultilineState();
@@ -213,7 +213,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Is the text input a natrually-interactable entity.
+        /// Is the text input a natrually-interactable element.
         /// </summary>
         /// <returns>True.</returns>
         override public bool IsNaturallyInteractable()
@@ -393,14 +393,14 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // call base draw function to draw the panel part
-            base.DrawEntity(spriteBatch, phase);
+            base.DrawElement(spriteBatch, phase);
 
             // get which paragraph we currently show - real or placeholder
             bool showPlaceholder = !(IsFocused || _value.Length > 0);
@@ -577,7 +577,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Called every time this entity is focused / unfocused.
+        /// Called every time this element is focused / unfocused.
         /// </summary>
         override protected void DoOnFocusChange()
         {

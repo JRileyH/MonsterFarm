@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.UI.DataTypes;
 using System.Text;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>Hold color instructions for MultiColor paragraphs.</summary>
     public class ColorInstruction
@@ -182,7 +182,7 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Special init after deserializing entity from file.
+        /// Special init after deserializing element from file.
         /// </summary>
         internal protected override void InitAfterDeserialize()
         {
@@ -226,19 +226,19 @@ namespace MonsterFarm.UI.Entities
         }
 
         /// <summary>
-        /// Draw entity outline. Note: in paragraph its a special case and we implement it inside the DrawEntity function.
+        /// Draw element outline. Note: in paragraph its a special case and we implement it inside the Drawelement function.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
-        override protected void DrawEntityOutline(SpriteBatch spriteBatch)
+        override protected void DrawElementOutline(SpriteBatch spriteBatch)
         {
         }
 
         /// <summary>
-        /// Draw the entity.
+        /// Draw the element.
         /// </summary>
         /// <param name="spriteBatch">Sprite batch to draw on.</param>
         /// <param name="phase">The phase we are currently drawing.</param>
-        override protected void DrawEntity(SpriteBatch spriteBatch, DrawPhase phase)
+        override protected void DrawElement(SpriteBatch spriteBatch, DrawPhase phase)
         {
             // update processed text if needed
             if (_needUpdateColors)
@@ -319,7 +319,7 @@ namespace MonsterFarm.UI.Entities
             // if there are no color-changing instructions, just draw the paragraph as-is
             else
             {
-                base.DrawEntity(spriteBatch, phase);
+                base.DrawElement(spriteBatch, phase);
             }
         }
     }

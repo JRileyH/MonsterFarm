@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework;
 using MonsterFarm.UI.DataTypes;
 
-namespace MonsterFarm.UI.Entities
+namespace MonsterFarm.UI.Elements
 {
     /// <summary>
-    /// Header entity is a subclass of Paragraph. Basically its the same, but with a different
+    /// Header element is a subclass of Paragraph. Basically its the same, but with a different
     /// default styling, and serves as a sugarcoat to quickly create headers for menues.
     /// </summary>
     public class Header : Paragraph

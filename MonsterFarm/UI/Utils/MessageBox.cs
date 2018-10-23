@@ -83,40 +83,40 @@ namespace MonsterFarm.UI.Utils
         /// <param name="size">Alternative size to use.</param>
         /// <param name="onDone">Optional callback to call when this msgbox closes.</param>
         /// <returns>Message box panel.</returns>
-        public static Entities.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Entities.Entity[] append = null, Vector2? size = null, System.Action onDone = null)
+        public static Elements.Panel ShowMsgBox(string header, string text, MsgBoxOption[] options, Elements.Element[] append = null, Vector2? size = null, System.Action onDone = null)
         {
             // create panel for messagebox
             size = size ?? new Vector2(500, 500);
-            var panel = new Entities.Panel(size.Value);
-            panel.AddChild(new Entities.Header(header));
-            panel.AddChild(new Entities.HorizontalLine());
-            panel.AddChild(new Entities.Paragraph(text));
+            var panel = new Elements.Panel(size.Value);
+            panel.AddChild(new Elements.Header(header));
+            panel.AddChild(new Elements.HorizontalLine());
+            panel.AddChild(new Elements.Paragraph(text));
 
             // add to opened boxes counter
             OpenedMsgBoxesCount++;
 
             // add rectangle to hide and lock background
-            Entities.ColoredRectangle fader = null;
+            Elements.ColoredRectangle fader = null;
             if (BackgroundFaderColor.A != 0)
             {
-                fader = new Entities.ColoredRectangle(Vector2.Zero, Entities.Anchor.Center);
+                fader = new Elements.ColoredRectangle(Vector2.Zero, Elements.Anchor.Center);
                 fader.FillColor = new Color(0, 0, 0, 100);
                 fader.OutlineWidth = 0;
                 fader.ClickThrough = false;
-                UserInterface.Active.AddEntity(fader);
+                UserInterface.Active.AddElement(fader);
             }
 
             // add custom appended entities
             if (append != null)
             {
-                foreach (var entity in append)
+                foreach (var element in append)
                 {
-                    panel.AddChild(entity);
+                    panel.AddChild(element);
                 }
             }
 
             // add bottom buttons panel
-            var buttonsPanel = new Entities.Panel(new Vector2(0, 70), Entities.PanelSkin.None, Entities.Anchor.BottomCenter);
+            var buttonsPanel = new Elements.Panel(new Vector2(0, 70), Elements.PanelSkin.None, Elements.Anchor.BottomCenter);
             buttonsPanel.Padding = Vector2.Zero;
             panel.AddChild(buttonsPanel);
 
@@ -124,11 +124,11 @@ namespace MonsterFarm.UI.Utils
             var btnSize = new Vector2(options.Length == 1 ? 0f : (1f / options.Length), 60);
             foreach (var option in options)
             {
-                // add button entity
-                var button = new Entities.Button(option.Title, anchor: Entities.Anchor.AutoInline, size: btnSize);
+                // add button element
+                var button = new Elements.Button(option.Title, anchor: Elements.Anchor.AutoInline, size: btnSize);
 
                 // set click event
-                button.OnClick += (Entities.Entity ent) =>
+                button.OnClick += (Elements.Element ent) =>
                 {
                     // if need to close message box after clicking this button, close it:
                     if (option.Callback == null || option.Callback())
@@ -150,7 +150,7 @@ namespace MonsterFarm.UI.Utils
             }
 
             // add panel to active ui
-            UserInterface.Active.AddEntity(panel);
+            UserInterface.Active.AddElement(panel);
             return panel;
         }
 
@@ -162,7 +162,7 @@ namespace MonsterFarm.UI.Utils
         /// <param name="closeButtonTxt">Text for the closing button (if not provided will use default).</param>
         /// <param name="size">Message box size (if not provided will use default).</param>
         /// <returns>Message box panel.</returns>
-        public static Entities.Panel ShowMsgBox(string header, string text, string closeButtonTxt = null, Vector2? size = null)
+        public static Elements.Panel ShowMsgBox(string header, string text, string closeButtonTxt = null, Vector2? size = null)
         {
             return ShowMsgBox(header, text, new MsgBoxOption[]
             {

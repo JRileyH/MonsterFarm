@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonsterFarm.UI.Entities;
+using MonsterFarm.UI.Elements;
 using Microsoft.Xna.Framework.Content;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
@@ -18,17 +18,17 @@ namespace MonsterFarm.UI
     }
 
     /// <summary>
-    /// A callback function you can register on entity events, like on-click, on-mouse-leave, etc.
+    /// A callback function you can register on element events, like on-click, on-mouse-leave, etc.
     /// </summary>
-    /// <param name="entity">The entity instance the event came from.</param>
-    public delegate void EventCallback(Entity entity);
+    /// <param name="element">The element instance the event came from.</param>
+    public delegate void EventCallback(Element element);
 
     /// <summary>
-    /// A function used to generate tooltip entity.
-    /// Used when the user points on an entity with a tooltip text and show present it.
+    /// A function used to generate tooltip element.
+    /// Used when the user points on an element with a tooltip text and show present it.
     /// </summary>
-    /// <param name="entity">The entity instance the tooltip came from.</param>
-    public delegate Entity GenerateTooltipFunc(Entity entity);
+    /// <param name="element">The element instance the tooltip came from.</param>
+    public delegate Element GenerateTooltipFunc(Element element);
 
     /// <summary>
     /// Callback to generate default paragraph type for internal entities.
@@ -130,7 +130,7 @@ namespace MonsterFarm.UI
         }
 
         /// <summary>
-        /// Get the root entity.
+        /// Get the root element.
         /// </summary>
         public RootPanel Root { get; private set; }
 
@@ -144,8 +144,8 @@ namespace MonsterFarm.UI
         /// </summary>
         public SamplerState SamplerState = SamplerState.PointClamp;
 
-        // the entity currently being dragged
-        Entity _dragTarget;
+        // the element currently being dragged
+        Element _dragTarget;
 
         // current global scale
         private float _scale = 1f;
@@ -169,79 +169,79 @@ namespace MonsterFarm.UI
         /// <summary>Draw utils helper. Contain general drawing functionality and handle effects replacement.</summary>
         public DrawUtils DrawUtils = null;
 
-        /// <summary>Current active entity, eg last entity user interacted with.</summary>
-        public Entity ActiveEntity = null;
+        /// <summary>Current active element, eg last element user interacted with.</summary>
+        public Element ActiveElement = null;
 
-        /// <summary>The current target entity, eg what cursor points on. Can be null if cursor don't point on any entity.</summary>
-        public Entity TargetEntity { get; private set; }
+        /// <summary>The current target element, eg what cursor points on. Can be null if cursor don't point on any element.</summary>
+        public Element TargetElement { get; private set; }
 
-        /// <summary>Callback to execute when mouse button is pressed over an entity (called once when button is pressed).</summary>
+        /// <summary>Callback to execute when mouse button is pressed over an element (called once when button is pressed).</summary>
         public EventCallback OnMouseDown = null;
 
-        /// <summary>Callback to execute when right mouse button is pressed over an entity (called once when button is pressed).</summary>
+        /// <summary>Callback to execute when right mouse button is pressed over an element (called once when button is pressed).</summary>
         public EventCallback OnRightMouseDown = null;
 
-        /// <summary>Callback to execute when mouse button is released over an entity (called once when button is released).</summary>
+        /// <summary>Callback to execute when mouse button is released over an element (called once when button is released).</summary>
         public EventCallback OnMouseReleased = null;
 
-        /// <summary>Callback to execute every frame while mouse button is pressed over an entity.</summary>
+        /// <summary>Callback to execute every frame while mouse button is pressed over an element.</summary>
         public EventCallback WhileMouseDown = null;
 
-        /// <summary>Callback to execute every frame while right mouse button is pressed over an entity.</summary>
+        /// <summary>Callback to execute every frame while right mouse button is pressed over an element.</summary>
         public EventCallback WhileRightMouseDown = null;
 
-        /// <summary>Callback to execute every frame while mouse is hovering over an entity, unless mouse button is down.</summary>
+        /// <summary>Callback to execute every frame while mouse is hovering over an element, unless mouse button is down.</summary>
         public EventCallback WhileMouseHover = null;
 
-        /// <summary>Callback to execute every frame while mouse is hovering over an entity, even if mouse button is down.</summary>
+        /// <summary>Callback to execute every frame while mouse is hovering over an element, even if mouse button is down.</summary>
         public EventCallback WhileMouseHoverOrDown = null;
 
-        /// <summary>Callback to execute when user clicks on an entity (eg release mouse over it).</summary>
+        /// <summary>Callback to execute when user clicks on an element (eg release mouse over it).</summary>
         public EventCallback OnClick = null;
 
-        /// <summary>Callback to execute when user clicks on an entity with right mouse button (eg release mouse over it).</summary>
+        /// <summary>Callback to execute when user clicks on an element with right mouse button (eg release mouse over it).</summary>
         public EventCallback OnRightClick = null;
 
-        /// <summary>Callback to execute when any entity value changes (relevant only for entities with value).</summary>
+        /// <summary>Callback to execute when any element value changes (relevant only for entities with value).</summary>
         public EventCallback OnValueChange = null;
 
-        /// <summary>Callback to execute when mouse start hovering over an entity (eg enters its region).</summary>
+        /// <summary>Callback to execute when mouse start hovering over an element (eg enters its region).</summary>
         public EventCallback OnMouseEnter = null;
 
-        /// <summary>Callback to execute when mouse stop hovering over an entity (eg leaves its region).</summary>
+        /// <summary>Callback to execute when mouse stop hovering over an element (eg leaves its region).</summary>
         public EventCallback OnMouseLeave = null;
 
-        /// <summary>Callback to execute when mouse wheel scrolls and an entity is the active entity.</summary>
+        /// <summary>Callback to execute when mouse wheel scrolls and an element is the active element.</summary>
         public EventCallback OnMouseWheelScroll = null;
 
-        /// <summary>Called when entity starts getting dragged (only if draggable).</summary>
+        /// <summary>Called when element starts getting dragged (only if draggable).</summary>
         public EventCallback OnStartDrag = null;
 
-        /// <summary>Called when entity stop getting dragged (only if draggable).</summary>
+        /// <summary>Called when element stop getting dragged (only if draggable).</summary>
         public EventCallback OnStopDrag = null;
 
-        /// <summary>Called every frame while entity is being dragged.</summary>
+        /// <summary>Called every frame while element is being dragged.</summary>
         public EventCallback WhileDragging = null;
 
-        /// <summary>Callback to execute every frame before entity update.</summary>
+        /// <summary>Callback to execute every frame before element update.</summary>
         public EventCallback BeforeUpdate = null;
 
-        /// <summary>Callback to execute every frame after entity update.</summary>
+        /// <summary>Callback to execute every frame after element update.</summary>
         public EventCallback AfterUpdate = null;
 
-        /// <summary>Callback to execute every frame before entity is rendered.</summary>
+        /// <summary>Callback to execute every frame before element is rendered.</summary>
         public EventCallback BeforeDraw = null;
 
-        /// <summary>Callback to execute every frame after entity is rendered.</summary>
+        /// <summary>Callback to execute every frame after element is rendered.</summary>
         public EventCallback AfterDraw = null;
 
-        /// <summary>Callback to execute every time the visibility property of an entity change.</summary>
+        /// <summary>Callback to execute every time the visibility property of an element change.</summary>
         public EventCallback OnVisiblityChange = null;
 
-        /// <summary>Callback to execute every time a new entity is spawned (note: spawn = first time Update() is called on this entity).</summary>
-        public EventCallback OnEntitySpawn = null;
+        /// <summary>Callback to execute every time a new element is spawned (note: spawn = first time Update() is called on this element).</summary>
+        public EventCallback OnElementSpawn = null;
 
-        /// <summary>Callback to execute every time an entity focus changes.</summary>
+        /// <summary>Callback to execute every time an element focus changes.</summary>
         public EventCallback OnFocusChange = null;
 
         // cursor texture.
@@ -256,11 +256,11 @@ namespace MonsterFarm.UI
         // time until we show tooltip text.
         private float _timeUntilTooltip = 0f;
 
-        // the current tooltip entity.
-        Entity _tooltipEntity;
+        // the current tooltip element.
+        Element _tooltipelement;
 
-        // current tooltip target entity (eg entity we point on with tooltip).
-        Entity _tooltipTargetEntity;
+        // current tooltip target element (eg element we point on with tooltip).
+        Element _tooltipTargetElement;
 
         /// <summary>
         /// How long to wait before showing tooltip texts.
@@ -322,9 +322,9 @@ namespace MonsterFarm.UI
         /// <summary>
         /// Default function we use to generate tooltip text entities.
         /// </summary>
-        /// <param name="source">Source entity.</param>
-        /// <returns>Entity to use for tooltip text.</returns>
-        static private Entity DefaultGenerateTooltipFunc(Entity source)
+        /// <param name="source">Source element.</param>
+        /// <returns>element to use for tooltip text.</returns>
+        static private Element DefaultGenerateTooltipFunc(Element source)
         {
             // no tooltip text? return null
             if (source.ToolTipText == null) return null;
@@ -334,7 +334,7 @@ namespace MonsterFarm.UI
             tooltip.BackgroundColor = Color.Black;
 
             // add callback to update tooltip position
-            tooltip.BeforeDraw += (Entity ent) =>
+            tooltip.BeforeDraw += (Element ent) =>
             {
                 // get dest rect and calculate tooltip position based on size and mouse position
                 var destRect = tooltip.GetActualDestRect();
@@ -430,21 +430,21 @@ namespace MonsterFarm.UI
         }
 
         /// <summary>
-        /// Add an entity to screen.
+        /// Add an element to screen.
         /// </summary>
-        /// <param name="entity">Entity to add.</param>
-        public Entity AddEntity(Entity entity)
+        /// <param name="element">element to add.</param>
+        public Element AddElement(Element element)
         {
-            return Root.AddChild(entity);
+            return Root.AddChild(element);
         }
 
         /// <summary>
-        /// Remove an entity from screen.
+        /// Remove an element from screen.
         /// </summary>
-        /// <param name="entity">Entity to remove.</param>
-        public void RemoveEntity(Entity entity)
+        /// <param name="element">element to remove.</param>
+        public void Removeelement(Element element)
         {
-            Root.RemoveChild(entity);
+            Root.RemoveChild(element);
         }
 
         /// <summary>
@@ -471,74 +471,74 @@ namespace MonsterFarm.UI
             }
 
             // update root panel
-            Entity target = null;
+            Element target = null;
             bool wasEventHandled = false;
             Root.Update(ref target, ref _dragTarget, ref wasEventHandled, Point.Zero);
 
-            // set active entity
+            // set active element
             if (_input.MouseButtonDown(MouseButton.Left))
             {
-                ActiveEntity = target;
+                ActiveElement = target;
             }
 
             // update tooltip
             UpdateTooltipText(gameTime, target);
 
-            // default active entity is root panel
-            ActiveEntity = ActiveEntity ?? Root;
+            // default active element is root panel
+            ActiveElement = ActiveElement ?? Root;
 
-            // set current target entity
-            TargetEntity = target;
+            // set current target element
+            TargetElement = target;
         }
 
         /// <summary>
         /// Update tooltip text related stuff.
         /// </summary>
         /// <param name="gameTime">Current game time.</param>
-        /// <param name="target">Current target entity.</param>
-        private void UpdateTooltipText(GameTime gameTime, Entity target)
+        /// <param name="target">Current target element.</param>
+        private void UpdateTooltipText(GameTime gameTime, Element target)
         {
-            // fix tooltip target to be an actual entity
-            while (target != null && target._hiddenInternalEntity)
+            // fix tooltip target to be an actual element
+            while (target != null && target._hiddenInternalElement)
                 target = target.Parent;
 
-            // if target entity changed, zero time to show tooltip text
-            if (_tooltipTargetEntity != target || target == null)
+            // if target element changed, zero time to show tooltip text
+            if (_tooltipTargetElement != target || target == null)
             {
                 // zero time until showing tooltip text
                 _timeUntilTooltip = 0f;
 
                 // if we currently have a tooltip we show, remove it
-                if (_tooltipEntity != null && _tooltipEntity.Parent != null)
+                if (_tooltipelement != null && _tooltipelement.Parent != null)
                 {
-                    _tooltipEntity.RemoveFromParent();
-                    _tooltipEntity = null;
+                    _tooltipelement.RemoveFromParent();
+                    _tooltipelement = null;
                 }
             }
 
             // set current tooltip target
-            _tooltipTargetEntity = target;
+            _tooltipTargetElement = target;
 
-            // if we currently not showing any tooltip entity
-            if (_tooltipEntity == null)
+            // if we currently not showing any tooltip element
+            if (_tooltipelement == null)
             {
                 // decrease time until showing tooltip
                 _timeUntilTooltip += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 // if its time to show tooltip text, create it.
-                // note: we create even if the target have no tooltip text, to allow our custom function to create default tooltip or generate based on entity type.
-                // if the entity should not show tooltip text, the function to generate it should just return null.
+                // note: we create even if the target have no tooltip text, to allow our custom function to create default tooltip or generate based on element type.
+                // if the element should not show tooltip text, the function to generate it should just return null.
                 if (_timeUntilTooltip > TimeToShowTooltipText)
                 {
-                    // create tooltip text entity
-                    _tooltipEntity = GenerateTooltipFunc(_tooltipTargetEntity);
+                    // create tooltip text element
+                    _tooltipelement = GenerateTooltipFunc(_tooltipTargetElement);
 
                     // if got a result lock it and add to UI
-                    if (_tooltipEntity != null)
+                    if (_tooltipelement != null)
                     {
-                        _tooltipEntity.Locked = true;
-                        _tooltipEntity.ClickThrough = true;
-                        AddEntity(_tooltipEntity);
+                        _tooltipelement.Locked = true;
+                        _tooltipelement.ClickThrough = true;
+                        AddElement(_tooltipelement);
                     }
                 }
             }
@@ -666,7 +666,7 @@ namespace MonsterFarm.UI
         /// <returns>XML serializer instance.</returns>
         virtual protected XmlSerializer GetXmlSerializer()
         {
-            return new XmlSerializer(Root.GetType(), Entity._serializableTypes.ToArray());
+            return new XmlSerializer(Root.GetType(), Element._serializableTypes.ToArray());
         }
 
         /// <summary>
