@@ -18,6 +18,7 @@ namespace MonsterFarm.Game.Entites
     public class Monster : Entity
     {
         private readonly char[] _families = { 'e', 'g', 'a', 'b', 'p', 's' };
+        private Guid _guid = Guid.NewGuid();
         private string _id;
         private int _purity;
         private char _family;
@@ -81,15 +82,16 @@ namespace MonsterFarm.Game.Entites
         }
 
         //Getters
-        public string name { get { return _name; }}
-        public IconType monsterIcon { get { return _monsterIcon; } }
-        public IconType familyIcon { get { return _familyIcon; } }
-        public string id { get { return _id; } }
-        public int purity { get { return _purity; } }
-        public char family { get { return _family; } }
-        public char line { get { return _line; } }
-        public int tier { get { return _tier; } }
-        public char[] couisins { get { return _cousins; } }
+        public Guid Guid { get { return _guid; } }
+        public string Name { get { return _name; } }
+        public IconType MonsterIcon { get { return _monsterIcon; } }
+        public IconType FamilyIcon { get { return _familyIcon; } }
+        public string Id { get { return _id; } }
+        public int Purity { get { return _purity; } }
+        public char Family { get { return _family; } }
+        public char Line { get { return _line; } }
+        public int Tier { get { return _tier; } }
+        public char[] Couisins { get { return _cousins; } }
 
         private void _validate_id(string _id_){
             if(_id_.Length != 3
@@ -104,25 +106,25 @@ namespace MonsterFarm.Game.Entites
         }
 
         public bool is_cousin(Monster monster){
-            return Array.IndexOf(_cousins, monster.family) > -1;
+            return Array.IndexOf(_cousins, monster.Family) > -1;
         }
-        public Monster breed_with(Monster mate){
+        public Monster BreedWith(Monster mate){
             string offspring_id;
             int offspring_purity = 0;
-            if (mate.is_cousin(this) && mate.line == _family)
+            if (mate.is_cousin(this) && mate.Line == _family)
             {
                 // Breeding with the pedigree's cousin can upgrade the offsprings tier if the mate's tier is sufficiently high
                 // Oh.. not like that. Grow up...
                 int new_tier = _tier;
-                if (mate.tier >= new_tier) new_tier++;
-                offspring_id = _family.ToString() + mate.family.ToString() + new_tier.ToString();
+                if (mate.Tier >= new_tier) new_tier++;
+                offspring_id = _family.ToString() + mate.Family.ToString() + new_tier.ToString();
             }
-            else if (mate.family == _line)
+            else if (mate.Family == _line)
             {
                 // Breeding with a mate of the pedigree's bloodline can laterally move the offspring to the mate's tier
-                offspring_id = _family.ToString() + mate.family.ToString() + mate.tier.ToString();
+                offspring_id = _family.ToString() + mate.Family.ToString() + mate.Tier.ToString();
             }
-            else if (mate.id == _id)
+            else if (mate.Id == _id)
             {
                 // Breeding two of the same species will add purity to the offspring.
                 offspring_id = _id;
@@ -131,9 +133,9 @@ namespace MonsterFarm.Game.Entites
             else
             {
                 // All other breeding will result in tier 1 offspring
-                offspring_id = _family.ToString() + mate.family.ToString() + "1";
+                offspring_id = _family.ToString() + mate.Family.ToString() + "1";
             }
-            Debug.WriteLine("Breed: "+_id+" + "+mate.id+" = "+offspring_id+ " +"+offspring_purity.ToString());
+            Debug.WriteLine("Breed: "+_id+" + "+mate.Id+" = "+offspring_id+ " +"+offspring_purity.ToString());
             return new Monster(offspring_id, offspring_purity);
         }
 
