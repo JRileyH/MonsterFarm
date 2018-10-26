@@ -241,6 +241,7 @@
     <Folder Include="Game\" />
     <Folder Include="Game\Entites\" />
     <Folder Include="UI\" />
+    <Folder Include="UI\Elements\" />
     <Folder Include="UI\DataTypes\" />
     <Folder Include="UI\Utils\" />
     <Folder Include="Content\UI\" />
