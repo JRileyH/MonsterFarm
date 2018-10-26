@@ -236,6 +236,12 @@
     <None Include="Content\UI\fonts\Regular.spritefont" />
     <None Include="Content\UI\effects\disabled.xnb" />
     <None Include="Content\UI\effects\silhouette.xnb" />
+    <None Include="Content\UI\textures\icons\BeastFamily.png" />
+    <None Include="Content\UI\textures\icons\SlimeFamily.png" />
+    <None Include="Content\UI\textures\icons\GianFamily.png" />
+    <None Include="Content\UI\textures\icons\FloranFamily.png" />
+    <None Include="Content\UI\textures\icons\ChitanFamily.png" />
+    <None Include="Content\UI\textures\icons\EtheranFamily.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

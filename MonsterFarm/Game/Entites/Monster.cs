@@ -17,7 +17,7 @@ namespace MonsterFarm.Game.Entites
 
     public class Monster : Entity
     {
-        private readonly char[] _families = { 'e', 'g', 'a', 'b', 'p', 's' };
+        private readonly char[] _families = { 'e', 'g', 'c', 'b', 'f', 's' };
         private Guid _guid = Guid.NewGuid();
         private string _id;
         private int _purity;
@@ -34,21 +34,30 @@ namespace MonsterFarm.Game.Entites
         {
             { "es2", "Fire Snake" },
             { "ss1", "Slimey Boy" },
-            { "bp2", "ManBagPig" }
+            { "bf2", "ManBagPig" },
+            { "ge1", "Geodog" },
+            { "fg1", "Cactelot" },
+            { "cf2", "Arachnicore" }
         };
 
         private Dictionary<string, IconType> _temp_monster_icon_map = new Dictionary<string, IconType>
         {
             { "es2", IconType.RubyPink },
             { "ss1", IconType.PotionBlue },
-            { "bp2", IconType.Sack }
+            { "bf2", IconType.Sack },
+            { "ge1", IconType.Feather },
+            { "fg1", IconType.OrbGreen },
+            { "cf2", IconType.RubyPurple }
         };
 
         private Dictionary<char, IconType> _temp_family_icon_map = new Dictionary<char, IconType>
         {
-            { 'e', IconType.OrbRed },
-            { 's', IconType.OrbBlue },
-            { 'b', IconType.OrbGreen }
+            { 'e', IconType.EtheranFamily },
+            { 'g', IconType.GianFamily },
+            { 'c', IconType.ChitanFamily },
+            { 'b', IconType.BeastFamily },
+            { 'f', IconType.FloranFamily },
+            { 's', IconType.SlimeFamily },
         };
 
         public Monster(string id)
