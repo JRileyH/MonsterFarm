@@ -304,6 +304,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/textures/icons/background.png
 
+#begin UI/textures/icons/BeastFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/BeastFamily.png
+
 #begin UI/textures/icons/BloodySword.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -340,6 +352,18 @@
 /processorParam:TextureFormat=Color
 /build:UI/textures/icons/Book.png
 
+#begin UI/textures/icons/ChitanFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/ChitanFamily.png
+
 #begin UI/textures/icons/Cubes.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -363,6 +387,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/textures/icons/Diamond.png
+
+#begin UI/textures/icons/EtheranFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/EtheranFamily.png
 
 #begin UI/textures/icons/Explanation.png
 /importer:TextureImporter
@@ -399,6 +435,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/textures/icons/FloppyDisk.png
+
+#begin UI/textures/icons/FloranFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/FloranFamily.png
+
+#begin UI/textures/icons/GianFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/GianFamily.png
 
 #begin UI/textures/icons/GoldCoins.png
 /importer:TextureImporter
@@ -819,6 +879,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:UI/textures/icons/Skull.png
+
+#begin UI/textures/icons/SlimeFamily.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:UI/textures/icons/SlimeFamily.png
 
 #begin UI/textures/icons/Sword.png
 /importer:TextureImporter

@@ -36,7 +36,10 @@ namespace MonsterFarm.Desktop
         string[] MonsterPool = new string[]{
             "ss1",
             "es2",
-            "bp2"
+            "bf2",
+            "ge1",
+            "fg1",
+            "cf2"
         };
 
         protected override void Initialize()
@@ -47,7 +50,7 @@ namespace MonsterFarm.Desktop
             //Background stuff
             Button addRandomButton = new Button("Add", anchor: Anchor.TopLeft, size: new Vector2(150,50));
             addRandomButton.OnClick = (Element btn) => {
-                Menagerie.AddMonster(new Monster(MonsterPool[rng.Next(0,3)]));
+                Menagerie.AddMonster(new Monster(MonsterPool[rng.Next(0,6)]));
             };
             UserInterface.Active.AddElement(addRandomButton);
 
@@ -72,7 +75,10 @@ namespace MonsterFarm.Desktop
 
             Menagerie.AddMonster(new Monster("ss1"));
             Menagerie.AddMonster(new Monster("es2"));
-            Menagerie.AddMonster(new Monster("bp2"));
+            Menagerie.AddMonster(new Monster("bf2"));
+            Menagerie.AddMonster(new Monster("ge1"));
+            Menagerie.AddMonster(new Monster("fg1"));
+            Menagerie.AddMonster(new Monster("cf2"));
 
             Menagerie.Show();
 

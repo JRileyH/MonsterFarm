@@ -12,6 +12,18 @@ namespace MonsterFarm.UI.Elements
     {
         /// <summary>'Sword' Icon.</summary>
         Sword = 0,
+        /// <summary>The Gian family Icon</summary>
+        EtheranFamily,
+        /// <summary>The Gian family Icon</summary>
+        GianFamily,
+        /// <summary>The Chitan family Icon</summary>
+        ChitanFamily,
+        /// <summary>The Beast family Icon</summary>
+        BeastFamily,
+        /// <summary>The Floran family Icon</summary>
+        FloranFamily,
+        /// <summary>The Slime family Icon</summary>
+        SlimeFamily,
         /// <summary>'Shield' Icon.</summary>
         Shield,
         /// <summary>'Armor' Icon.</summary>

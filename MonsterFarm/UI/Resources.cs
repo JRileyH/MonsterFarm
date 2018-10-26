@@ -32,6 +32,7 @@ namespace MonsterFarm.UI
                 if (_loadedTextures[indx] == null)
                 {
                     var path = Resources._root + _basepath + EnumToString(i) + _suffix;
+                    Debug.WriteLine(path);
                     _loadedTextures[indx] = Resources._content.Load<Texture2D>(path);
                 }
                 return _loadedTextures[indx];
