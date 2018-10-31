@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game;
 using MonsterFarm.Game.Entites;
-
+using MonsterFarm.Game.Environment;
 using MonsterFarm.UI;
 using MonsterFarm.UI.Elements;
 
@@ -16,12 +16,7 @@ namespace MonsterFarm.Desktop
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        Menagerie Menagerie;
-        MonsterInfo MonsterInfo;
-        Random rng = new Random();
-
-
+        TileGroup tileGroup;
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -33,54 +28,12 @@ namespace MonsterFarm.Desktop
 
         }
 
-        string[] MonsterPool = new string[]{
-            "ss1",
-            "es2",
-            "bf2",
-            "ge1",
-            "fg1",
-            "cf2"
-        };
-
         protected override void Initialize()
         {
             UserInterface.Initialize(Content);
             UserInterface.Active.UseRenderTarget = true;
 
-            //Background stuff
-            Button addRandomButton = new Button("Add", anchor: Anchor.TopLeft, size: new Vector2(150,50));
-            addRandomButton.OnClick = (Element btn) => {
-                Menagerie.AddMonster(new Monster(MonsterPool[rng.Next(0,6)]));
-            };
-            UserInterface.Active.AddElement(addRandomButton);
-
-            Button showMenagerie = new Button("Show", anchor: Anchor.AutoInline, size: new Vector2(150, 50));
-            showMenagerie.OnClick = (Element btn) => {
-                Menagerie.Show();
-            };
-            UserInterface.Active.AddElement(showMenagerie);
-
-            //UI stuff
-            Menagerie = new Menagerie(UserInterface.Active);
-            MonsterInfo = new MonsterInfo(UserInterface.Active);
-            Menagerie.OnSelect = (Monster monster) => {
-                MonsterInfo.Show(monster);
-            };
-            Menagerie.OnClose = (Monster monster) => {
-                MonsterInfo.Hide();
-            };
-            MonsterInfo.OnKill = (Monster monster) => {
-                Menagerie.RemoveMonster(monster);
-            };
-
-            Menagerie.AddMonster(new Monster("ss1"));
-            Menagerie.AddMonster(new Monster("es2"));
-            Menagerie.AddMonster(new Monster("bf2"));
-            Menagerie.AddMonster(new Monster("ge1"));
-            Menagerie.AddMonster(new Monster("fg1"));
-            Menagerie.AddMonster(new Monster("cf2"));
-
-            Menagerie.Show();
+            tileGroup = new TileGroup().LoadContent(Content).LoadContent(Content);
 
             base.Initialize();
         }
@@ -112,6 +65,10 @@ namespace MonsterFarm.Desktop
             UserInterface.Active.Draw(spriteBatch);
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            spriteBatch.Begin();
+            tileGroup.Render(spriteBatch);
+            spriteBatch.End();
 
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);
 
