@@ -86,6 +86,15 @@
     <Compile Include="UI\Elements\VerticalScrollbar.cs" />
     <Compile Include="Game\Menagerie.cs" />
     <Compile Include="Game\MonsterInfo.cs" />
+    <Compile Include="Game\Environment\Map.cs" />
+    <Compile Include="Game\Environment\TileGroup.cs" />
+    <Compile Include="Utils\Tiled\Core.cs" />
+    <Compile Include="Utils\Tiled\ObjectGroup.cs" />
+    <Compile Include="Utils\Tiled\Tileset.cs" />
+    <Compile Include="Utils\Tiled\Map.cs" />
+    <Compile Include="Utils\Tiled\Layer.cs" />
+    <Compile Include="Utils\Tiled\ImageLayer.cs" />
+    <Compile Include="Utils\Tiled\Group.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -93,6 +102,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -242,6 +252,11 @@
     <None Include="Content\UI\textures\icons\FloranFamily.png" />
     <None Include="Content\UI\textures\icons\ChitanFamily.png" />
     <None Include="Content\UI\textures\icons\EtheranFamily.png" />
+    <None Include="Content\Environment\MapLibrary\ground.tsx" />
+    <None Include="Content\Environment\MapLibrary\outdoor.tsx" />
+    <None Include="Content\Environment\MapLibrary\t2-l2-r2-b2.tmx" />
+    <None Include="Content\Environment\MapTextures\ground.png" />
+    <None Include="Content\Environment\MapTextures\outdoor.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />
@@ -255,6 +270,12 @@
     <Folder Include="Content\UI\fonts\" />
     <Folder Include="Content\UI\effects\" />
     <Folder Include="Content\UI\textures\icons\" />
+    <Folder Include="Game\Environment\" />
+    <Folder Include="Content\Environment\" />
+    <Folder Include="Content\Environment\MapTextures\" />
+    <Folder Include="Content\Environment\MapLibrary\" />
+    <Folder Include="Utils\" />
+    <Folder Include="Utils\Tiled\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
