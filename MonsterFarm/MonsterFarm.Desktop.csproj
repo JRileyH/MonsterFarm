@@ -254,9 +254,11 @@
     <None Include="Content\UI\textures\icons\EtheranFamily.png" />
     <None Include="Content\Environment\MapLibrary\ground.tsx" />
     <None Include="Content\Environment\MapLibrary\outdoor.tsx" />
-    <None Include="Content\Environment\MapLibrary\t2-l2-r2-b2.tmx" />
     <None Include="Content\Environment\MapTextures\ground.png" />
     <None Include="Content\Environment\MapTextures\outdoor.png" />
+    <None Include="Content\Environment\MapLibrary\l2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-l2-r2-b2-v1.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

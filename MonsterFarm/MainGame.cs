@@ -33,8 +33,20 @@ namespace MonsterFarm.Desktop
             UserInterface.Initialize(Content);
             UserInterface.Active.UseRenderTarget = true;
             tgs = new TileGroup[100];
+            string tgid = "r2-v1";
             for (int i = 0; i < 100; i++){
-                tgs[i] = new TileGroup(new Vector2(27*32*i, 0)).LoadContent(Content);
+                tgs[i] = new TileGroup(tgid, new Vector2(27*32*i, 0)).LoadContent(Content);
+                switch(tgid){
+                    case "r2-v1":
+                        tgid = "t2-l2-r2-b2-v1";
+                        break;
+                    case "t2-l2-r2-b2-v1":
+                        tgid = "l2-v1";
+                        break;
+                    case "l2-v1":
+                        tgid = "r2-v1";
+                        break;
+            }
             }
 
             base.Initialize();

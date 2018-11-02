@@ -40,10 +40,10 @@ namespace MonsterFarm.Game.Environment
         private int _width;
         private int _height;
 
-        public TileGroup(Vector2 startingOffset)
+        public TileGroup(string id, Vector2 startingOffset)
         {
             _root = @"Content/Environment/MapLibrary/";
-            _map = new TmxMap(_root + "t2-l2-r2-b2.tmx");
+            _map = new TmxMap(_root + id +".tmx");
             _offset = startingOffset;
             _tiles = new List<TileNode>();
             _width = _map.Width * _map.TileWidth;
