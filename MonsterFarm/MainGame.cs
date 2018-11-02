@@ -16,7 +16,7 @@ namespace MonsterFarm.Desktop
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        TileGroup tileGroup;
+        TileGroup[] tgs;
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -32,8 +32,10 @@ namespace MonsterFarm.Desktop
         {
             UserInterface.Initialize(Content);
             UserInterface.Active.UseRenderTarget = true;
-
-            tileGroup = new TileGroup().LoadContent(Content).LoadContent(Content);
+            tgs = new TileGroup[100];
+            for (int i = 0; i < 100; i++){
+                tgs[i] = new TileGroup(new Vector2(27*32*i, 0)).LoadContent(Content);
+            }
 
             base.Initialize();
         }
@@ -57,17 +59,23 @@ namespace MonsterFarm.Desktop
 
             UserInterface.Active.Update(gameTime);
 
-            base.Update(gameTime);
+            foreach (TileGroup tg in tgs){
+                tg.Update(gameTime);
+            }
+
+                base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             UserInterface.Active.Draw(spriteBatch);
 
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            tileGroup.Render(spriteBatch);
+            foreach(TileGroup tg in tgs){
+                tg.Render(spriteBatch, GraphicsDevice.Viewport);
+            }
             spriteBatch.End();
 
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);

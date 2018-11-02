@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using static MonsterFarm.Utils.Tiled.Core;
 
 namespace MonsterFarm.Utils.Tiled
@@ -12,6 +14,7 @@ namespace MonsterFarm.Utils.Tiled
     public class TmxTileset : TmxDocument, ITmxElement
     {
         public int FirstGid { get; private set; }
+        public Texture2D Texture { get; private set; }
         public string Name { get; private set; }
         public int TileWidth { get; private set; }
         public int TileHeight { get; private set; }
@@ -25,6 +28,8 @@ namespace MonsterFarm.Utils.Tiled
         public PropertyDict Properties { get; private set; }
         public TmxImage Image { get; private set; }
         public TmxList<TmxTerrain> Terrains { get; private set; }
+
+        private string _root = @"Environment/MapTextures/";
 
         // TSX file constructor
         public TmxTileset(XContainer xDoc, string tmxDir) :
@@ -94,6 +99,11 @@ namespace MonsterFarm.Utils.Tiled
 
                 Properties = new PropertyDict(xTileset.Element("properties"));
             }
+        }
+        public TmxTileset LoadContent(ContentManager content)
+        {
+            Texture = content.Load<Texture2D>(_root + Name);
+            return this;
         }
     }
 
