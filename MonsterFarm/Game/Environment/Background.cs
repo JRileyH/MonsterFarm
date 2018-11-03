@@ -9,32 +9,28 @@ namespace MonsterFarm.Game.Environment
     public class Background
     {
         private bool _initialized = false;
+        private string _root;
+        private string _textureName;
         private Vector2 _offset;
-        private Texture2D _tile;
-        private int _tileWidth;
-        private int _tileHeight;
+        private Texture2D _tileTexture;
 
-        public Background()
+        public Background(string textureName)
         {
-            _tileWidth = 32;
-            _tileHeight = 32;
+            _root = @"Environment/MapTextures/";
+            _textureName = textureName;
         }
 
         public Background LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            Texture2D tileSet = content.Load<Texture2D>(@"Environment/MapTextures/ground");
-            Rectangle crop = new Rectangle(32, 128, TileWidth, TileHeight);
-            _tile = new Texture2D(graphicsDevice, crop.Width, crop.Height);
-            Color[] data = new Color[crop.Width * crop.Height];
-            tileSet.GetData(0, crop, data, 0, data.Length);
-            _tile.SetData(data);
-
+            _tileTexture = content.Load<Texture2D>(@"Environment/MapTextures/"+_textureName);
+            TileWidth = _tileTexture.Width;
+            TileHeight = _tileTexture.Height;
             _initialized = true;
             return this;
         }
 
-        public int TileWidth { get { return _tileWidth; } }
-        public int TileHeight { get { return _tileHeight; } }
+        public int TileWidth { get; private set; }
+        public int TileHeight { get; private set; }
 
         public void Shift(Vector2 _amt)
         {
@@ -58,7 +54,7 @@ namespace MonsterFarm.Game.Environment
             while(x * TileWidth <= viewport.Width){
                 y = -2;
                 while (y * TileHeight <= viewport.Height){
-                    spriteBatch.Draw(_tile, new Rectangle((x * TileWidth)+(int)_offset.X, (y * TileHeight)+(int)_offset.Y, TileWidth, TileHeight), Color.White);
+                    spriteBatch.Draw(_tileTexture, new Rectangle((x * TileWidth)+(int)_offset.X, (y * TileHeight)+(int)_offset.Y, TileWidth, TileHeight), Color.White);
                     y++;
                 }
                 x++;

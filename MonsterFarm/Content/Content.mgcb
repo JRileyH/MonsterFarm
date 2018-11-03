@@ -88,6 +88,18 @@
 /processorParam:TextureFormat=Color
 /build:Environment/MapTextures/outdoor.png
 
+#begin Environment/MapTextures/WaterTile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/WaterTile.png
+
 #begin UI/effects/disabled.xnb
 /copy:UI/effects/disabled.xnb
 

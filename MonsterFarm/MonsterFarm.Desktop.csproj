@@ -272,6 +272,7 @@
     <None Include="Content\Environment\MapLibrary\t2-l2-b2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\t2-l2-r2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\t2-r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapTextures\WaterTile.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

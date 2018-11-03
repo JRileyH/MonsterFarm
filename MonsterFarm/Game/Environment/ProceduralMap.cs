@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml;
+using System.IO;
 
 namespace MonsterFarm.Game.Environment
 {
@@ -12,64 +13,42 @@ namespace MonsterFarm.Game.Environment
     {
         Random rnd = new Random();
         private bool _initialized = false;
+        private string _root;
         private string _start;
         private List<TileGroup> _tileGroups;
         private Vector2 _scroll;
         private int _size;
         private Background _background;
-
-        private Dictionary<string, string[]> _connectors = new Dictionary<string, string[]>{
-            {"t2", new string[]{
-                    "t2-b2-v1",
-                    "t2-l2-b2-v1",
-                    "t2-l2-r2-b2-v1",
-                    "t2-l2-r2-v1",
-                    "t2-l2-v1",
-                    "t2-r2-b2-v1",
-                    "t2-r2-v1",
-                    "t2-v1"
-                }
-            },
-            {"l2", new string[]{
-                    "l2-b2-v1",
-                    "l2-r2-b2-v1",
-                    "l2-r2-v1",
-                    "l2-v1",
-                    "t2-l2-b2-v1",
-                    "t2-l2-r2-b2-v1",
-                    "t2-l2-r2-v1",
-                    "t2-l2-v1"
-                }
-            },
-            {"r2", new string[]{
-                    "l2-r2-b2-v1",
-                    "l2-r2-v1",
-                    "r2-b2-v1",
-                    "r2-v1",
-                    "t2-l2-r2-b2-v1",
-                    "t2-l2-r2-v1",
-                    "t2-r2-b2-v1",
-                    "t2-r2-v1"
-                }
-            },
-            {"b2", new string[]{
-                    "b2-v1",
-                    "l2-b2-v1",
-                    "l2-r2-b2-v1",
-                    "r2-b2-v1",
-                    "t2-b2-v1",
-                    "t2-l2-b2-v1",
-                    "t2-l2-r2-b2-v1",
-                    "t2-r2-b2-v1"
-                }
-            },
+        private Dictionary<string, List<string>> _connectors = new Dictionary<string, List<string>>{
+            { "t2", new List<string>() },
+            { "l2", new List<string>() },
+            { "r2", new List<string>() },
+            { "b2", new List<string>() }
         };
 
         public ProceduralMap(string start, int size)
         {
+            _root = @"Content/Environment/MapLibrary/";
+            string[] allmaps = Directory.GetFiles(@"Content/Environment/MapLibrary/", "*.tmx");
+            for (int i = 0; i < allmaps.Length; i++){
+                allmaps[i] = allmaps[i].Replace(_root, "").Replace(".tmx", "");
+                if(allmaps[i].Contains("t2")){
+                    _connectors["t2"].Add(allmaps[i]);
+                }
+                if (allmaps[i].Contains("l2")){
+                    _connectors["l2"].Add(allmaps[i]);
+                }
+                if (allmaps[i].Contains("r2")){
+                    _connectors["r2"].Add(allmaps[i]);
+                }
+                if (allmaps[i].Contains("b2")){
+                    _connectors["b2"].Add(allmaps[i]);
+                }
+            }
+
             _start = start;
             _scroll = new Vector2(0, 0);
-            _background = new Background();
+            _background = new Background("WaterTile");
             _tileGroups = new List<TileGroup>();
             _size = size;
             _build(start, "start", new Vector2(0, 0), 0);
@@ -87,6 +66,18 @@ namespace MonsterFarm.Game.Environment
                     return "t2";
             }
             return "err";
+        }
+
+        private string _randomOption(string connector, string[] offlimits){
+            List<string> optionList = _connectors[_findConnector(connector)];
+            foreach(string option in optionList){
+                foreach(string offlimit in offlimits){
+                    if(option == offlimit){
+                        optionList.Remove(option);
+                    }
+                }
+            }
+            return optionList[rnd.Next(optionList.Count)];
         }
 
         private void _build(string id, string from, Vector2 offset, int depth){
@@ -111,8 +102,8 @@ namespace MonsterFarm.Game.Environment
                     if (depth >= _size) {
                         _build(_findConnector(connector)+"-v1", connector, newOffset, depth + 1);
                     } else {
-                        string[] options = _connectors[_findConnector(connector)];
-                        _build(options[rnd.Next(options.Length)], connector, newOffset, depth + 1);
+
+                        _build(_randomOption(connector, new string[]{}), connector, newOffset, depth + 1);
                     }
                 }
             }
