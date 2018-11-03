@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -52,7 +53,6 @@ namespace MonsterFarm.Utils.Tiled
                 else
                 {
                     // TODO: Check for existence of file
-
                     xDoc = XDocument.Load(filepath);
                     TmxDirectory = Path.GetDirectoryName(filepath);
                 }

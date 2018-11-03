@@ -86,7 +86,7 @@
     <Compile Include="UI\Elements\VerticalScrollbar.cs" />
     <Compile Include="Game\Menagerie.cs" />
     <Compile Include="Game\MonsterInfo.cs" />
-    <Compile Include="Game\Environment\Map.cs" />
+    <Compile Include="Game\Environment\ProceduralMap.cs" />
     <Compile Include="Game\Environment\TileGroup.cs" />
     <Compile Include="Utils\Tiled\Core.cs" />
     <Compile Include="Utils\Tiled\ObjectGroup.cs" />
@@ -95,6 +95,7 @@
     <Compile Include="Utils\Tiled\Layer.cs" />
     <Compile Include="Utils\Tiled\ImageLayer.cs" />
     <Compile Include="Utils\Tiled\Group.cs" />
+    <Compile Include="Game\Environment\Background.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -259,6 +260,18 @@
     <None Include="Content\Environment\MapLibrary\l2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\r2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\t2-l2-r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\l2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\l2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-l2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\l2-r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-l2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-l2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\t2-r2-b2-v1.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

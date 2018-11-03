@@ -16,7 +16,8 @@ namespace MonsterFarm.Desktop
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        TileGroup[] tgs;
+        ProceduralMap proceduralMap;
+
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -32,22 +33,6 @@ namespace MonsterFarm.Desktop
         {
             UserInterface.Initialize(Content);
             UserInterface.Active.UseRenderTarget = true;
-            tgs = new TileGroup[100];
-            string tgid = "r2-v1";
-            for (int i = 0; i < 100; i++){
-                tgs[i] = new TileGroup(tgid, new Vector2(27*32*i, 0)).LoadContent(Content);
-                switch(tgid){
-                    case "r2-v1":
-                        tgid = "t2-l2-r2-b2-v1";
-                        break;
-                    case "t2-l2-r2-b2-v1":
-                        tgid = "l2-v1";
-                        break;
-                    case "l2-v1":
-                        tgid = "r2-v1";
-                        break;
-            }
-            }
 
             base.Initialize();
         }
@@ -56,7 +41,7 @@ namespace MonsterFarm.Desktop
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            proceduralMap = new ProceduralMap("r2-v1", 5).LoadContent(Content, GraphicsDevice);
         }
 
         protected override void UnloadContent()
@@ -71,11 +56,28 @@ namespace MonsterFarm.Desktop
 
             UserInterface.Active.Update(gameTime);
 
-            foreach (TileGroup tg in tgs){
-                tg.Update(gameTime);
-            }
+            // Poll for current keyboard state
+            KeyboardState state = Keyboard.GetState();
 
-                base.Update(gameTime);
+            // If they hit esc, exit
+            if (state.IsKeyDown(Keys.Escape))
+                Exit();
+
+            // Move our sprite based on arrow keys being pressed:
+            if (state.IsKeyDown(Keys.Right))
+                proceduralMap.Scroll(10, 0);
+            if (state.IsKeyDown(Keys.Left))
+                proceduralMap.Scroll(-10, 0);
+            if (state.IsKeyDown(Keys.Up))
+                proceduralMap.Scroll(0, -10);
+            if (state.IsKeyDown(Keys.Down))
+                proceduralMap.Scroll(0, 10);
+            if (state.IsKeyDown(Keys.Space))
+                proceduralMap.Scroll(0, 0);
+
+            proceduralMap.Update(gameTime);
+
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -85,9 +87,7 @@ namespace MonsterFarm.Desktop
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            foreach(TileGroup tg in tgs){
-                tg.Render(spriteBatch, GraphicsDevice.Viewport);
-            }
+            proceduralMap.Render(spriteBatch, GraphicsDevice.Viewport);
             spriteBatch.End();
 
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);

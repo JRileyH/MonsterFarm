@@ -39,6 +39,7 @@ namespace MonsterFarm.Game.Environment
         private List<TileNode> _tiles;
         private int _width;
         private int _height;
+        private string[] _connectors;
 
         public TileGroup(string id, Vector2 startingOffset)
         {
@@ -48,6 +49,9 @@ namespace MonsterFarm.Game.Environment
             _tiles = new List<TileNode>();
             _width = _map.Width * _map.TileWidth;
             _height = _map.Height * _map.TileHeight;
+            //TODO: ewww..
+            _connectors = id.Split('v')[0].Split('-');
+            Array.Resize(ref _connectors, _connectors.Length - 1);
         }
 
         public TileGroup LoadContent(ContentManager content){
@@ -80,16 +84,21 @@ namespace MonsterFarm.Game.Environment
         public int YCount { get { return _map.Height; } }
         public int TileWidth { get { return _map.TileWidth; } }
         public int TileHeight { get { return _map.TileHeight; } }
+        public string[] Connectors { get { return _connectors;  } }
 
+        public void Shift(Vector2 _amt){
+            _offset -= _amt;
+        }
         public void Update(GameTime gameTime){
             if (!_initialized) throw new Exception("Must call LoadContent before using TileGroup");
-            _offset.X--;
+
         }
 
         public void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
             if (!_initialized) throw new Exception("Must call LoadContent before using TileGroup");
-            if (_offset.X + Width > 0 && _offset.X < viewport.Width && _offset.Y + TileHeight > 0 && _offset.Y < viewport.Height){
+            //TODO: ensure no rendering outside of viewport
+            if (_offset.X + Width > 0 && _offset.X < viewport.Width && _offset.Y + Height > 0 && _offset.Y < viewport.Height){
                 foreach (TileNode tile in _tiles) {
                     Vector2 rPos = tile.Position + _offset;
                     if (rPos.X + TileWidth > 0 && rPos.X < viewport.Width && rPos.Y + TileHeight > 0 && rPos.Y < viewport.Height){
