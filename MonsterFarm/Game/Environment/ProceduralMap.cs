@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using System.Collections;
+using MonsterFarm.Utils.DataStructures;
 
 namespace MonsterFarm.Game.Environment
 {
@@ -16,6 +18,8 @@ namespace MonsterFarm.Game.Environment
         private string _root;
         private string _start;
         private List<TileGroup> _tileGroups;
+
+
         private Vector2 _scroll;
         private int _size;
         private Background _background;
@@ -25,6 +29,18 @@ namespace MonsterFarm.Game.Environment
             { "r2", new List<string>() },
             { "b2", new List<string>() }
         };
+        private Dictionary<string, string> _ = new Dictionary<string, string> {
+            {"t2", "b2"},
+            {"l2", "r2"},
+            {"r2", "l2"},
+            {"b2", "t2"}
+        };
+        private Dictionary<string, Vector2> __ = new Dictionary<string, Vector2> {
+            {"t2", new Vector2( 0, -1)},
+            {"l2", new Vector2(-1,  0)},
+            {"r2", new Vector2( 1,  0)},
+            {"b2", new Vector2( 0,  1)}
+        };
 
         public ProceduralMap(string start, int size)
         {
@@ -33,16 +49,16 @@ namespace MonsterFarm.Game.Environment
             for (int i = 0; i < allmaps.Length; i++){
                 allmaps[i] = allmaps[i].Replace(_root, "").Replace(".tmx", "");
                 if(allmaps[i].Contains("t2")){
-                    _connectors["t2"].Add(allmaps[i]);
+                    _connectors["b2"].Add(allmaps[i]);
                 }
                 if (allmaps[i].Contains("l2")){
-                    _connectors["l2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("r2")){
                     _connectors["r2"].Add(allmaps[i]);
                 }
+                if (allmaps[i].Contains("r2")){
+                    _connectors["l2"].Add(allmaps[i]);
+                }
                 if (allmaps[i].Contains("b2")){
-                    _connectors["b2"].Add(allmaps[i]);
+                    _connectors["t2"].Add(allmaps[i]);
                 }
             }
 
@@ -51,59 +67,38 @@ namespace MonsterFarm.Game.Environment
             _background = new Background("WaterTile");
             _tileGroups = new List<TileGroup>();
             _size = size;
-            _build(start, "start", new Vector2(0, 0), 0);
+            _build(start, "start", 0, new Vector2(0, 0));
         }
 
-        private string _findConnector(string input){
-            switch(input){
-                case "t2":
-                    return "b2";
-                case "l2":
-                    return "r2";
-                case "r2":
-                    return "l2";
-                case "b2":
-                    return "t2";
-            }
-            return "err";
-        }
-
-        private string _randomOption(string connector, string[] offlimits){
-            List<string> optionList = _connectors[_findConnector(connector)];
-            foreach(string option in optionList){
-                foreach(string offlimit in offlimits){
-                    if(option == offlimit){
-                        optionList.Remove(option);
+        private string _randomOption(string connector, string[] offlimits = null, bool cap = false){
+            offlimits = offlimits ?? new string[0];
+            List<string> completeList = _connectors[connector];
+            List<string> trimmedList = new List<string>(completeList);
+            foreach(string option in completeList){
+                if (cap && option.Length > 7) {
+                    trimmedList.Remove(option);
+                } else {
+                    foreach (string offlimit in offlimits) {
+                        if (option == offlimit) {
+                            trimmedList.Remove(option);
+                        }
                     }
                 }
             }
-            return optionList[rnd.Next(optionList.Count)];
+            return trimmedList[rnd.Next(trimmedList.Count)];
         }
 
-        private void _build(string id, string from, Vector2 offset, int depth){
-            TileGroup tileGroup = new TileGroup(id, offset);
-            foreach(string connector in tileGroup.Connectors){
-                if(connector != _findConnector(from)){
-                    Vector2 newOffset = offset;//todo: copy this object?
-                    switch (connector){
-                        case "t2":
-                            newOffset.Y -= tileGroup.Height;
-                            break;
-                        case "l2":
-                            newOffset.X -= tileGroup.Width;
-                            break;
-                        case "r2":
-                            newOffset.X += tileGroup.Width;
-                            break;
-                        case "b2":
-                            newOffset.Y += tileGroup.Height;
-                            break;
-                    }
+        private void _build(string id, string from, int depth, Vector2 position){
+            TileGroup tileGroup = new TileGroup(id, position);
+
+            foreach (string connector in tileGroup.Connectors){
+                if(connector != from){
+                    Vector2 newPosition = position + (__[connector] * tileGroup.Dimensions);
                     if (depth >= _size) {
-                        _build(_findConnector(connector)+"-v1", connector, newOffset, depth + 1);
+                        _build(_randomOption(connector, cap: true), _[connector], depth + 1, newPosition);
                     } else {
 
-                        _build(_randomOption(connector, new string[]{}), connector, newOffset, depth + 1);
+                        _build(_randomOption(connector), _[connector], depth + 1, newPosition);
                     }
                 }
             }

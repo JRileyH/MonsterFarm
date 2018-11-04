@@ -36,6 +36,7 @@ namespace MonsterFarm.Game.Environment
         private string _root;
         private bool _initialized = false;
         private Vector2 _offset;
+        private Vector2 _dimensions;
         private List<TileNode> _tiles;
         private int _width;
         private int _height;
@@ -49,6 +50,7 @@ namespace MonsterFarm.Game.Environment
             _tiles = new List<TileNode>();
             _width = _map.Width * _map.TileWidth;
             _height = _map.Height * _map.TileHeight;
+            _dimensions = new Vector2(_width, _height);
             //TODO: ewww..
             _connectors = id.Split('v')[0].Split('-');
             Array.Resize(ref _connectors, _connectors.Length - 1);
@@ -84,7 +86,8 @@ namespace MonsterFarm.Game.Environment
         public int YCount { get { return _map.Height; } }
         public int TileWidth { get { return _map.TileWidth; } }
         public int TileHeight { get { return _map.TileHeight; } }
-        public string[] Connectors { get { return _connectors;  } }
+        public Vector2 Dimensions { get { return _dimensions; } }
+        public string[] Connectors { get { return _connectors; } }
 
         public void Shift(Vector2 _amt){
             _offset -= _amt;

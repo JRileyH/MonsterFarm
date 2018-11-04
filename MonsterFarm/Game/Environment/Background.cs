@@ -22,7 +22,7 @@ namespace MonsterFarm.Game.Environment
 
         public Background LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            _tileTexture = content.Load<Texture2D>(@"Environment/MapTextures/"+_textureName);
+            _tileTexture = content.Load<Texture2D>(_root+_textureName);
             TileWidth = _tileTexture.Width;
             TileHeight = _tileTexture.Height;
             _initialized = true;

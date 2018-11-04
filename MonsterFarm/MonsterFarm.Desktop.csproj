@@ -96,6 +96,7 @@
     <Compile Include="Utils\Tiled\ImageLayer.cs" />
     <Compile Include="Utils\Tiled\Group.cs" />
     <Compile Include="Game\Environment\Background.cs" />
+    <Compile Include="Utils\DataStructures.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
