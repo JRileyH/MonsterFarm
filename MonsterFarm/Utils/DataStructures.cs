@@ -38,8 +38,22 @@ namespace MonsterFarm.Utils.DataStructures
             int sy = y + _yshift;
             return sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0 ? default(T) : _data[sx, sy];
         }
+        public T Get(float x, float y)
+        {
+            int sx = (int)x + _xshift;
+            int sy = (int)y + _yshift;
+            return sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0 ? default(T) : _data[sx, sy];
+        }
         public void Add(int x, int y, Object entry)
         {
+            _resize(x, y);
+            _data[x + _xshift, y + _yshift] = (T)entry;
+            _populateNodeList();
+        }
+        public void Add(float xf, float yf, Object entry)
+        {
+            int x = (int)xf;
+            int y = (int)yf;
             _resize(x, y);
             _data[x + _xshift, y + _yshift] = (T)entry;
             _populateNodeList();
@@ -134,7 +148,9 @@ namespace MonsterFarm.Utils.DataStructures
             {
                 for (int y = 0; y < _data.GetLength(1); y++)
                 {
-                    yield return _data[x, y];
+                    if (!EqualityComparer<T>.Default.Equals(_data[x, y], default(T))) {
+                        yield return _data[x, y];
+                    }
                 }
             }
         }

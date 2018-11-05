@@ -41,7 +41,7 @@ namespace MonsterFarm.Desktop
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            proceduralMap = new ProceduralMap("r2-v1", 5).LoadContent(Content, GraphicsDevice);
+            proceduralMap = new ProceduralMap("t2-l2-r2-b2-v1", 5).LoadContent(Content, GraphicsDevice);
         }
 
         protected override void UnloadContent()

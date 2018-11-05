@@ -17,7 +17,7 @@ namespace MonsterFarm.Game.Environment
         private bool _initialized = false;
         private string _root;
         private string _start;
-        private List<TileGroup> _tileGroups;
+        private Coordinate<TileGroup> _tileGroups;
 
 
         private Vector2 _scroll;
@@ -65,9 +65,9 @@ namespace MonsterFarm.Game.Environment
             _start = start;
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
-            _tileGroups = new List<TileGroup>();
+            _tileGroups = new Coordinate<TileGroup>();
             _size = size;
-            _build(start, "start", 0, new Vector2(0, 0));
+            _build(start, "start", new Vector2(0, 0), 0, new string[]{});
         }
 
         private string _randomOption(string connector, string[] offlimits = null, bool cap = false){
@@ -88,21 +88,30 @@ namespace MonsterFarm.Game.Environment
             return trimmedList[rnd.Next(trimmedList.Count)];
         }
 
-        private void _build(string id, string from, int depth, Vector2 position){
+        private void _build(string id, string from, Vector2 position, int depth, string[] exlude){
             TileGroup tileGroup = new TileGroup(id, position);
-
+            _tileGroups.Add(position.X, position.Y, tileGroup);
+            Debug.WriteLine("- " + position.X + ", " + position.Y + ": " + id);
             foreach (string connector in tileGroup.Connectors){
-                if(connector != from){
-                    Vector2 newPosition = position + (__[connector] * tileGroup.Dimensions);
-                    if (depth >= _size) {
-                        _build(_randomOption(connector, cap: true), _[connector], depth + 1, newPosition);
+                Vector2 updatePosition = position + __[connector];
+                if (connector != from){
+                    if (_tileGroups.Get(updatePosition.X, updatePosition.Y) != null)
+                    {
+                        Debug.WriteLine("x " + updatePosition.X + ", " + updatePosition.Y);
+                        break;
+                    }
+                    if (depth >= _size || _tileGroups.Get(updatePosition.X, updatePosition.Y) != null) {
+                        _build(_randomOption(connector, cap: true), _[connector], updatePosition, depth + 1, new string[]{});
                     } else {
-
-                        _build(_randomOption(connector), _[connector], depth + 1, newPosition);
+                        string[] exlusions = new string[1 + exlude.Length];
+                        Array.Copy(new string[]{from}, exlusions, 1);
+                        Array.Copy(exlude, 0, exlusions, 1, exlude.Length);
+                        _build(_randomOption(connector, exlude), _[connector], updatePosition, depth + 1, exlusions);
                     }
                 }
             }
-            _tileGroups.Add(tileGroup);
+
+
         }
 
         public void Scroll(int x, int y){

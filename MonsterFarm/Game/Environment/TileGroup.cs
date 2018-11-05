@@ -42,15 +42,16 @@ namespace MonsterFarm.Game.Environment
         private int _height;
         private string[] _connectors;
 
-        public TileGroup(string id, Vector2 startingOffset)
+        public TileGroup(string id, Vector2 position)
         {
             _root = @"Content/Environment/MapLibrary/";
             _map = new TmxMap(_root + id +".tmx");
-            _offset = startingOffset;
+
             _tiles = new List<TileNode>();
             _width = _map.Width * _map.TileWidth;
             _height = _map.Height * _map.TileHeight;
             _dimensions = new Vector2(_width, _height);
+            _offset = position * _dimensions;
             //TODO: ewww..
             _connectors = id.Split('v')[0].Split('-');
             Array.Resize(ref _connectors, _connectors.Length - 1);
@@ -100,7 +101,6 @@ namespace MonsterFarm.Game.Environment
         public void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
             if (!_initialized) throw new Exception("Must call LoadContent before using TileGroup");
-            //TODO: ensure no rendering outside of viewport
             if (_offset.X + Width > 0 && _offset.X < viewport.Width && _offset.Y + Height > 0 && _offset.Y < viewport.Height){
                 foreach (TileNode tile in _tiles) {
                     Vector2 rPos = tile.Position + _offset;
