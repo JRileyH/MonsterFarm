@@ -8,6 +8,7 @@ using System.Xml;
 using System.IO;
 using System.Collections;
 using MonsterFarm.Utils.DataStructures;
+using System.Linq;
 
 namespace MonsterFarm.Game.Environment
 {
@@ -16,9 +17,7 @@ namespace MonsterFarm.Game.Environment
         Random rnd = new Random();
         private bool _initialized = false;
         private string _root;
-        private string _start;
         private Coordinate<TileGroup> _tileGroups;
-
 
         private Vector2 _scroll;
         private int _size;
@@ -42,7 +41,7 @@ namespace MonsterFarm.Game.Environment
             {"b2", new Vector2( 0,  1)}
         };
 
-        public ProceduralMap(string start, int size)
+        public ProceduralMap()
         {
             _root = @"Content/Environment/MapLibrary/";
             string[] allmaps = Directory.GetFiles(@"Content/Environment/MapLibrary/", "*.tmx");
@@ -62,56 +61,43 @@ namespace MonsterFarm.Game.Environment
                 }
             }
 
-            _start = start;
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
             _tileGroups = new Coordinate<TileGroup>();
-            _size = size;
-            _build(start, "start", new Vector2(0, 0), 0, new string[]{});
+            _build(10);
+
         }
 
-        private string _randomOption(string connector, string[] offlimits = null, bool cap = false){
-            offlimits = offlimits ?? new string[0];
-            List<string> completeList = _connectors[connector];
-            List<string> trimmedList = new List<string>(completeList);
-            foreach(string option in completeList){
-                if (cap && option.Length > 7) {
-                    trimmedList.Remove(option);
-                } else {
-                    foreach (string offlimit in offlimits) {
-                        if (option == offlimit) {
-                            trimmedList.Remove(option);
-                        }
-                    }
-                }
+        private void _build(int numberOfRooms){
+            Vector2 checkPos = new Vector2(0, 0);
+            _tileGroups.Add(0, 0, new TileGroup(checkPos));
+            float randomCompare;
+            float rndStart = 0.2f, rndEnd = 0.01f;
+            for (int i = 0; i < numberOfRooms; i++){
+                float perc = i / ((float)numberOfRooms - 1);
+                randomCompare = rndStart + (rndEnd - rndStart) * perc;
+                checkPos = _getNewPos();
+                Debug.WriteLine("Wrote: "+checkPos);
+                _tileGroups.Add(checkPos.X, checkPos.Y, new TileGroup(checkPos));
+                Debug.WriteLine(_tileGroups.Get(checkPos.X, checkPos.Y).X+", "+ _tileGroups.Get(checkPos.X, checkPos.Y).Y);
+                Debug.WriteLine("-----");
             }
-            return trimmedList[rnd.Next(trimmedList.Count)];
         }
-
-        private void _build(string id, string from, Vector2 position, int depth, string[] exlude){
-            TileGroup tileGroup = new TileGroup(id, position);
-            _tileGroups.Add(position.X, position.Y, tileGroup);
-            Debug.WriteLine("- " + position.X + ", " + position.Y + ": " + id);
-            foreach (string connector in tileGroup.Connectors){
-                Vector2 updatePosition = position + __[connector];
-                if (connector != from){
-                    if (_tileGroups.Get(updatePosition.X, updatePosition.Y) != null)
-                    {
-                        Debug.WriteLine("x " + updatePosition.X + ", " + updatePosition.Y);
-                        break;
-                    }
-                    if (depth >= _size || _tileGroups.Get(updatePosition.X, updatePosition.Y) != null) {
-                        _build(_randomOption(connector, cap: true), _[connector], updatePosition, depth + 1, new string[]{});
-                    } else {
-                        string[] exlusions = new string[1 + exlude.Length];
-                        Array.Copy(new string[]{from}, exlusions, 1);
-                        Array.Copy(exlude, 0, exlusions, 1, exlude.Length);
-                        _build(_randomOption(connector, exlude), _[connector], updatePosition, depth + 1, exlusions);
-                    }
-                }
+        private Vector2 _getNewPos(){
+            TileGroup branchOff = _tileGroups.Get();
+            Debug.WriteLine("Found: "+branchOff.X+", "+branchOff.Y);
+            Vector2[] options = {
+                new Vector2(branchOff.X,branchOff.Y+1),
+                new Vector2(branchOff.X,branchOff.Y-1),
+                new Vector2(branchOff.X+1,branchOff.Y),
+                new Vector2(branchOff.X-1,branchOff.Y)
+            };
+            options = options.OrderBy(i => rnd.Next()).ToArray();
+            foreach(Vector2 option in options){
+                Debug.WriteLine("Check: " + option);
+                if(_tileGroups.Get(option.X, option.Y) == null) return option;
             }
-
-
+            return _getNewPos();
         }
 
         public void Scroll(int x, int y){

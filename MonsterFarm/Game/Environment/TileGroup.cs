@@ -13,20 +13,16 @@ namespace MonsterFarm.Game.Environment
 {
     class TileNode
     {
-        private Texture2D _texture;
-        private Vector2 _position;
-        private Rectangle _crop;
-
         public TileNode(TmxTileset tileset, Vector2 position, int value)
         {
-            _texture = tileset.Texture;
+            Texture = tileset.Texture;
             value -= tileset.FirstGid;
-            _position = new Vector2(position.X * tileset.TileWidth, position.Y * tileset.TileHeight);
-            _crop = new Rectangle((int)(value % tileset.Columns * tileset.TileWidth), (int)(value / tileset.Columns) * tileset.TileHeight, tileset.TileWidth, tileset.TileHeight);
+            Position = new Vector2(position.X * tileset.TileWidth, position.Y * tileset.TileHeight);
+            Crop = new Rectangle((int)(value % tileset.Columns * tileset.TileWidth), (int)(value / tileset.Columns) * tileset.TileHeight, tileset.TileWidth, tileset.TileHeight);
         }
-        public Texture2D Texture { get { return _texture; } }
-        public Vector2 Position { get { return _position; } }
-        public Rectangle Crop { get { return _crop; } }
+        public Texture2D Texture { get; }
+        public Vector2 Position { get; }
+        public Rectangle Crop { get; }
         public Color Color { get { return Color.White; } }
     }
 
@@ -36,33 +32,26 @@ namespace MonsterFarm.Game.Environment
         private string _root;
         private bool _initialized = false;
         private Vector2 _offset;
-        private Vector2 _dimensions;
         private List<TileNode> _tiles;
-        private int _width;
-        private int _height;
-        private string[] _connectors;
 
-        public TileGroup(string id, Vector2 position)
+        public TileGroup(Vector2 position)
         {
             _root = @"Content/Environment/MapLibrary/";
-            _map = new TmxMap(_root + id +".tmx");
-
+            _map = new TmxMap(_root + "test-v1.tmx");
             _tiles = new List<TileNode>();
-            _width = _map.Width * _map.TileWidth;
-            _height = _map.Height * _map.TileHeight;
-            _dimensions = new Vector2(_width, _height);
-            _offset = position * _dimensions;
-            //TODO: ewww..
-            _connectors = id.Split('v')[0].Split('-');
-            Array.Resize(ref _connectors, _connectors.Length - 1);
+            Width = _map.Width * _map.TileWidth;
+            Height = _map.Height * _map.TileHeight;
+            _offset = position * new Vector2(Width, Height);
+            X = (int)position.X;
+            Y = (int)position.Y;
+            Connectors = new string[] { };
         }
 
         public TileGroup LoadContent(ContentManager content){
             foreach(TmxTileset tileset in _map.Tilesets){
                 tileset.LoadContent(content);
             }
-            foreach(TmxLayer layer in _map.Layers)
-            {
+            foreach(TmxLayer layer in _map.Layers){
                 foreach (TmxLayerTile tile in layer.Tiles){
                     int gid = tile.Gid;
                     if (gid == 0) continue;
@@ -81,14 +70,15 @@ namespace MonsterFarm.Game.Environment
             return this;
         }
 
-        public int Width { get { return _width; } }
-        public int Height { get { return _height; } }
+        public int X { get; }
+        public int Y { get; }
+        public int Width { get; }
+        public int Height { get; }
         public int XCount { get { return _map.Width; } }
         public int YCount { get { return _map.Height; } }
         public int TileWidth { get { return _map.TileWidth; } }
         public int TileHeight { get { return _map.TileHeight; } }
-        public Vector2 Dimensions { get { return _dimensions; } }
-        public string[] Connectors { get { return _connectors; } }
+        public string[] Connectors { get; }
 
         public void Shift(Vector2 _amt){
             _offset -= _amt;

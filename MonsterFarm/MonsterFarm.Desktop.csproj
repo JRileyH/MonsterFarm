@@ -260,20 +260,21 @@
     <None Include="Content\Environment\MapTextures\outdoor.png" />
     <None Include="Content\Environment\MapLibrary\l2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-l2-r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-l2-r2-t2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\l2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-l2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\l2-r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\r2-b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-l2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-t2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\l2-t2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\r2-t2-v1.tmx" />
     <None Include="Content\Environment\MapLibrary\t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\l2-r2-b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-l2-b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-l2-r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-r2-b2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-l2-r2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-l2-t2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\l2-r2-t2-v1.tmx" />
+    <None Include="Content\Environment\MapLibrary\b2-r2-t2-v1.tmx" />
     <None Include="Content\Environment\MapTextures\WaterTile.png" />
+    <None Include="Content\Environment\MapLibrary\test-v1.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

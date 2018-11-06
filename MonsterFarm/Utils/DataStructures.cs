@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MonsterFarm.Utils.DataStructures
 {
@@ -20,17 +21,31 @@ namespace MonsterFarm.Utils.DataStructures
     public class Coordinate<T> : IEnumerable<T>
     {
         T[,] _data;
+        int _count;
         int _xshift;
         int _yshift;
         int _xsize;
         int _ysize;
+        bool _resizable;
 
-        public Coordinate()
+        public Coordinate(int? x = null, int? y = null, bool resizable = true)
         {
-            _data = new T[1, 1];
-            _xshift = _yshift = 0;
-            _xsize = _ysize = 1;
+            _count = 0;
+            _xsize = (x * 2) ?? 1;
+            _ysize = (y * 2) ?? 1;
+            _xshift = x ?? 0;
+            _yshift = y ?? 0;
+            _resizable = resizable;
+            _data = new T[_xsize, _ysize];
             _populateNodeList();
+        }
+        public T Get(){
+            Random rnd = new Random();
+            List<T> all = new List<T>();
+            foreach(T i in this){
+                all.Add(i);
+            }
+            return all[rnd.Next(all.Count)];
         }
         public T Get(int x, int y)
         {
@@ -46,16 +61,26 @@ namespace MonsterFarm.Utils.DataStructures
         }
         public void Add(int x, int y, Object entry)
         {
-            _resize(x, y);
-            _data[x + _xshift, y + _yshift] = (T)entry;
+            if(_resizable) _resize(x, y);
+            int sx = x + _xshift;
+            int sy = y + _yshift;
+            if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0) return;
+            _count++;
+            Debug.WriteLine("Adding: " + x + ", " + y);
+            _data[sx, sy] = (T)entry;
             _populateNodeList();
         }
         public void Add(float xf, float yf, Object entry)
         {
             int x = (int)xf;
             int y = (int)yf;
-            _resize(x, y);
-            _data[x + _xshift, y + _yshift] = (T)entry;
+            if (_resizable) _resize(x, y);
+            int sx = x + _xshift;
+            int sy = y + _yshift;
+            if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0) return;
+            _count++;
+            Debug.WriteLine("Adding: " + x + ", " + y);
+            _data[sx, sy] = (T)entry;
             _populateNodeList();
         }
         public void Remove(int x, int y)
@@ -64,9 +89,13 @@ namespace MonsterFarm.Utils.DataStructures
             int sy = y + _yshift;
             if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0)
             {
+                _count--;
                 _data[sx, y + sy] = default(T);
                 _populateNodeList();
             }
+        }
+        public int Count(){
+            return _count;
         }
         public List<CoordinateNode<T>> Nodes { get; private set; }
         void _populateNodeList()
