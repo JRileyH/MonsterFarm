@@ -65,6 +65,7 @@ namespace MonsterFarm.Game.Environment
             _background = new Background("WaterTile");
             _tileGroups = new Coordinate<TileGroup>();
             _build(10);
+            Debug.WriteLine(_tileGroups.ToString());
 
         }
 

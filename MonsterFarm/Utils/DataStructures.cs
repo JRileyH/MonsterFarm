@@ -188,5 +188,24 @@ namespace MonsterFarm.Utils.DataStructures
         {
             return GetEnumerator();
         }
+
+        public override string ToString()
+        {
+            string output = "";
+            string horizontal = "-";
+            for (int x = 0; x < _data.GetLength(0); x++){
+                horizontal += "----";
+            }
+            horizontal += "\n";
+            for (int y = 0; y < _data.GetLength(1); y++)
+            {
+                output += horizontal;
+                for (int x = 0; x < _data.GetLength(0); x++){
+                    output += ("| " + (_data[x, y] == null ? "  " : "x "));
+                }
+                output += "|\n";
+            }
+            return output+horizontal;
+        }
     }
 }
