@@ -21,70 +21,43 @@ namespace MonsterFarm.Utils.DataStructures
     public class Coordinate<T> : IEnumerable<T>
     {
         T[,] _data;
-        int _count;
-        int _xshift;
-        int _yshift;
-        int _xsize;
-        int _ysize;
-        bool _resizable;
-
-        public Coordinate(int? x = null, int? y = null, bool resizable = true)
+        int _count, _xshift, _yshift, _xsize, _ysize;
+        public Coordinate()
         {
             _count = 0;
-            _xsize = (x * 2) ?? 1;
-            _ysize = (y * 2) ?? 1;
-            _xshift = x ?? 0;
-            _yshift = y ?? 0;
-            _resizable = resizable;
+            _xsize = _ysize = 4;
+            _xshift = _yshift = 2;
             _data = new T[_xsize, _ysize];
             _populateNodeList();
         }
         public T Get(){
-            Random rnd = new Random();
             List<T> all = new List<T>();
             foreach(T i in this){
                 all.Add(i);
             }
-            return all[rnd.Next(all.Count)];
+            return all[new Random().Next(all.Count)];
         }
-        public T Get(int x, int y)
-        {
+        public T Get(int x, int y){
             int sx = x + _xshift;
             int sy = y + _yshift;
             return sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0 ? default(T) : _data[sx, sy];
         }
-        public T Get(float x, float y)
-        {
-            int sx = (int)x + _xshift;
-            int sy = (int)y + _yshift;
-            return sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0 ? default(T) : _data[sx, sy];
+        public T Get(float xf, float yf){
+            return Get((int)xf, (int)yf);
         }
-        public void Add(int x, int y, Object entry)
-        {
-            if(_resizable) _resize(x, y);
+        public void Add(int x, int y, Object entry){
+            _resize(x, y);
             int sx = x + _xshift;
             int sy = y + _yshift;
             if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0) return;
             _count++;
-            Debug.WriteLine("Adding: " + x + ", " + y);
             _data[sx, sy] = (T)entry;
             _populateNodeList();
         }
-        public void Add(float xf, float yf, Object entry)
-        {
-            int x = (int)xf;
-            int y = (int)yf;
-            if (_resizable) _resize(x, y);
-            int sx = x + _xshift;
-            int sy = y + _yshift;
-            if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0) return;
-            _count++;
-            Debug.WriteLine("Adding: " + x + ", " + y);
-            _data[sx, sy] = (T)entry;
-            _populateNodeList();
+        public void Add(float xf, float yf, Object entry){
+            Add((int)xf, (int)yf, entry);
         }
-        public void Remove(int x, int y)
-        {
+        public void Remove(int x, int y){
             int sx = x + _xshift;
             int sy = y + _yshift;
             if (sx >= _data.GetLength(0) || sx < 0 || sy >= _data.GetLength(1) || sy < 0)
@@ -94,6 +67,9 @@ namespace MonsterFarm.Utils.DataStructures
                 _populateNodeList();
             }
         }
+        public void Remove(float xf, float yf){
+            Remove((int)xf, (int)yf);
+        }
         public int Count(){
             return _count;
         }
@@ -101,11 +77,14 @@ namespace MonsterFarm.Utils.DataStructures
         void _populateNodeList()
         {
             List<CoordinateNode<T>> nodeList = new List<CoordinateNode<T>>();
-            for (int x = 0; x < _data.GetLength(0); x++)
+            for (int y = 0; y < _data.GetLength(1); y++)
             {
-                for (int y = 0; y < _data.GetLength(1); y++)
+                for (int x = 0; x < _data.GetLength(0); x++)
                 {
-                    nodeList.Add(new CoordinateNode<T>(x - _xshift, y - _yshift, _data[x, y]));
+                    if (!EqualityComparer<T>.Default.Equals(_data[x, y], default(T)))
+                    {
+                        nodeList.Add(new CoordinateNode<T>(x - _xshift, y - _yshift, _data[x, y]));
+                    }
                 }
             }
             Nodes = nodeList;
@@ -155,9 +134,8 @@ namespace MonsterFarm.Utils.DataStructures
                 //Create data of new size
                 _data = new T[_xsize, _ysize];
                 //Find shifted location of existing data in new coordinate array
-                //Converting to double and finding ceiling is done for the single case of 1/2=0
-                int _xs = xltb ? (int)Math.Ceiling((double)_xshift / (double)2) : 0;
-                int _ys = yltb ? (int)Math.Ceiling((double)_yshift / (double)2) : 0;
+                int _xs = xltb ? _xshift / 2 : xgtb ? _xsize / 2 : 0;
+                int _ys = yltb ? _yshift / 2 : ygtb ? _ysize / 2 : 0;
                 //write existing data into new coordinate array
                 for (int ix = 0; ix < _dataCopy.GetLength(0); ix++)
                 {
@@ -173,9 +151,9 @@ namespace MonsterFarm.Utils.DataStructures
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int x = 0; x < _data.GetLength(0); x++)
+            for (int y = 0; y < _data.GetLength(1); y++)
             {
-                for (int y = 0; y < _data.GetLength(1); y++)
+                for (int x = 0; x < _data.GetLength(0); x++)
                 {
                     if (!EqualityComparer<T>.Default.Equals(_data[x, y], default(T))) {
                         yield return _data[x, y];
@@ -187,25 +165,6 @@ namespace MonsterFarm.Utils.DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public override string ToString()
-        {
-            string output = "";
-            string horizontal = "-";
-            for (int x = 0; x < _data.GetLength(0); x++){
-                horizontal += "----";
-            }
-            horizontal += "\n";
-            for (int y = 0; y < _data.GetLength(1); y++)
-            {
-                output += horizontal;
-                for (int x = 0; x < _data.GetLength(0); x++){
-                    output += ("| " + (_data[x, y] == null ? "  " : "x "));
-                }
-                output += "|\n";
-            }
-            return output+horizontal;
         }
     }
 }

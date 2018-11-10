@@ -14,13 +14,11 @@ namespace MonsterFarm.Game.Environment
 {
     public class ProceduralMap
     {
-        Random rnd = new Random();
         private bool _initialized = false;
         private string _root;
         private Coordinate<TileGroup> _tileGroups;
 
         private Vector2 _scroll;
-        private int _size;
         private Background _background;
         private Dictionary<string, List<string>> _connectors = new Dictionary<string, List<string>>{
             { "t2", new List<string>() },
@@ -33,12 +31,6 @@ namespace MonsterFarm.Game.Environment
             {"l2", "r2"},
             {"r2", "l2"},
             {"b2", "t2"}
-        };
-        private Dictionary<string, Vector2> __ = new Dictionary<string, Vector2> {
-            {"t2", new Vector2( 0, -1)},
-            {"l2", new Vector2(-1,  0)},
-            {"r2", new Vector2( 1,  0)},
-            {"b2", new Vector2( 0,  1)}
         };
 
         public ProceduralMap()
@@ -65,40 +57,32 @@ namespace MonsterFarm.Game.Environment
             _background = new Background("WaterTile");
             _tileGroups = new Coordinate<TileGroup>();
             _build(10);
-            Debug.WriteLine(_tileGroups.ToString());
 
         }
 
         private void _build(int numberOfRooms){
-            Vector2 checkPos = new Vector2(0, 0);
-            _tileGroups.Add(0, 0, new TileGroup(checkPos));
-            float randomCompare;
-            float rndStart = 0.2f, rndEnd = 0.01f;
-            for (int i = 0; i < numberOfRooms; i++){
-                float perc = i / ((float)numberOfRooms - 1);
-                randomCompare = rndStart + (rndEnd - rndStart) * perc;
-                checkPos = _getNewPos();
-                Debug.WriteLine("Wrote: "+checkPos);
-                _tileGroups.Add(checkPos.X, checkPos.Y, new TileGroup(checkPos));
-                Debug.WriteLine(_tileGroups.Get(checkPos.X, checkPos.Y).X+", "+ _tileGroups.Get(checkPos.X, checkPos.Y).Y);
-                Debug.WriteLine("-----");
+            _tileGroups.Add(0, 0, new TileGroup(new Vector2(0, 0)));
+            for (int i = 0; i <= numberOfRooms; i++)
+            {
+                bool stillLooking = true;
+                while(stillLooking){
+                    TileGroup t = _tileGroups.Get();
+                    TileGroup[] options = {
+                        new TileGroup(t.X+1, t.Y),
+                        new TileGroup(t.X-1, t.Y),
+                        new TileGroup(t.X, t.Y+1),
+                        new TileGroup(t.X, t.Y-1)
+                    };
+                    options = options.OrderBy(o => new Random().Next()).ToArray();
+                    foreach(TileGroup option in options){
+                        if(_tileGroups.Get(option.X, option.Y) == null){
+                            _tileGroups.Add(option.X, option.Y, option);
+                            stillLooking = false;
+                            break;
+                        }
+                    }
+                }
             }
-        }
-        private Vector2 _getNewPos(){
-            TileGroup branchOff = _tileGroups.Get();
-            Debug.WriteLine("Found: "+branchOff.X+", "+branchOff.Y);
-            Vector2[] options = {
-                new Vector2(branchOff.X,branchOff.Y+1),
-                new Vector2(branchOff.X,branchOff.Y-1),
-                new Vector2(branchOff.X+1,branchOff.Y),
-                new Vector2(branchOff.X-1,branchOff.Y)
-            };
-            options = options.OrderBy(i => rnd.Next()).ToArray();
-            foreach(Vector2 option in options){
-                Debug.WriteLine("Check: " + option);
-                if(_tileGroups.Get(option.X, option.Y) == null) return option;
-            }
-            return _getNewPos();
         }
 
         public void Scroll(int x, int y){

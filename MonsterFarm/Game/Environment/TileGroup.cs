@@ -34,6 +34,19 @@ namespace MonsterFarm.Game.Environment
         private Vector2 _offset;
         private List<TileNode> _tiles;
 
+        public TileGroup(int x, int y)
+        {
+            Vector2 position = new Vector2(x, y);
+            _root = @"Content/Environment/MapLibrary/";
+            _map = new TmxMap(_root + "test-v1.tmx");
+            _tiles = new List<TileNode>();
+            Width = _map.Width * _map.TileWidth;
+            Height = _map.Height * _map.TileHeight;
+            _offset = position * new Vector2(Width, Height);
+            X = (int)position.X;
+            Y = (int)position.Y;
+            Connectors = new string[] { };
+        }
         public TileGroup(Vector2 position)
         {
             _root = @"Content/Environment/MapLibrary/";
