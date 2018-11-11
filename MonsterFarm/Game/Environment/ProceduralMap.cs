@@ -56,7 +56,7 @@ namespace MonsterFarm.Game.Environment
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
             _tileGroups = new Coordinate<TileGroup>();
-            _build(10);
+            _build(16);
 
         }
 
@@ -66,7 +66,7 @@ namespace MonsterFarm.Game.Environment
             {
                 bool stillLooking = true;
                 while(stillLooking){
-                    TileGroup t = _tileGroups.Get();
+                    CoordinateNode<TileGroup> t = _tileGroups.Get(2);
                     TileGroup[] options = {
                         new TileGroup(t.X+1, t.Y),
                         new TileGroup(t.X-1, t.Y),
