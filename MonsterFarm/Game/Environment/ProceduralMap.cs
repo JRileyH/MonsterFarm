@@ -23,45 +23,15 @@ namespace MonsterFarm.Game.Environment
 
         private Vector2 _scroll;
         private Background _background;
-        private Dictionary<string, List<string>> _connectors = new Dictionary<string, List<string>>{
-            { "t2", new List<string>() },
-            { "l2", new List<string>() },
-            { "r2", new List<string>() },
-            { "b2", new List<string>() }
-        };
-        private Dictionary<string, string> _ = new Dictionary<string, string> {
-            {"t2", "b2"},
-            {"l2", "r2"},
-            {"r2", "l2"},
-            {"b2", "t2"}
-        };
 
         public ProceduralMap()
         {
             _root = @"Content/Environment/MapLibrary/";
-            string[] allmaps = Directory.GetFiles(@"Content/Environment/MapLibrary/", "*.tmx");
-            for (int i = 0; i < allmaps.Length; i++){
-                allmaps[i] = allmaps[i].Replace(_root, "").Replace(".tmx", "");
-                if(allmaps[i].Contains("t2")){
-                    _connectors["b2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("l2")){
-                    _connectors["r2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("r2")){
-                    _connectors["l2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("b2")){
-                    _connectors["t2"].Add(allmaps[i]);
-                }
-            }
-
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
             _tileGroups = new TileGroup[_mapSize*2, _mapSize*2];
             _bluePrint = new List<Vector2>();
             _build(15);
-
         }
 
         private List<Vector2> _available(Vector2 v)
@@ -96,7 +66,11 @@ namespace MonsterFarm.Game.Environment
 
         private void _build(int numberOfRooms){
             _bluePrint.Add(new Vector2(0, 0));
-            for (int i = 1; i <= numberOfRooms; i++)
+            _bluePrint.Add(new Vector2(1, 0));
+            _bluePrint.Add(new Vector2(0, 1));
+            _bluePrint.Add(new Vector2(-1, 0));
+            _bluePrint.Add(new Vector2(0, -1));
+            for (int i = 1; i <= numberOfRooms-4; i++)
             {
                 bool stillLooking = true;
                 while(stillLooking){
