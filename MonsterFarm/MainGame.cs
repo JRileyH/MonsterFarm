@@ -64,13 +64,13 @@ namespace MonsterFarm.Desktop
                 Exit();
 
             // Move our sprite based on arrow keys being pressed:
-            if (state.IsKeyDown(Keys.Right))
+            if (state.IsKeyDown(Keys.D))
                 proceduralMap.Scroll(10, 0);
-            if (state.IsKeyDown(Keys.Left))
+            if (state.IsKeyDown(Keys.A))
                 proceduralMap.Scroll(-10, 0);
-            if (state.IsKeyDown(Keys.Up))
+            if (state.IsKeyDown(Keys.W))
                 proceduralMap.Scroll(0, -10);
-            if (state.IsKeyDown(Keys.Down))
+            if (state.IsKeyDown(Keys.S))
                 proceduralMap.Scroll(0, 10);
             if (state.IsKeyDown(Keys.Space))
                 proceduralMap.Scroll(0, 0);

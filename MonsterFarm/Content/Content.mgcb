@@ -13,56 +13,11 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Environment/MapLibrary/b2-l2-r2-t2-v1.tmx
-/copy:Environment/MapLibrary/b2-l2-r2-t2-v1.tmx
-
-#begin Environment/MapLibrary/b2-l2-r2-v1.tmx
-/copy:Environment/MapLibrary/b2-l2-r2-v1.tmx
-
-#begin Environment/MapLibrary/b2-l2-t2-v1.tmx
-/copy:Environment/MapLibrary/b2-l2-t2-v1.tmx
-
-#begin Environment/MapLibrary/b2-l2-v1.tmx
-/copy:Environment/MapLibrary/b2-l2-v1.tmx
-
-#begin Environment/MapLibrary/b2-r2-t2-v1.tmx
-/copy:Environment/MapLibrary/b2-r2-t2-v1.tmx
-
-#begin Environment/MapLibrary/b2-r2-v1.tmx
-/copy:Environment/MapLibrary/b2-r2-v1.tmx
-
-#begin Environment/MapLibrary/b2-t2-v1.tmx
-/copy:Environment/MapLibrary/b2-t2-v1.tmx
-
-#begin Environment/MapLibrary/b2-v1.tmx
-/copy:Environment/MapLibrary/b2-v1.tmx
-
 #begin Environment/MapLibrary/ground.tsx
 /copy:Environment/MapLibrary/ground.tsx
 
-#begin Environment/MapLibrary/l2-r2-t2-v1.tmx
-/copy:Environment/MapLibrary/l2-r2-t2-v1.tmx
-
-#begin Environment/MapLibrary/l2-r2-v1.tmx
-/copy:Environment/MapLibrary/l2-r2-v1.tmx
-
-#begin Environment/MapLibrary/l2-t2-v1.tmx
-/copy:Environment/MapLibrary/l2-t2-v1.tmx
-
-#begin Environment/MapLibrary/l2-v1.tmx
-/copy:Environment/MapLibrary/l2-v1.tmx
-
 #begin Environment/MapLibrary/outdoor.tsx
 /copy:Environment/MapLibrary/outdoor.tsx
-
-#begin Environment/MapLibrary/r2-t2-v1.tmx
-/copy:Environment/MapLibrary/r2-t2-v1.tmx
-
-#begin Environment/MapLibrary/r2-v1.tmx
-/copy:Environment/MapLibrary/r2-v1.tmx
-
-#begin Environment/MapLibrary/t2-v1.tmx
-/copy:Environment/MapLibrary/t2-v1.tmx
 
 #begin Environment/MapLibrary/test/b2.tmx
 /copy:Environment/MapLibrary/test/b2.tmx
@@ -108,6 +63,51 @@
 
 #begin Environment/MapLibrary/test/t2.tmx
 /copy:Environment/MapLibrary/test/t2.tmx
+
+#begin Environment/MapLibrary/v1/b2.tmx
+/copy:Environment/MapLibrary/v1/b2.tmx
+
+#begin Environment/MapLibrary/v1/b2-l2.tmx
+/copy:Environment/MapLibrary/v1/b2-l2.tmx
+
+#begin Environment/MapLibrary/v1/b2-l2-r2.tmx
+/copy:Environment/MapLibrary/v1/b2-l2-r2.tmx
+
+#begin Environment/MapLibrary/v1/b2-l2-r2-t2.tmx
+/copy:Environment/MapLibrary/v1/b2-l2-r2-t2.tmx
+
+#begin Environment/MapLibrary/v1/b2-l2-t2.tmx
+/copy:Environment/MapLibrary/v1/b2-l2-t2.tmx
+
+#begin Environment/MapLibrary/v1/b2-r2.tmx
+/copy:Environment/MapLibrary/v1/b2-r2.tmx
+
+#begin Environment/MapLibrary/v1/b2-r2-t2.tmx
+/copy:Environment/MapLibrary/v1/b2-r2-t2.tmx
+
+#begin Environment/MapLibrary/v1/b2-t2.tmx
+/copy:Environment/MapLibrary/v1/b2-t2.tmx
+
+#begin Environment/MapLibrary/v1/l2.tmx
+/copy:Environment/MapLibrary/v1/l2.tmx
+
+#begin Environment/MapLibrary/v1/l2-r2.tmx
+/copy:Environment/MapLibrary/v1/l2-r2.tmx
+
+#begin Environment/MapLibrary/v1/l2-r2-t2.tmx
+/copy:Environment/MapLibrary/v1/l2-r2-t2.tmx
+
+#begin Environment/MapLibrary/v1/l2-t2.tmx
+/copy:Environment/MapLibrary/v1/l2-t2.tmx
+
+#begin Environment/MapLibrary/v1/r2.tmx
+/copy:Environment/MapLibrary/v1/r2.tmx
+
+#begin Environment/MapLibrary/v1/r2-t2.tmx
+/copy:Environment/MapLibrary/v1/r2-t2.tmx
+
+#begin Environment/MapLibrary/v1/t2.tmx
+/copy:Environment/MapLibrary/v1/t2.tmx
 
 #begin Environment/MapTextures/ground.png
 /importer:TextureImporter

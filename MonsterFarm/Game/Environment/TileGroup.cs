@@ -37,7 +37,7 @@ namespace MonsterFarm.Game.Environment
         public TileGroup(int x, int y) : this(new Vector2(x, y)){}
         public TileGroup(Vector2 position)
         {
-            _root = @"Content/Environment/MapLibrary/test/";
+            _root = @"Content/Environment/MapLibrary/v1/";
             _map = new TmxMap(_root + "b2-l2-r2-t2.tmx");
             _tiles = new List<TileNode>();
             Width = _map.Width * _map.TileWidth;
@@ -46,6 +46,11 @@ namespace MonsterFarm.Game.Environment
             X = (int)position.X;
             Y = (int)position.Y;
             Connectors = new string[] { };
+        }
+
+        public TileGroup SetLayout(string layout) {
+            _map = new TmxMap(_root+layout+".tmx");
+            return this;
         }
 
         public TileGroup LoadContent(ContentManager content){

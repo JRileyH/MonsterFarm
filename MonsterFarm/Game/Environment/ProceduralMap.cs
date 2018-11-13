@@ -14,9 +14,12 @@ namespace MonsterFarm.Game.Environment
 {
     public class ProceduralMap
     {
+        private Random rnd = new Random();
         private bool _initialized = false;
         private string _root;
-        private Coordinate<TileGroup> _tileGroups;
+        private int _mapSize = 64;
+        private List<Vector2> _bluePrint;
+        private TileGroup[,] _tileGroups;
 
         private Vector2 _scroll;
         private Background _background;
@@ -55,31 +58,63 @@ namespace MonsterFarm.Game.Environment
 
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
-            _tileGroups = new Coordinate<TileGroup>();
-            _build(16);
+            _tileGroups = new TileGroup[_mapSize*2, _mapSize*2];
+            _bluePrint = new List<Vector2>();
+            _build(15);
 
         }
 
+        private List<Vector2> _available(Vector2 v)
+        {
+            List<Vector2> options = new List<Vector2>();
+            Vector2[] _options = {
+                new Vector2(v.X, v.Y+1),
+                new Vector2(v.X, v.Y-1),
+                new Vector2(v.X+1, v.Y),
+                new Vector2(v.X-1, v.Y)
+            };
+            foreach (Vector2 option in _options)
+            {
+                if (!_bluePrint.Contains(option))
+                {
+                    options.Add(option);
+                }
+            }
+            return options;
+        }
+
+        private List<Vector2> _limit(int limit){
+            List<Vector2> options = new List<Vector2>();
+            foreach(Vector2 option in _bluePrint){
+                if(4 - _available(option).Count < limit){
+                    options.Add(option);
+                }
+            }
+            if (options.Count == 0) return _bluePrint;
+            return options;
+        }
+
         private void _build(int numberOfRooms){
-            _tileGroups.Add(0, 0, new TileGroup(new Vector2(0, 0)));
-            for (int i = 0; i <= numberOfRooms; i++)
+            _bluePrint.Add(new Vector2(0, 0));
+            for (int i = 1; i <= numberOfRooms; i++)
             {
                 bool stillLooking = true;
                 while(stillLooking){
-                    CoordinateNode<TileGroup> t = _tileGroups.Get(2);
-                    TileGroup[] options = {
-                        new TileGroup(t.X+1, t.Y),
-                        new TileGroup(t.X-1, t.Y),
-                        new TileGroup(t.X, t.Y+1),
-                        new TileGroup(t.X, t.Y-1)
-                    };
-                    options = options.OrderBy(o => new Random().Next()).ToArray();
-                    foreach(TileGroup option in options){
-                        if(_tileGroups.Get(option.X, option.Y) == null){
-                            _tileGroups.Add(option.X, option.Y, option);
-                            stillLooking = false;
-                            break;
+                    int lerp = i > numberOfRooms / 2 ? 3 : 2;
+                    List<Vector2> limit = _limit(lerp);
+                    Vector2 sample = limit[rnd.Next(limit.Count)];
+                    List<Vector2> options = _available(sample);
+                    options = options.OrderBy(o => rnd.Next()).ToList();
+                    if(options.Count > 0){
+                        foreach(Vector2 option in options){
+                            if(option.X > -_mapSize && option.X < _mapSize && option.Y > -_mapSize && option.Y < _mapSize)
+                            {
+                                _bluePrint.Add(options[0]);
+                                stillLooking = false;
+                                break;
+                            }
                         }
+
                     }
                 }
             }
@@ -91,9 +126,24 @@ namespace MonsterFarm.Game.Environment
         }
 
         public ProceduralMap LoadContent(ContentManager content, GraphicsDevice graphicsDevice) {
+
             _background.LoadContent(content, graphicsDevice);
-            foreach(TileGroup tileGroup in _tileGroups){
-                tileGroup.LoadContent(content);
+            foreach (Vector2 v in _bluePrint)
+            {
+                _tileGroups[(int)v.X + _mapSize, (int)v.Y + _mapSize] = new TileGroup(v);
+            }
+            foreach (TileGroup tileGroup in _tileGroups){
+                if (tileGroup != null)
+                {
+                    List<string> connections = new List<string>();
+                    if (_tileGroups[tileGroup.X+_mapSize, tileGroup.Y+1+_mapSize] != null) connections.Add("b2");
+                    if (_tileGroups[tileGroup.X - 1 + _mapSize, tileGroup.Y + _mapSize] != null) connections.Add("l2");
+                    if (_tileGroups[tileGroup.X + 1 + _mapSize, tileGroup.Y + _mapSize] != null) connections.Add("r2");
+                    if (_tileGroups[tileGroup.X + _mapSize, tileGroup.Y - 1 + _mapSize] != null) connections.Add("t2");
+                    string s = string.Join("-",connections.ToArray());
+                    s = s.Length > 0 ? s : "b2-l2-r2-t2";
+                    tileGroup.SetLayout(s).LoadContent(content);
+                }
             }
             _initialized = true;
             return this;
@@ -104,8 +154,8 @@ namespace MonsterFarm.Game.Environment
             _background.Shift(_scroll);
             _background.Update(gameTime);
             foreach (TileGroup tileGroup in _tileGroups){
-                tileGroup.Shift(_scroll);
-                tileGroup.Update(gameTime);
+                if (tileGroup != null) tileGroup.Shift(_scroll);
+                if (tileGroup != null) tileGroup.Update(gameTime);
             }
         }
 
@@ -113,7 +163,7 @@ namespace MonsterFarm.Game.Environment
             if (!_initialized) throw new Exception("Must call LoadContent before using ProceduralMap");
             _background.Render(spriteBatch, viewport);
             foreach (TileGroup tileGroup in _tileGroups){
-                tileGroup.Render(spriteBatch, viewport);
+                if (tileGroup != null) tileGroup.Render(spriteBatch, viewport);
             }
         }
     }

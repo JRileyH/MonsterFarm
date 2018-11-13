@@ -254,25 +254,8 @@
     <None Include="Content\UI\textures\icons\FloranFamily.png" />
     <None Include="Content\UI\textures\icons\ChitanFamily.png" />
     <None Include="Content\UI\textures\icons\EtheranFamily.png" />
-    <None Include="Content\Environment\MapLibrary\ground.tsx" />
-    <None Include="Content\Environment\MapLibrary\outdoor.tsx" />
     <None Include="Content\Environment\MapTextures\ground.png" />
     <None Include="Content\Environment\MapTextures\outdoor.png" />
-    <None Include="Content\Environment\MapLibrary\l2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-l2-r2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-l2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\l2-r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\l2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\r2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-l2-r2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-l2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\l2-r2-t2-v1.tmx" />
-    <None Include="Content\Environment\MapLibrary\b2-r2-t2-v1.tmx" />
     <None Include="Content\Environment\MapTextures\WaterTile.png" />
     <None Include="Content\Environment\MapLibrary\test\b2-l2-r2-t2.tmx" />
     <None Include="Content\Environment\MapLibrary\test\b2.tmx" />
@@ -289,6 +272,23 @@
     <None Include="Content\Environment\MapLibrary\test\t2.tmx" />
     <None Include="Content\Environment\MapLibrary\test\r2.tmx" />
     <None Include="Content\Environment\MapLibrary\test\l2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-l2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-l2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-l2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-l2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\b2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\l2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\l2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\l2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\l2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v1\t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\ground.tsx" />
+    <None Include="Content\Environment\MapLibrary\outdoor.tsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />
@@ -309,6 +309,7 @@
     <Folder Include="Utils\" />
     <Folder Include="Utils\Tiled\" />
     <Folder Include="Content\Environment\MapLibrary\test\" />
+    <Folder Include="Content\Environment\MapLibrary\v1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
