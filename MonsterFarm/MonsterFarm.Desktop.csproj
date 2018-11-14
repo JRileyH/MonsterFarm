@@ -289,6 +289,21 @@
     <None Include="Content\Environment\MapLibrary\v1\t2.tmx" />
     <None Include="Content\Environment\MapLibrary\ground.tsx" />
     <None Include="Content\Environment\MapLibrary\outdoor.tsx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-l2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-l2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-l2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-l2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\b2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\l2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\l2-r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\l2-r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\l2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\r2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\r2-t2.tmx" />
+    <None Include="Content\Environment\MapLibrary\v2\t2.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />
@@ -310,6 +325,7 @@
     <Folder Include="Utils\Tiled\" />
     <Folder Include="Content\Environment\MapLibrary\test\" />
     <Folder Include="Content\Environment\MapLibrary\v1\" />
+    <Folder Include="Content\Environment\MapLibrary\v2\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

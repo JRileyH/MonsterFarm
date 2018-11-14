@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonsterFarm.Desktop;
 using MonsterFarm.Utils.Tiled;
 using static MonsterFarm.Utils.Tiled.Core;
 using static MonsterFarm.Utils.Tiled.Layer;
@@ -29,45 +30,44 @@ namespace MonsterFarm.Game.Environment
     public class TileGroup
     {
         private TmxMap _map;
+        private string _version;
         private string _root;
         private bool _initialized = false;
-        private Vector2 _offset;
+        private Vector2 _offset, _position;
         private List<TileNode> _tiles;
 
         public TileGroup(int x, int y) : this(new Vector2(x, y)){}
-        public TileGroup(Vector2 position)
-        {
-            _root = @"Content/Environment/MapLibrary/v1/";
-            _map = new TmxMap(_root + "b2-l2-r2-t2.tmx");
+        public TileGroup(Vector2 position){
+            _version = Global.rnd.Next(2) == 0 ? "v1" : "v2";
+            _root = @"Content/Environment/MapLibrary/"+_version+"/";
+            _position = position;
+        }
+
+        public TileGroup LoadContent(ContentManager content, string layout){
+            if (_initialized) throw new Exception("Cannot call LoadContent twice");
+            _map = new TmxMap(_root + layout + ".tmx");
             _tiles = new List<TileNode>();
             Width = _map.Width * _map.TileWidth;
             Height = _map.Height * _map.TileHeight;
-            _offset = position * new Vector2(Width, Height);
-            X = (int)position.X;
-            Y = (int)position.Y;
-            Connectors = new string[] { };
-        }
-
-        public TileGroup SetLayout(string layout) {
-            _map = new TmxMap(_root+layout+".tmx");
-            return this;
-        }
-
-        public TileGroup LoadContent(ContentManager content){
-            foreach(TmxTileset tileset in _map.Tilesets){
+            _offset = _position * new Vector2(Width, Height);
+            foreach (TmxTileset tileset in _map.Tilesets){
                 tileset.LoadContent(content);
             }
             foreach(TmxLayer layer in _map.Layers){
-                foreach (TmxLayerTile tile in layer.Tiles){
-                    int gid = tile.Gid;
-                    if (gid == 0) continue;
-                    int tileSetIndex = 0;
-                    while(tileSetIndex <= _map.Tilesets.Count){
-                        if (tileSetIndex == _map.Tilesets.Count) break;
-                        TmxTileset tileset = _map.Tilesets[tileSetIndex++];
-                        if (gid < tileset.FirstGid + tileset.TileCount){
-                            _tiles.Add(new TileNode(tileset, new Vector2(tile.X, tile.Y), gid));
-                            break;
+                if (layer.Name == "Walkable"){
+                    //create walkable map
+                } else {
+                    foreach (TmxLayerTile tile in layer.Tiles){
+                        int gid = tile.Gid;
+                        if (gid == 0) continue;
+                        int tileSetIndex = 0;
+                        while (tileSetIndex <= _map.Tilesets.Count){
+                            if (tileSetIndex == _map.Tilesets.Count) break;
+                            TmxTileset tileset = _map.Tilesets[tileSetIndex++];
+                            if (gid < tileset.FirstGid + tileset.TileCount){
+                                _tiles.Add(new TileNode(tileset, new Vector2(tile.X, tile.Y), gid));
+                                break;
+                            }
                         }
                     }
                 }
@@ -76,15 +76,14 @@ namespace MonsterFarm.Game.Environment
             return this;
         }
 
-        public int X { get; }
-        public int Y { get; }
-        public int Width { get; }
-        public int Height { get; }
+        public int X { get { return (int)_position.X; } }
+        public int Y { get { return (int)_position.Y; } }
+        public int Width { get; private set; }
+        public int Height { get; private set; }
         public int XCount { get { return _map.Width; } }
         public int YCount { get { return _map.Height; } }
         public int TileWidth { get { return _map.TileWidth; } }
         public int TileHeight { get { return _map.TileHeight; } }
-        public string[] Connectors { get; }
 
         public void Shift(Vector2 _amt){
             _offset -= _amt;
