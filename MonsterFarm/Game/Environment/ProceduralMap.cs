@@ -16,56 +16,21 @@ namespace MonsterFarm.Game.Environment
     public class ProceduralMap
     {
         private bool _initialized = false;
-        private string _root;
         private int _mapSize = 64;
         private List<Vector2> _bluePrint;
         private TileGroup[,] _tileGroups;
-
         private Vector2 _scroll;
         private Background _background;
-        private Dictionary<string, List<string>> _connectors = new Dictionary<string, List<string>>{
-            { "t2", new List<string>() },
-            { "l2", new List<string>() },
-            { "r2", new List<string>() },
-            { "b2", new List<string>() }
-        };
-        private Dictionary<string, string> _ = new Dictionary<string, string> {
-            {"t2", "b2"},
-            {"l2", "r2"},
-            {"r2", "l2"},
-            {"b2", "t2"}
-        };
 
-        public ProceduralMap()
-        {
-            _root = @"Content/Environment/MapLibrary/";
-            string[] allmaps = Directory.GetFiles(@"Content/Environment/MapLibrary/", "*.tmx");
-            for (int i = 0; i < allmaps.Length; i++){
-                allmaps[i] = allmaps[i].Replace(_root, "").Replace(".tmx", "");
-                if(allmaps[i].Contains("t2")){
-                    _connectors["b2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("l2")){
-                    _connectors["r2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("r2")){
-                    _connectors["l2"].Add(allmaps[i]);
-                }
-                if (allmaps[i].Contains("b2")){
-                    _connectors["t2"].Add(allmaps[i]);
-                }
-            }
-
+        public ProceduralMap(){
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
             _tileGroups = new TileGroup[_mapSize*2, _mapSize*2];
             _bluePrint = new List<Vector2>();
             _build(15);
-
         }
 
-        private List<Vector2> _available(Vector2 v)
-        {
+        private List<Vector2> _available(Vector2 v){
             List<Vector2> options = new List<Vector2>();
             Vector2[] _options = {
                 new Vector2(v.X, v.Y+1),
@@ -73,10 +38,8 @@ namespace MonsterFarm.Game.Environment
                 new Vector2(v.X+1, v.Y),
                 new Vector2(v.X-1, v.Y)
             };
-            foreach (Vector2 option in _options)
-            {
-                if (!_bluePrint.Contains(option))
-                {
+            foreach (Vector2 option in _options){
+                if (!_bluePrint.Contains(option)){
                     options.Add(option);
                 }
             }
@@ -100,8 +63,7 @@ namespace MonsterFarm.Game.Environment
             _bluePrint.Add(new Vector2(-1, 0));
             _bluePrint.Add(new Vector2(0, 1));
             _bluePrint.Add(new Vector2(0, -1));
-            for (int i = 1; i <= numberOfRooms; i++)
-            {
+            for (int i = 1; i <= numberOfRooms; i++){
                 bool stillLooking = true;
                 while(stillLooking){
                     int lerp = i > numberOfRooms / 2 ? 3 : 2;
@@ -111,14 +73,12 @@ namespace MonsterFarm.Game.Environment
                     options = options.OrderBy(o => Global.rnd.Next()).ToList();
                     if(options.Count > 0){
                         foreach(Vector2 option in options){
-                            if(option.X > -_mapSize && option.X < _mapSize && option.Y > -_mapSize && option.Y < _mapSize)
-                            {
+                            if(option.X > -_mapSize && option.X < _mapSize && option.Y > -_mapSize && option.Y < _mapSize){
                                 _bluePrint.Add(options[0]);
                                 stillLooking = false;
                                 break;
                             }
                         }
-
                     }
                 }
             }
@@ -130,15 +90,12 @@ namespace MonsterFarm.Game.Environment
         }
 
         public ProceduralMap LoadContent(ContentManager content, GraphicsDevice graphicsDevice) {
-
             _background.LoadContent(content, graphicsDevice);
-            foreach (Vector2 v in _bluePrint)
-            {
+            foreach (Vector2 v in _bluePrint){
                 _tileGroups[(int)v.X + _mapSize, (int)v.Y + _mapSize] = new TileGroup(v);
             }
             foreach (TileGroup tileGroup in _tileGroups){
-                if (tileGroup != null)
-                {
+                if (tileGroup != null){
                     List<string> connections = new List<string>();
                     if (_tileGroups[tileGroup.X+_mapSize, tileGroup.Y+1+_mapSize] != null) connections.Add("b2");
                     if (_tileGroups[tileGroup.X - 1 + _mapSize, tileGroup.Y + _mapSize] != null) connections.Add("l2");
