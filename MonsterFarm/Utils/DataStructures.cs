@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using MonsterFarm.Desktop;
 
 namespace MonsterFarm.Utils.DataStructures
 {
@@ -46,7 +47,6 @@ namespace MonsterFarm.Utils.DataStructures
 
     public class Coordinate<T> : IEnumerable<T>
     {
-        Random rnd = new Random();
         CoordinateNode<T>[,] _data;
         int _count, _xshift, _yshift, _xsize, _ysize;
         public Coordinate()
@@ -71,7 +71,7 @@ namespace MonsterFarm.Utils.DataStructures
                     if (n <= maxConnection) all.Add(i);
                 }
             }
-            return all[rnd.Next(all.Count)];
+            return all[Global.rnd.Next(all.Count)];
         }
         public CoordinateNode<T> Get(int x, int y)
         {
