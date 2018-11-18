@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game;
 using MonsterFarm.Game.Entites;
 using MonsterFarm.Game.Environment;
+using MonsterFarm.Game.States;
 using MonsterFarm.UI;
 using MonsterFarm.UI.Elements;
 
@@ -16,23 +17,32 @@ namespace MonsterFarm.Desktop
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        ProceduralMap proceduralMap;
+
+        Dictionary<string, State> allStates;
+        State activeState;
+        State lastState;
+
 
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this)
             {
-                PreferredBackBufferWidth = 1600,
-                PreferredBackBufferHeight = 900
+                PreferredBackBufferWidth = 1422,
+                PreferredBackBufferHeight = 800
             };
             Content.RootDirectory = "Content";
+
+            allStates = new Dictionary<string, State>();
+
 
         }
 
         protected override void Initialize()
         {
             UserInterface.Initialize(Content);
-            UserInterface.Active.UseRenderTarget = true;
+
+            allStates["World"] = new WorldState(new UserInterface());
+            allStates["Menu"] = new MenuState(new UserInterface());
 
             base.Initialize();
         }
@@ -41,12 +51,24 @@ namespace MonsterFarm.Desktop
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            proceduralMap = new ProceduralMap().LoadContent(Content, GraphicsDevice);
+
+            allStates["World"].LoadContent(Content, GraphicsDevice);
+            allStates["Menu"].LoadContent(Content, GraphicsDevice, true);
+
+            activeState = allStates["World"].Start();
+
         }
 
         protected override void UnloadContent()
         {
 
+        }
+
+        private void chooseState(string state){
+            foreach (KeyValuePair<string, State> _state in allStates){
+                _state.Value.Stop();
+            }
+            activeState = allStates[state].Start();
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,19 +85,12 @@ namespace MonsterFarm.Desktop
             if (state.IsKeyDown(Keys.Escape))
                 Exit();
 
-            // Move our sprite based on arrow keys being pressed:
-            if (state.IsKeyDown(Keys.D))
-                proceduralMap.Scroll(10, 0);
-            if (state.IsKeyDown(Keys.A))
-                proceduralMap.Scroll(-10, 0);
-            if (state.IsKeyDown(Keys.W))
-                proceduralMap.Scroll(0, -10);
-            if (state.IsKeyDown(Keys.S))
-                proceduralMap.Scroll(0, 10);
-            if (state.IsKeyDown(Keys.Space))
-                proceduralMap.Scroll(0, 0);
+            if (state.IsKeyDown(Keys.O))
+                chooseState("World");
+            if (state.IsKeyDown(Keys.P))
+                chooseState("Menu");
 
-            proceduralMap.Update(gameTime);
+            activeState.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -87,7 +102,7 @@ namespace MonsterFarm.Desktop
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            proceduralMap.Render(spriteBatch, GraphicsDevice.Viewport);
+            activeState.Render(spriteBatch, GraphicsDevice.Viewport);
             spriteBatch.End();
 
             UserInterface.Active.DrawMainRenderTarget(spriteBatch);
