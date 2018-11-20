@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.Desktop;
 using MonsterFarm.Game.Entites;
+using MonsterFarm.Game.UI;
 using MonsterFarm.UI;
 using MonsterFarm.UI.Elements;
 

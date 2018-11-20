@@ -6,7 +6,7 @@ using MonsterFarm.Game.Entites;
 using MonsterFarm.UI;
 using MonsterFarm.UI.Elements;
 
-namespace MonsterFarm.Game
+namespace MonsterFarm.Game.UI
 {
     public class Menagerie
     {

@@ -35,6 +35,7 @@ namespace MonsterFarm.Game.Environment
         private bool _initialized = false;
         private Vector2 _offset, _position;
         private List<TileNode> _tiles;
+        private bool[,] _walkable;
 
         public TileGroup(int x, int y) : this(new Vector2(x, y)){}
         public TileGroup(Vector2 position){
@@ -49,13 +50,16 @@ namespace MonsterFarm.Game.Environment
             _tiles = new List<TileNode>();
             Width = _map.Width * _map.TileWidth;
             Height = _map.Height * _map.TileHeight;
+            _walkable = new bool[_map.Width, _map.Height];
             _offset = _position * new Vector2(Width, Height);
             foreach (TmxTileset tileset in _map.Tilesets){
                 tileset.LoadContent(content);
             }
             foreach(TmxLayer layer in _map.Layers){
                 if (layer.Name == "Walkable"){
-                    //create walkable map
+                    foreach (TmxLayerTile tile in layer.Tiles) {
+                        _walkable[tile.X, tile.Y] = tile.Gid != 0;
+                    }
                 } else {
                     foreach (TmxLayerTile tile in layer.Tiles){
                         int gid = tile.Gid;
@@ -84,6 +88,8 @@ namespace MonsterFarm.Game.Environment
         public int YCount { get { return _map.Height; } }
         public int TileWidth { get { return _map.TileWidth; } }
         public int TileHeight { get { return _map.TileHeight; } }
+        public Vector2 Offset { get { return _offset; } }
+        public bool[,] WalkableMap { get { return _walkable; }}
 
         public void Shift(Vector2 _amt){
             _offset -= _amt;

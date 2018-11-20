@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonsterFarm.Game.Entites;
 using MonsterFarm.Game.Environment;
 using MonsterFarm.UI;
 
@@ -10,15 +11,18 @@ namespace MonsterFarm.Game.States
 {
     public class WorldState : State
     {
+        Player player;
         ProceduralMap proceduralMap;
 
         public WorldState(UserInterface ui) : base(ui)
         {
             proceduralMap = new ProceduralMap();
+            player = new Player(proceduralMap);
         }
 
         public override State LoadContent(ContentManager content, GraphicsDevice graphicsDevice, bool useRenderTarget = false){
             proceduralMap.LoadContent(content, graphicsDevice);
+            player.LoadContent(content, graphicsDevice);
             return base.LoadContent(content, graphicsDevice, useRenderTarget);
         }
 
@@ -37,19 +41,9 @@ namespace MonsterFarm.Game.States
             // Poll for current keyboard state
             KeyboardState state = Keyboard.GetState();
 
-            // Move our sprite based on arrow keys being pressed:
-            if (state.IsKeyDown(Keys.D))
-                proceduralMap.Scroll(10, 0);
-            if (state.IsKeyDown(Keys.A))
-                proceduralMap.Scroll(-10, 0);
-            if (state.IsKeyDown(Keys.W))
-                proceduralMap.Scroll(0, -10);
-            if (state.IsKeyDown(Keys.S))
-                proceduralMap.Scroll(0, 10);
-            if (state.IsKeyDown(Keys.Space))
-                proceduralMap.Scroll(0, 0);
-
             proceduralMap.Update(gameTime);
+
+            player.Update(gameTime);
 
             base.Update(gameTime);
 
@@ -59,6 +53,7 @@ namespace MonsterFarm.Game.States
         {
             base.Render(spriteBatch, viewport);
             proceduralMap.Render(spriteBatch, viewport);
+            player.Render(spriteBatch, viewport);
         }
     }
 }

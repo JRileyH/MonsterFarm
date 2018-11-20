@@ -84,6 +84,10 @@ namespace MonsterFarm.Game.Environment
             }
         }
 
+        public TileGroup TileGroup(int x, int y){
+            return _tileGroups[x + _mapSize, y + _mapSize];
+        }
+
         public void Scroll(int x, int y){
             _scroll.X = x;
             _scroll.Y = y;
