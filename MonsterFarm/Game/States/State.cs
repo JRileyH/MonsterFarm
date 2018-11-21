@@ -3,6 +3,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonsterFarm.Game.Util;
 using MonsterFarm.UI;
 
 namespace MonsterFarm.Game.States
@@ -12,11 +13,14 @@ namespace MonsterFarm.Game.States
         protected bool _initialized = false;
         protected bool _running = false;
         protected UserInterface _ui;
+        protected string _name;
 
         public State(UserInterface ui)
         {
             _ui = ui;
         }
+
+        public string Name { get { return _name; } }
 
         public virtual State Start(){
             UserInterface.Active = _ui;
@@ -38,8 +42,6 @@ namespace MonsterFarm.Game.States
         {
             if (!_initialized) throw new Exception("Must GenerateWorld before updating");
         }
-
-
 
         public virtual void Render(SpriteBatch spriteBatch, Viewport viewport)
         {

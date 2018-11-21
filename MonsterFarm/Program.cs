@@ -1,9 +1,11 @@
 ﻿using System;
+using MonsterFarm.Game.Util;
 
 namespace MonsterFarm.Desktop
 {
     public static class Global{
         public static readonly Random rnd = new Random();
+        public static KeyboardHandler keyboardHandler = new KeyboardHandler();
     }
     public static class Program
     {

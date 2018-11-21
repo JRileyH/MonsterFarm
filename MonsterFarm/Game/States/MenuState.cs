@@ -25,6 +25,7 @@ namespace MonsterFarm.Game.States
 
         public MenuState(UserInterface ui) : base(ui)
         {
+            _name = "Menu";
             //Background stuff
             Button addRandomButton = new Button("Add", anchor: Anchor.TopLeft, size: new Vector2(150, 50));
             addRandomButton.OnClick = (Element btn) => {

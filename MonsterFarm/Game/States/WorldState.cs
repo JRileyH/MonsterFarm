@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game.Entites;
 using MonsterFarm.Game.Environment;
+using MonsterFarm.Game.Util;
 using MonsterFarm.UI;
 
 namespace MonsterFarm.Game.States
@@ -13,9 +14,11 @@ namespace MonsterFarm.Game.States
     {
         Player player;
         ProceduralMap proceduralMap;
+        public static KeyboardHandler keyboardHandler = new KeyboardHandler();
 
         public WorldState(UserInterface ui) : base(ui)
         {
+            _name = "World";
             proceduralMap = new ProceduralMap();
             player = new Player(proceduralMap);
         }
@@ -38,8 +41,7 @@ namespace MonsterFarm.Game.States
 
         public override void Update(GameTime gameTime)
         {
-            // Poll for current keyboard state
-            KeyboardState state = Keyboard.GetState();
+            keyboardHandler.Update(gameTime);
 
             proceduralMap.Update(gameTime);
 

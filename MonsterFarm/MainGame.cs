@@ -8,8 +8,10 @@ using MonsterFarm.Game;
 using MonsterFarm.Game.Entites;
 using MonsterFarm.Game.Environment;
 using MonsterFarm.Game.States;
+using MonsterFarm.Game.Util;
 using MonsterFarm.UI;
 using MonsterFarm.UI.Elements;
+using static MonsterFarm.Game.Util.KeyboardHandler;
 
 namespace MonsterFarm.Desktop
 {
@@ -22,7 +24,6 @@ namespace MonsterFarm.Desktop
         State activeState;
         State lastState;
 
-
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this)
@@ -33,8 +34,6 @@ namespace MonsterFarm.Desktop
             Content.RootDirectory = "Content";
 
             allStates = new Dictionary<string, State>();
-
-
         }
 
         protected override void Initialize()
@@ -43,6 +42,14 @@ namespace MonsterFarm.Desktop
 
             allStates["World"] = new WorldState(new UserInterface());
             allStates["Menu"] = new MenuState(new UserInterface());
+
+            Global.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.Escape, Exit);
+            Global.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.P, ()=>{
+                chooseState("Menu");
+            });
+            Global.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.O, ()=>{
+                chooseState("World");
+            });
 
             base.Initialize();
         }
@@ -65,33 +72,21 @@ namespace MonsterFarm.Desktop
         }
 
         private void chooseState(string state){
-            foreach (KeyValuePair<string, State> _state in allStates){
-                _state.Value.Stop();
+            if (activeState.Name != state){
+                lastState = activeState;
+                foreach (KeyValuePair<string, State> _state in allStates)
+                {
+                    _state.Value.Stop();
+                }
+                activeState = allStates[state].Start();
             }
-            activeState = allStates[state].Start();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
+            Global.keyboardHandler.Update(gameTime);
             UserInterface.Active.Update(gameTime);
-
-            // Poll for current keyboard state
-            KeyboardState state = Keyboard.GetState();
-
-            // If they hit esc, exit
-            if (state.IsKeyDown(Keys.Escape))
-                Exit();
-
-            if (state.IsKeyDown(Keys.O))
-                chooseState("World");
-            if (state.IsKeyDown(Keys.P))
-                chooseState("Menu");
-
             activeState.Update(gameTime);
-
             base.Update(gameTime);
         }
 

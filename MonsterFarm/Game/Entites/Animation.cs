@@ -38,7 +38,6 @@ namespace MonsterFarm.Game.Entites
         public void Stop(){
             if(_running && _sequence != null){
                 _running = false;
-                _currentFrame = _animations[_sequence][0];
             }
         }
 
