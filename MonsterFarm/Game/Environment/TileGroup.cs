@@ -12,21 +12,6 @@ using static MonsterFarm.Utils.Tiled.TmxTileset;
 
 namespace MonsterFarm.Game.Environment
 {
-    class TileNode
-    {
-        public TileNode(TmxTileset tileset, Vector2 position, int value)
-        {
-            Texture = tileset.Texture;
-            value -= tileset.FirstGid;
-            Position = new Vector2(position.X * tileset.TileWidth, position.Y * tileset.TileHeight);
-            Crop = new Rectangle((int)(value % tileset.Columns * tileset.TileWidth), (int)(value / tileset.Columns) * tileset.TileHeight, tileset.TileWidth, tileset.TileHeight);
-        }
-        public Texture2D Texture { get; }
-        public Vector2 Position { get; }
-        public Rectangle Crop { get; }
-        public Color Color { get { return Color.White; } }
-    }
-
     public class TileGroup
     {
         private TmxMap _map;

@@ -21,11 +21,13 @@ namespace MonsterFarm.Game.Environment
         private TileGroup[,] _tileGroups;
         private Vector2 _scroll;
         private Background _background;
+        private bool[,] _walkable;
 
         public ProceduralMap(){
             _scroll = new Vector2(0, 0);
             _background = new Background("WaterTile");
             _tileGroups = new TileGroup[_mapSize*2, _mapSize*2];
+            _walkable = new bool[_mapSize * 2 * 27, _mapSize * 2 * 27];
             _bluePrint = new List<Vector2>();
             _build(15);
         }

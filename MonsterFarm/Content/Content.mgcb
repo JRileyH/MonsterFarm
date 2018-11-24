@@ -25,11 +25,23 @@
 /processorParam:TextureFormat=Color
 /build:Entities/player.png
 
+#begin Environment/MapLibrary/floors.tsx
+/copy:Environment/MapLibrary/floors.tsx
+
+#begin Environment/MapLibrary/furniture.tsx
+/copy:Environment/MapLibrary/furniture.tsx
+
 #begin Environment/MapLibrary/ground.tsx
 /copy:Environment/MapLibrary/ground.tsx
 
+#begin Environment/MapLibrary/interior.tsx
+/copy:Environment/MapLibrary/interior.tsx
+
 #begin Environment/MapLibrary/outdoor.tsx
 /copy:Environment/MapLibrary/outdoor.tsx
+
+#begin Environment/MapLibrary/static/tavern.tmx
+/copy:Environment/MapLibrary/static/tavern.tmx
 
 #begin Environment/MapLibrary/test/b2.tmx
 /copy:Environment/MapLibrary/test/b2.tmx
@@ -166,6 +178,42 @@
 #begin Environment/MapLibrary/v2/t2.tmx
 /copy:Environment/MapLibrary/v2/t2.tmx
 
+#begin Environment/MapTextures/cliffs.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/cliffs.png
+
+#begin Environment/MapTextures/floors.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/floors.png
+
+#begin Environment/MapTextures/furniture.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/furniture.png
+
 #begin Environment/MapTextures/ground.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -177,6 +225,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Environment/MapTextures/ground.png
+
+#begin Environment/MapTextures/interior.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/interior.png
 
 #begin Environment/MapTextures/outdoor.png
 /importer:TextureImporter

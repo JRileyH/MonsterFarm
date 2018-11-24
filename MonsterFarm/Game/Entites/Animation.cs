@@ -15,7 +15,7 @@ namespace MonsterFarm.Game.Entites
 
     public class Animation
     {
-        Dictionary<string, List<AnimationFrame>> _animations;
+        Dictionary<string, List<AnimationFrame>> _sequences;
         Texture2D _sheet;
         TimeSpan _timeIntoAnimation;
         AnimationFrame _currentFrame;
@@ -25,7 +25,7 @@ namespace MonsterFarm.Game.Entites
         public Animation(Texture2D sheet)
         {
             _sheet = sheet;
-            _animations = new Dictionary<string, List<AnimationFrame>>();
+            _sequences = new Dictionary<string, List<AnimationFrame>>();
             _running = false;
         }
 
@@ -36,17 +36,21 @@ namespace MonsterFarm.Game.Entites
             }
         }
         public void Stop(){
-            if(_running && _sequence != null){
+            if(_running){
                 _running = false;
             }
         }
 
+        public void Reset(){
+            _currentFrame = _sequences[Sequence][0];
+        }
+
         public string Sequence { get { return _sequence; } set
             {
-                if (_animations.ContainsKey(value) && _animations[value].Count > 0)
+                if (_sequences.ContainsKey(value) && _sequences[value].Count > 0)
                 {
                     _sequence = value;
-                    _currentFrame = _animations[value][0];
+                    Reset();
                 }
             }
         }
@@ -54,13 +58,13 @@ namespace MonsterFarm.Game.Entites
         public TimeSpan Duration(string sequence)
         {
             double totalSeconds = 0;
-            foreach (AnimationFrame frame in _animations[sequence]){
+            foreach (AnimationFrame frame in _sequences[sequence]){
                 totalSeconds += frame.Duration.TotalSeconds;
             }
             return TimeSpan.FromSeconds(totalSeconds);
         }
-        public void AddSequence(string name){
-            _animations[name] = new List<AnimationFrame>();
+        private void _addSequence(string name){
+            _sequences[name] = new List<AnimationFrame>();
         }
         public void AddFrames(string sequence, int startingFrame, int frameCount, int frameWidth, int frameHeight, TimeSpan duration, bool reverse = false)
         {
@@ -72,35 +76,29 @@ namespace MonsterFarm.Game.Entites
         }
         public void AddFrame(string sequence, Rectangle rectangle, TimeSpan duration, bool reverse = false)
         {
-            if(!_animations.ContainsKey(sequence)){
-                AddSequence(sequence);
+            if(!_sequences.ContainsKey(sequence)){
+                _addSequence(sequence);
             }
-            _animations[sequence].Add(new AnimationFrame() {
+            _sequences[sequence].Add(new AnimationFrame() {
                 SourceRectangle = rectangle,
                 Duration = duration,
                 Reverse = reverse
             });
         }
 
-        public void Update(GameTime gameTime)
-        {
-            if(_sequence == null) throw new Exception("Must set initial Sequence before Updating Animation");
-            if (_running)
-            {
+        public void Update(GameTime gameTime) {
+            if (Sequence == null) throw new Exception("No Frames Set");
+            if (_running) {
                 double secondsIntoAnimation = _timeIntoAnimation.TotalSeconds + gameTime.ElapsedGameTime.TotalSeconds;
                 double remainder = secondsIntoAnimation % Duration(_sequence).TotalSeconds;
                 _timeIntoAnimation = TimeSpan.FromSeconds(remainder);
 
                 TimeSpan accumulatedTime;
-                foreach (AnimationFrame frame in _animations[_sequence])
-                {
-                    if (accumulatedTime + frame.Duration >= _timeIntoAnimation)
-                    {
+                foreach (AnimationFrame frame in _sequences[_sequence]) {
+                    if (accumulatedTime + frame.Duration >= _timeIntoAnimation) {
                         _currentFrame = frame;
                         break;
-                    }
-                    else
-                    {
+                    } else {
                         accumulatedTime += frame.Duration;
                     }
                 }
@@ -109,7 +107,7 @@ namespace MonsterFarm.Game.Entites
 
         public void Render(Vector2 position, SpriteBatch spriteBatch){
             if (_currentFrame.Reverse){
-#pragma warning disable CS0618 // Type or member is obsolete
+                #pragma warning disable CS0618 // Type or member is obsolete
                 spriteBatch.Draw(
                     texture: _sheet,
                     position: position,
@@ -117,7 +115,7 @@ namespace MonsterFarm.Game.Entites
                     color: Color.White,
                     effects: SpriteEffects.FlipHorizontally
                 );
-#pragma warning restore CS0618 // Type or member is obsolete
+                #pragma warning restore CS0618 // Type or member is obsolete
             } else {
                 spriteBatch.Draw(_sheet, position, _currentFrame.SourceRectangle, Color.White);
             }
