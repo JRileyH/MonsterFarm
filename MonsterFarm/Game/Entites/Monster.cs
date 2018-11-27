@@ -15,7 +15,7 @@ namespace MonsterFarm.Game.Entites
         }
     }
 
-    public class Monster : Entity
+    public class Monster
     {
         private readonly char[] _families = { 'e', 'g', 'c', 'b', 'f', 's' };
         private Guid _guid = Guid.NewGuid();

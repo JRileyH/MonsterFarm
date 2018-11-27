@@ -4,7 +4,11 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game.Environment;
+using MonsterFarm.Game.States;
+using MonsterFarm.Game.Util;
+using static MonsterFarm.Game.Util.KeyboardHandler;
 
 namespace MonsterFarm.Game.Entites
 {
@@ -14,6 +18,7 @@ namespace MonsterFarm.Game.Entites
         private Map _map;
         private Point _offset;
         private Point? _destination;
+        private Point _tileDim;
         private int _speed = 2;
         private Texture2D _placeholder;
         private Queue<Point> _path;
@@ -22,6 +27,7 @@ namespace MonsterFarm.Game.Entites
             _map = map;
             Position = new Point(11, 3);
             _destination = null;
+            _tileDim = new Point(_map.TileWidth, _map.TileHeight);
             _offset = new Point();
             _path = new Queue<Point>();
             Walking = false;
@@ -46,16 +52,6 @@ namespace MonsterFarm.Game.Entites
             }
         }
 
-        private Point _velocity(){
-            Point dim = new Point(_map.TileWidth, _map.TileHeight);
-            Point delta = ((Point)_destination * dim) - ((Position * dim) + _offset);
-            double rad = Math.Atan2(delta.Y, delta.X);
-            return new Point(
-                Math.Abs(delta.X) >= _speed ? (int)Math.Round(Math.Cos(rad) * _speed) : 0,
-                Math.Abs(delta.Y) >= _speed ? (int)Math.Round(Math.Sin(rad) * _speed) : 0
-            );
-        }
-
         public bool CanWalkTo(int x, int y){
             return x > 0 &&
             y > 0 &&
@@ -69,6 +65,7 @@ namespace MonsterFarm.Game.Entites
 
         public void AddPath(Point destination){
             if(CanWalkTo(destination)){
+                //todo: find path and queue them all
                 _path.Enqueue(destination);
                 Walking = true;
             }
@@ -77,24 +74,19 @@ namespace MonsterFarm.Game.Entites
         public void Update(GameTime gameTime){
             if (!_initialized) throw new Exception("Must call LoadContent before Update");
             if (_destination != null){
-                Point vel = _velocity();
-                if (vel.X == 0 && vel.Y == 0){
+                Point dim = new Point(_map.TileWidth, _map.TileHeight);
+                Point delta = ((Point)_destination * dim) - ((Position * dim) + _offset);
+                if (Math.Abs(delta.X) < _speed && Math.Abs(delta.Y) < _speed){
                     Position = (Point)_destination;
                     _offset = new Point();
                     _destination = null;
                 } else {
-                    _offset += vel;
+                    _offset += ((Point)_destination - Position) * new Point(_speed, _speed);
                 }
             } else if (_path.Count > 0) {
                 Walking = true;
                 _destination = _path.Dequeue();
-                if (_destination != Position)
-                {
-                    Point direction = (Point)_destination - Position;
-                    if (Animation != null) Animation.Start();
-                } else {
-                    if (Animation != null) Animation.Reset();
-                }
+                if (Animation != null) Animation.Start();
             } else {
                 Walking = false;
                 if (Animation != null) Animation.Stop();

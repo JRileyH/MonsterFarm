@@ -44,7 +44,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Game\Entites\Entity.cs" />
     <Compile Include="Game\Entites\Monster.cs" />
     <Compile Include="UI\UserInterface.cs" />
     <Compile Include="UI\DataTypes\CursorTextureData.cs" />
@@ -100,13 +99,13 @@
     <Compile Include="Game\States\MenuState.cs" />
     <Compile Include="Game\UI\Menagerie.cs" />
     <Compile Include="Game\UI\MonsterInfo.cs" />
-    <Compile Include="Game\Entites\Player.cs" />
     <Compile Include="Game\Entites\Animation.cs" />
     <Compile Include="Game\Util\KeyboardHandler.cs" />
     <Compile Include="Game\Entites\Pawn.cs" />
     <Compile Include="Game\Environment\Map.cs" />
     <Compile Include="Game\Environment\StaticMap.cs" />
     <Compile Include="Game\Entites\Controller.cs" />
+    <Compile Include="Game\Util\PathFinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
