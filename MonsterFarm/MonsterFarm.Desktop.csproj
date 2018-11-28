@@ -322,6 +322,7 @@
     <None Include="Content\Environment\MapLibrary\floors.tsx" />
     <None Include="Content\Environment\MapLibrary\furniture.tsx" />
     <None Include="Content\Environment\MapLibrary\interior.tsx" />
+    <None Include="Content\Environment\MapLibrary\static\street.tmx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Game\" />

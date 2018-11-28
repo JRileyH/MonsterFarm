@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonsterFarm.Game.States;
 using static MonsterFarm.Game.Util.KeyboardHandler;
@@ -32,15 +28,15 @@ namespace MonsterFarm.Game.Entites
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.S, () => { _directionInput.Remove("down"); });
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.A, () => { _directionInput.Remove("left"); });
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.D, () => { _directionInput.Remove("right"); });
+
+            WorldState.keyboardHandler.Subscribe(KeyTrigger.Press, Keys.L, () => { Pawn.AddPath(new Point(2, 3)); });
         }
         public Pawn Pawn { get; set; }
         public void Update(GameTime gameTime){
             if (Pawn == null) throw new Exception("Must set Pawn");
-            if (!Pawn.Walking)
-            {
+            if (!Pawn.Walking){
                 if(_directionInput.Count > 0){
-                    Pawn.Direction = _directionInput[0];
-                    Pawn.AddPath(Pawn.Position + _[Pawn.Direction]);
+                    Pawn.AddPath(Pawn.Position + _[_directionInput[0]]);
                     Pawn.Update(gameTime);//smoothing
                 } else {
                     if (Pawn.Animation != null) Pawn.Animation.Reset();

@@ -24,16 +24,37 @@ namespace MonsterFarm.Game.Environment
         public Color Color { get { return Color.White; } }
     }
 
+    public struct Transition
+    {
+        public Transition(Point entry, Point exit)
+        {
+            Entry = entry;
+            Exit = exit;
+        }
+        public Point Entry { get; private set; }
+        public Point Exit { get; private set; }
+    };
+
     public abstract class Map
     {
         private bool _initialized = false;
-        private string _root = @"Content/Environment/MapLibrary/";
+        private string _root = @"Content/Environment/MapLibrary/static/";
+        private string _name;
+
         private List<TileNode> _tiles;
         private List<TileNode> _overlay;
 
-        public Map()
+        public Map(string name)
         {
-            Offset = new Vector2(350, 60);
+            Offset = new Vector2(200, 60);
+            _name = name;
+            Transitions = new Dictionary<string, Transition>();
+            if (name=="street"){
+                Transitions["tavern"] = new Transition(new Point(14, 5), new Point(8, 17));
+            }
+            if(name=="tavern"){
+                Transitions["street"] = new Transition(new Point(8, 17), new Point(14, 5));
+            }
         }
 
         public int XCount { get; private set; }
@@ -44,11 +65,12 @@ namespace MonsterFarm.Game.Environment
         public int TileHeight { get; private set; }
         public Vector2 Offset { get; private set; }
         public bool[,] WalkableMap { get; private set; }
+        public Dictionary<string, Transition> Transitions { get; private set; }
 
         public virtual Map LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
             if (_initialized) throw new Exception("Cannot call LoadContent twice");
-            TmxMap map = new TmxMap(@"Content/Environment/MapLibrary/static/tavern.tmx");
+            TmxMap map = new TmxMap(_root+_name+".tmx");
 
             //Init data structures
             _tiles = new List<TileNode>();

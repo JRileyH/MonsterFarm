@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,27 +15,40 @@ namespace MonsterFarm.Game.States
     {
         //Player player;
         //ProceduralMap proceduralMap;
-        StaticMap tavern;
+        static Dictionary<string, StaticMap> maps;
         Pawn pawn;
         Controller controller;
         Animation playerAnimation;
 
         public static KeyboardHandler keyboardHandler = new KeyboardHandler();
 
+        public static void transition(Pawn pawn, string map, Point entry){
+            if(maps.ContainsKey(map)){
+                pawn.Stop();
+                pawn.Map = maps[map];
+                pawn.Position = entry;
+            }
+        }
+
         public WorldState(UserInterface ui) : base(ui)
         {
             _name = "World";
             //proceduralMap = new ProceduralMap();
             //player = new Player(proceduralMap);
-            tavern = new StaticMap();
-            pawn = new Pawn(tavern);
+            maps = new Dictionary<string, StaticMap> {
+                {"tavern", new StaticMap("tavern")},
+                {"street", new StaticMap("street")}
+            };
+            pawn = new Pawn(maps["street"]);
             controller = new Controller();
         }
 
         public override State LoadContent(ContentManager content, GraphicsDevice graphicsDevice, bool useRenderTarget = false){
             //proceduralMap.LoadContent(content, graphicsDevice);
             //player.LoadContent(content, graphicsDevice);
-            tavern.LoadContent(content, graphicsDevice);
+            foreach(StaticMap map in maps.Values){
+                map.LoadContent(content, graphicsDevice);
+            }
             controller.Pawn = pawn.LoadContent(content, graphicsDevice);
 
             playerAnimation = new Animation(content.Load<Texture2D>(@"Entities/player"));
@@ -67,7 +81,7 @@ namespace MonsterFarm.Game.States
 
             //player.Update(gameTime);
 
-            tavern.Update(gameTime);
+            pawn.Map.Update(gameTime);
             pawn.Update(gameTime);
             controller.Update(gameTime);
             base.Update(gameTime);
@@ -79,9 +93,9 @@ namespace MonsterFarm.Game.States
             base.Render(spriteBatch, viewport);
             //proceduralMap.Render(spriteBatch, viewport);
             //player.Render(spriteBatch, viewport);
-            tavern.Render(spriteBatch, viewport);
+            pawn.Map.Render(spriteBatch, viewport);
             pawn.Render(spriteBatch, viewport);
-            tavern.RenderOverlay(spriteBatch, viewport);
+            pawn.Map.RenderOverlay(spriteBatch, viewport);
         }
     }
 }

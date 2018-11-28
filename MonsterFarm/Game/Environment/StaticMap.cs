@@ -3,7 +3,7 @@ namespace MonsterFarm.Game.Environment
 {
     public class StaticMap : Map
     {
-        public StaticMap()
+        public StaticMap(string name) : base(name)
         {
 
         }

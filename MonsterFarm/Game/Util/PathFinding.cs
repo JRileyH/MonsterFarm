@@ -7,42 +7,68 @@ namespace MonsterFarm.Game.Util
 {
     public static class PathFinding
     {
-		public static Point[] bfs(Point source, Point goal, bool[,] map){
-            Queue<Point> q = new Queue<Point>();
-            List<Point> v = new List<Point>();
-            q.Enqueue(source);
-            while(q.Count > 0){
-                Point c = q.Dequeue();
-                if(!v.Contains(c) && map[c.X, c.Y]){
-                    v.Add(c);
-                    if (c.X > 0) {
-                        Point l = c + new Point(-1, 0);
-                        if (!v.Contains(l) && map[l.X, l.Y]){
-                            v.Add(l);
-                        }
-                    }
-                    if (c.X < map.GetLength(0) - 1) {
-                        Point r = c + new Point(1, 0);
-                        if (!v.Contains(r) && map[r.X, r.Y]){
-                            v.Add(r);
-                        }
-                    }
-                    if (c.Y > 0) {
-                        Point t = c + new Point(0, -1);
-                        if (!v.Contains(t) && map[t.X, t.Y]){
-                            v.Add(t);
-                        }
-                    }
-                    if (c.Y < map.GetLength(1) - 1) {
-                        Point b = c + new Point(0, 1);
-                        if (!v.Contains(b) && map[b.X, b.Y]){
-                            v.Add(b);
-                        }
-                    }
+        struct bfsNode
+        {
+            public bfsNode(Point point, List<Point> path){
+                Point = point;
+                Path = path;
+            }
+            public Point Point { get; set; }
+            public List<Point> Path { get; set; }
+        };
+
+        public static List<Point> BFS(Point source, Point goal, bool[,] map){
+
+            if (!map[source.X, source.Y] || !map[goal.X, goal.Y]) return new List<Point>();
+            bool[,] visited = new bool[map.GetLength(0),map.GetLength(1)];
+            visited[source.X, source.Y] = true;
+            Queue<bfsNode> Q = new Queue<bfsNode>();
+            Q.Enqueue(new bfsNode(source, new List<Point>()));
+
+            while(Q.Count > 0){
+                bfsNode current = Q.Dequeue();
+                if (current.Point == goal) return current.Path;
+                Point point;
+                List<Point> path;
+                point = new Point(current.Point.X, current.Point.Y - 1);
+                if (current.Point.Y > 0 && map[point.X, point.Y] && !visited[point.X, point.Y])
+                {//top
+                    path = new List<Point>();
+                    path.AddRange(current.Path);
+                    path.Add(point);
+                    Q.Enqueue(new bfsNode(point, path));
+                    visited[point.X, point.Y] = true;
+                }
+                point = new Point(current.Point.X, current.Point.Y + 1);
+                if (current.Point.Y < map.GetLength(1) - 1 && map[point.X, point.Y] && !visited[point.X, point.Y])
+                {//bottom
+                    path = new List<Point>();
+                    path.AddRange(current.Path);
+                    path.Add(point);
+                    Q.Enqueue(new bfsNode(point, path));
+                    visited[point.X, point.Y] = true;
+                }
+                point = new Point(current.Point.X - 1, current.Point.Y);
+                if (current.Point.X > 0 && map[point.X, point.Y] && !visited[point.X, point.Y])
+                {//left
+                    path = new List<Point>();
+                    path.AddRange(current.Path);
+                    path.Add(point);
+                    Q.Enqueue(new bfsNode(point, path));
+                    visited[point.X, point.Y] = true;
+                }
+                point = new Point(current.Point.X + 1, current.Point.Y);
+                if (current.Point.X < map.GetLength(0) - 1 && map[point.X, point.Y] && !visited[point.X, point.Y])
+                {//right
+                    path = new List<Point>();
+                    path.AddRange(current.Path);
+                    path.Add(point);
+                    Q.Enqueue(new bfsNode(point, path));
+                    visited[point.X, point.Y] = true;
                 }
             }
 
-            return new List<Point>().ToArray();
-		}
+            return new List<Point>();
+        }
     }
 }

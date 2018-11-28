@@ -43,6 +43,9 @@
 #begin Environment/MapLibrary/static/tavern.tmx
 /copy:Environment/MapLibrary/static/tavern.tmx
 
+#begin Environment/MapLibrary/static/street.tmx
+/copy:Environment/MapLibrary/static/street.tmx
+
 #begin Environment/MapLibrary/test/b2.tmx
 /copy:Environment/MapLibrary/test/b2.tmx
 
