@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +10,7 @@ using static MonsterFarm.Utils.Tiled.Layer;
 
 namespace MonsterFarm.Game.Environment
 {
-    class TileNode
+    public class TileNode
     {
         public TileNode(TmxTileset tileset, Vector2 position, int value)
         {
@@ -37,16 +38,18 @@ namespace MonsterFarm.Game.Environment
 
     public abstract class Map
     {
-        private bool _initialized = false;
-        private string _root = @"Content/Environment/MapLibrary/static/";
-        private string _name;
+        protected bool _initialized = false;
+        protected string _root = @"Content/Environment/MapLibrary/";
+        protected string _name;
+        protected Vector2 _scroll;
 
-        private List<TileNode> _tiles;
-        private List<TileNode> _overlay;
+        protected List<TileNode> _tiles;
+        protected List<TileNode> _overlay;
 
         public Map(string name)
         {
             Offset = new Vector2(200, 60);
+            _scroll = new Vector2(0, 0);
             _name = name;
             Transitions = new Dictionary<string, Transition>();
             if (name=="street"){
@@ -57,15 +60,31 @@ namespace MonsterFarm.Game.Environment
             }
         }
 
-        public int XCount { get; private set; }
-        public int YCount { get; private set; }
-        public int Width { get; private set; }
-        public int Height { get; private set; }
-        public int TileWidth { get; private set; }
-        public int TileHeight { get; private set; }
-        public Vector2 Offset { get; private set; }
-        public bool[,] WalkableMap { get; private set; }
-        public Dictionary<string, Transition> Transitions { get; private set; }
+        public int XCount { get; protected set; }
+        public int YCount { get; protected set; }
+        public int Width { get; protected set; }
+        public int Height { get; protected set; }
+        public int TileWidth { get; protected set; }
+        public int TileHeight { get; protected set; }
+        public Vector2 Offset { get; set; }
+        public bool[,] WalkableMap { get; protected set; }
+        public Dictionary<string, Transition> Transitions { get; protected set; }
+
+        public void Shift(int x, int y)
+        {
+            Offset += new Vector2(x, y);
+
+        }
+        public void Shift(Point p) { Shift(p.X, p.Y); }
+        public void Shift(Vector2 v) { Shift((int)v.X, (int)v.Y); }
+
+        public void Scroll(int x, int y)
+        {
+            _scroll.X = x;
+            _scroll.Y = y;
+        }
+        public void Scroll(Point p) { Scroll(p.X, p.Y); }
+        public void Scroll(Vector2 v) { Scroll((int)v.X, (int)v.Y); }
 
         public virtual Map LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {
@@ -124,26 +143,26 @@ namespace MonsterFarm.Game.Environment
 
         public virtual void Render(SpriteBatch spriteBatch, Viewport viewport){
             if (!_initialized) throw new Exception("Must call LoadContent before Render");
-            if (Offset.X + Width > 0 && Offset.X < viewport.Width && Offset.Y + Height > 0 && Offset.Y < viewport.Height){
+            //if (Offset.X + Width > 0 && Offset.X < viewport.Width && Offset.Y + Height > 0 && Offset.Y < viewport.Height){
                 foreach (TileNode tile in _tiles){
                     Vector2 rPos = tile.Position + Offset;
                     if (rPos.X + TileWidth > 0 && rPos.X < viewport.Width && rPos.Y + TileHeight > 0 && rPos.Y < viewport.Height){
                         spriteBatch.Draw(tile.Texture, rPos, tile.Crop, tile.Color);
                     }
                 }
-            }
+            //}
         }
 
         public virtual void RenderOverlay(SpriteBatch spriteBatch, Viewport viewport){
             if (!_initialized) throw new Exception("Must call LoadContent before Render");
-            if (Offset.X + Width > 0 && Offset.X < viewport.Width && Offset.Y + Height > 0 && Offset.Y < viewport.Height){
+            //if (Offset.X + Width > 0 && Offset.X < viewport.Width && Offset.Y + Height > 0 && Offset.Y < viewport.Height){
                 foreach (TileNode tile in _overlay){
                     Vector2 rPos = tile.Position + Offset;
                     if (rPos.X + TileWidth > 0 && rPos.X < viewport.Width && rPos.Y + TileHeight > 0 && rPos.Y < viewport.Height){
                         spriteBatch.Draw(tile.Texture, rPos, tile.Crop, tile.Color);
                     }
                 }
-            }
+            //}
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonsterFarm.Desktop;
 using MonsterFarm.Game.Environment;
 using MonsterFarm.Game.States;
 using MonsterFarm.Game.Util;
@@ -14,11 +15,12 @@ namespace MonsterFarm.Game.Entites
 {
     public class Pawn
     {
+        private SpriteFont testfont;
         private bool _initialized = false;
         private Point _offset;
         private Point? _destination;
         private Point _tileDim;
-        private int _speed = 2;
+        private int _speed = 3;
         private Texture2D _placeholder;
         private Queue<Point> _path;
 
@@ -34,6 +36,7 @@ namespace MonsterFarm.Game.Entites
 
         public Pawn LoadContent(ContentManager content, GraphicsDevice graphicsDevice){
             if (_initialized) throw new Exception("Cannot call LoadContent twice");
+            testfont = content.Load<SpriteFont>("UI/fonts/Regular");
             _placeholder = content.Load<Texture2D>(@"Environment/MapTextures/WaterTile");
             _initialized = true;
             return this;
@@ -69,10 +72,11 @@ namespace MonsterFarm.Game.Entites
         }
 
         public void AddPath(Point destination){
-            if(CanWalkTo(destination)){
-                List<Point> searchPath = PathFinding.BFS(Position, destination, Map.WalkableMap);
+            Point temp = new Point(15 * 27, 15 * 27);//todo: ok this bad
+            if(CanWalkTo(destination + temp)){
+                List<Point> searchPath = PathFinding.BFS(Position + temp, destination + temp, Map.WalkableMap);
                 foreach(Point point in searchPath){
-                    _path.Enqueue(point);
+                    _path.Enqueue(point - temp);
                 }
                 Walking = true;
             }
@@ -104,15 +108,19 @@ namespace MonsterFarm.Game.Entites
                 if (p.Y < 0) Direction = "up";
                 if (p.Y > 0) Direction = "down";
                 if (Animation != null) Animation.Start();
+                Map.Scroll(p * new Point(-_speed, -_speed));
             } else {
                 Walking = false;
                 if (Animation != null) Animation.Stop();
+                Map.Scroll(new Point());
             }
             if (Animation != null) Animation.Update(gameTime);
         }
 
         public void Render(SpriteBatch spriteBatch, Viewport viewport){
             if (!_initialized) throw new Exception("Must call LoadContent before Render");
+            spriteBatch.DrawString(testfont, Position.ToString(), new Vector2(20, 20), Color.Red);
+            spriteBatch.DrawString(testfont, Map.Offset.ToString(), new Vector2(20, 40), Color.Red);
             Vector2 rPos = new Vector2(
                 Map.Offset.X + (Map.TileWidth * Position.X) + _offset.X,
                 Map.Offset.Y + (Map.TileHeight * Position.Y) + _offset.Y - 16

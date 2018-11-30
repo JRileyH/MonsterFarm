@@ -18,7 +18,6 @@ namespace MonsterFarm.Game.Util
         };
 
         public static List<Point> BFS(Point source, Point goal, bool[,] map){
-
             if (!map[source.X, source.Y] || !map[goal.X, goal.Y]) return new List<Point>();
             bool[,] visited = new bool[map.GetLength(0),map.GetLength(1)];
             visited[source.X, source.Y] = true;

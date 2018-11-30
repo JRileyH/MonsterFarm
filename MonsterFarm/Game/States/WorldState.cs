@@ -13,8 +13,6 @@ namespace MonsterFarm.Game.States
 {
     public class WorldState : State
     {
-        //Player player;
-        //ProceduralMap proceduralMap;
         static Dictionary<string, StaticMap> maps;
         Pawn pawn;
         Controller controller;
@@ -33,22 +31,19 @@ namespace MonsterFarm.Game.States
         public WorldState(UserInterface ui) : base(ui)
         {
             _name = "World";
-            //proceduralMap = new ProceduralMap();
-            //player = new Player(proceduralMap);
             maps = new Dictionary<string, StaticMap> {
                 {"tavern", new StaticMap("tavern")},
                 {"street", new StaticMap("street")}
             };
-            pawn = new Pawn(maps["street"]);
+            pawn = new Pawn(new ProceduralMap("b2-l2-r2-t2"));
             controller = new Controller();
         }
 
         public override State LoadContent(ContentManager content, GraphicsDevice graphicsDevice, bool useRenderTarget = false){
-            //proceduralMap.LoadContent(content, graphicsDevice);
-            //player.LoadContent(content, graphicsDevice);
             foreach(StaticMap map in maps.Values){
                 map.LoadContent(content, graphicsDevice);
             }
+            pawn.Map.LoadContent(content, graphicsDevice);
             controller.Pawn = pawn.LoadContent(content, graphicsDevice);
 
             playerAnimation = new Animation(content.Load<Texture2D>(@"Entities/player"));
@@ -76,11 +71,6 @@ namespace MonsterFarm.Game.States
         public override void Update(GameTime gameTime)
         {
             keyboardHandler.Update(gameTime);
-
-            //proceduralMap.Update(gameTime);
-
-            //player.Update(gameTime);
-
             pawn.Map.Update(gameTime);
             pawn.Update(gameTime);
             controller.Update(gameTime);
@@ -91,8 +81,6 @@ namespace MonsterFarm.Game.States
         public override void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
             base.Render(spriteBatch, viewport);
-            //proceduralMap.Render(spriteBatch, viewport);
-            //player.Render(spriteBatch, viewport);
             pawn.Map.Render(spriteBatch, viewport);
             pawn.Render(spriteBatch, viewport);
             pawn.Map.RenderOverlay(spriteBatch, viewport);

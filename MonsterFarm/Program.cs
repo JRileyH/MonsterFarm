@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.Game.Util;
 
 namespace MonsterFarm.Desktop

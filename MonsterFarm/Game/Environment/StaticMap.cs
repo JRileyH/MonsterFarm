@@ -5,7 +5,7 @@ namespace MonsterFarm.Game.Environment
     {
         public StaticMap(string name) : base(name)
         {
-
+            _root += "static/";
         }
     }
 }

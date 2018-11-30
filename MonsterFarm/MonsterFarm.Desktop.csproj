@@ -83,8 +83,6 @@
     <Compile Include="UI\Elements\TextInput.cs" />
     <Compile Include="UI\Elements\TextInputValidators.cs" />
     <Compile Include="UI\Elements\VerticalScrollbar.cs" />
-    <Compile Include="Game\Environment\ProceduralMap.cs" />
-    <Compile Include="Game\Environment\TileGroup.cs" />
     <Compile Include="Utils\Tiled\Core.cs" />
     <Compile Include="Utils\Tiled\ObjectGroup.cs" />
     <Compile Include="Utils\Tiled\Tileset.cs" />
@@ -106,6 +104,7 @@
     <Compile Include="Game\Environment\StaticMap.cs" />
     <Compile Include="Game\Entites\Controller.cs" />
     <Compile Include="Game\Util\PathFinding.cs" />
+    <Compile Include="Game\Environment\ProceduralMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
