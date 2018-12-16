@@ -85,9 +85,11 @@ namespace MonsterFarm.Game.Entites
         public void Update(GameTime gameTime){
             if (!_initialized) throw new Exception("Must call LoadContent before Update");
             if (_destination != null){
+                //Pawn has somewhere to go
                 Point dim = new Point(Map.TileWidth, Map.TileHeight);
                 Point delta = ((Point)_destination * dim) - ((Position * dim) + _offset);
                 if (Math.Abs(delta.X) < _speed && Math.Abs(delta.Y) < _speed){
+                    Map.Shift(delta);
                     Position = (Point)_destination;
                     _offset = new Point();
                     _destination = null;

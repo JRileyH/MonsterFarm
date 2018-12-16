@@ -158,6 +158,12 @@ namespace MonsterFarm.Game.Environment
             return this;
         }
 
+        public override void Shift(int x, int y)
+        {
+            base.Shift(x, y);
+            _background.Shift(-x, -y);
+        }
+
         public override void Update(GameTime gameTime)
         {
             Offset += _scroll;

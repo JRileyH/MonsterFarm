@@ -14,9 +14,8 @@ namespace MonsterFarm.Game.States
     public class WorldState : State
     {
         static Dictionary<string, StaticMap> maps;
-        Pawn pawn;
-        Controller controller;
-        Animation playerAnimation;
+        Player player;
+        Map activeMap;
 
         public static KeyboardHandler keyboardHandler = new KeyboardHandler();
 
@@ -35,25 +34,16 @@ namespace MonsterFarm.Game.States
                 {"tavern", new StaticMap("tavern")},
                 {"street", new StaticMap("street")}
             };
-            pawn = new Pawn(new ProceduralMap("b2-l2-r2-t2"));
-            controller = new Controller();
+            activeMap = new ProceduralMap("b2-l2-r2-t2");
+            player = new Player(activeMap);
         }
 
         public override State LoadContent(ContentManager content, GraphicsDevice graphicsDevice, bool useRenderTarget = false){
             foreach(StaticMap map in maps.Values){
                 map.LoadContent(content, graphicsDevice);
             }
-            pawn.Map.LoadContent(content, graphicsDevice);
-            controller.Pawn = pawn.LoadContent(content, graphicsDevice);
-
-            playerAnimation = new Animation(content.Load<Texture2D>(@"Entities/player"));
-            playerAnimation.AddFrames("down", 0, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            playerAnimation.AddFrames("up", 8, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            playerAnimation.AddFrames("left", 16, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            playerAnimation.AddFrames("right", 16, 8, 32, 48, TimeSpan.FromSeconds(.15), true);
-            playerAnimation.Sequence = "down";
-
-            pawn.Animation = playerAnimation;
+            activeMap.LoadContent(content, graphicsDevice);
+            player.LoadContent(content, graphicsDevice);
 
             return base.LoadContent(content, graphicsDevice, useRenderTarget);
         }
@@ -71,19 +61,17 @@ namespace MonsterFarm.Game.States
         public override void Update(GameTime gameTime)
         {
             keyboardHandler.Update(gameTime);
-            pawn.Map.Update(gameTime);
-            pawn.Update(gameTime);
-            controller.Update(gameTime);
+            activeMap.Update(gameTime);
+            player.Update(gameTime);
             base.Update(gameTime);
-
         }
 
         public override void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
             base.Render(spriteBatch, viewport);
-            pawn.Map.Render(spriteBatch, viewport);
-            pawn.Render(spriteBatch, viewport);
-            pawn.Map.RenderOverlay(spriteBatch, viewport);
+            activeMap.Render(spriteBatch, viewport);
+            player.Render(spriteBatch, viewport);
+            activeMap.RenderOverlay(spriteBatch, viewport);
         }
     }
 }

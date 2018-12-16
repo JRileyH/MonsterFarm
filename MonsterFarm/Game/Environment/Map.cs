@@ -70,7 +70,7 @@ namespace MonsterFarm.Game.Environment
         public bool[,] WalkableMap { get; protected set; }
         public Dictionary<string, Transition> Transitions { get; protected set; }
 
-        public void Shift(int x, int y)
+        public virtual void Shift(int x, int y)
         {
             Offset += new Vector2(x, y);
 
