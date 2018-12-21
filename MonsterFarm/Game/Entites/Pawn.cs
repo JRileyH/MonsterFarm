@@ -75,10 +75,17 @@ namespace MonsterFarm.Game.Entites
 
         public void AddPath(Vector2 destination){
             Vector2 temp = new Vector2(15 * 27, 15 * 27);//todo: ok this bad
-            if(CanWalkTo(destination + temp)){
-                List<Vector2> searchPath = PathFinding.BFS(Position + temp, destination + temp, Map.WalkableMap);
-                foreach(Vector2 point in searchPath){
-                    _path.Enqueue(point - temp);
+            Vector2 globalPosition = Position + temp;
+            Vector2 globalDestination = destination + temp;
+            Vector2 globalDelta = globalPosition - globalDestination;
+            if(CanWalkTo(globalDestination)){
+                if (Math.Abs((int)globalDelta.X) + Math.Abs((int)globalDelta.Y) == 1) {
+                    _path.Enqueue(destination);
+                } else {
+                    List<Vector2> searchPath = PathFinding.BFS(globalPosition, globalDestination, Map.WalkableMap);
+                    foreach (Vector2 point in searchPath) {
+                        _path.Enqueue(point - temp);
+                    }
                 }
                 Walking = true;
             }

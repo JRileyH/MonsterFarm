@@ -28,6 +28,7 @@ namespace MonsterFarm.Game.Entites
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.S, () => { _directionInput.Remove("down"); });
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.A, () => { _directionInput.Remove("left"); });
             WorldState.keyboardHandler.Subscribe(KeyTrigger.Release, Keys.D, () => { _directionInput.Remove("right"); });
+        
         }
         public Pawn Pawn { get; set; }
         public void Update(GameTime gameTime){

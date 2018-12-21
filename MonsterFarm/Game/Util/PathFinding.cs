@@ -66,6 +66,7 @@ namespace MonsterFarm.Game.Util
                     visited[(int)point.X, (int)point.Y] = true;
                 }
             }
+            visited = null;
 
             return new List<Vector2>();
         }

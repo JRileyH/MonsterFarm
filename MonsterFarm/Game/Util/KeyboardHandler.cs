@@ -56,7 +56,6 @@ namespace MonsterFarm.Game.Util
 
         public void Update(GameTime gameTime) {
             KeyboardState state = Keyboard.GetState();
-            List<Keys> doomed = new List<Keys>();
 
             foreach(Keys key in state.GetPressedKeys()){
                 if(!_keysDown.Contains(key)){
@@ -68,6 +67,7 @@ namespace MonsterFarm.Game.Util
                     }
                 }
             }
+            List<Keys> doomed = new List<Keys>();
             foreach (Keys key in _keysDown){
                 if (_subscriptionRegistery[KeyTrigger.Hold].ContainsKey(key)){
                     foreach (Action action in _subscriptionRegistery[KeyTrigger.Hold][key]){
@@ -86,6 +86,7 @@ namespace MonsterFarm.Game.Util
             foreach(Keys key in doomed){
                 _keysDown.Remove(key);
             }
+            doomed = null;
         }
     }
 }
