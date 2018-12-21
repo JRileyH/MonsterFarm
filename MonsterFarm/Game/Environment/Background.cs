@@ -32,15 +32,16 @@ namespace MonsterFarm.Game.Environment
         public int TileWidth { get; private set; }
         public int TileHeight { get; private set; }
 
-        public void Shift(int x, int y) {
-            _offset -= new Vector2(x, y);
+        public void Shift(int x, int y) { Shift(new Vector2(x, y)); }
+        public void Shift(float x, float y) { Shift(new Vector2(x, y)); }
+        public void Shift(Point _amt) { Shift(_amt.ToVector2()); }
+        public void Shift(Vector2 _amt) {
+            _offset = -_amt;
             if (_offset.X >= TileWidth) _offset.X -= TileWidth;
             if (_offset.X <= TileWidth) _offset.X += TileWidth;
             if (_offset.Y >= TileHeight) _offset.Y -= TileHeight;
             if (_offset.Y <= TileHeight) _offset.Y += TileHeight;
         }
-        public void Shift(Point _amt) { Shift(_amt.X, _amt.Y); }
-        public void Shift(Vector2 _amt) { Shift((int)_amt.X, (int)_amt.Y); }
 
         public void Update(GameTime gameTime)
         {

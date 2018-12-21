@@ -17,20 +17,20 @@ namespace MonsterFarm.Game.Entites
     {
         private SpriteFont testfont;
         private bool _initialized = false;
-        private Point _offset;
-        private Point? _destination;
-        private Point _tileDim;
+        private Vector2 _offset;
+        private Vector2? _destination;
+        private Vector2 _tileDim;
         private int _speed = 3;
         private Texture2D _placeholder;
-        private Queue<Point> _path;
+        private Queue<Vector2> _path;
 
         public Pawn(Map map){
             Map = map;
-            Position = new Point(9, 9);
+            Position = new Vector2(9, 9);
             _destination = null;
-            _tileDim = new Point(Map.TileWidth, Map.TileHeight);
-            _offset = new Point();
-            _path = new Queue<Point>();
+            _tileDim = new Vector2(Map.TileWidth, Map.TileHeight);
+            _offset = new Vector2();
+            _path = new Queue<Vector2>();
             Walking = false;
         }
 
@@ -44,7 +44,8 @@ namespace MonsterFarm.Game.Entites
 
         public Map Map { get; set; }
         public Animation Animation { get; set; }
-        public Point Position { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 RenderPosition { get; private set; }
         public bool Walking { get; private set; }
         public void Stop(){
             Walking = false;
@@ -67,15 +68,16 @@ namespace MonsterFarm.Game.Entites
             y < Map.WalkableMap.GetLength(1) &&
             Map.WalkableMap[x, y];
         }
-        public bool CanWalkTo(Point destination){
-            return CanWalkTo(destination.X, destination.Y);
+        public bool CanWalkTo(Vector2 destination)
+        {
+            return CanWalkTo((int)destination.X, (int)destination.Y);
         }
 
-        public void AddPath(Point destination){
-            Point temp = new Point(15 * 27, 15 * 27);//todo: ok this bad
+        public void AddPath(Vector2 destination){
+            Vector2 temp = new Vector2(15 * 27, 15 * 27);//todo: ok this bad
             if(CanWalkTo(destination + temp)){
-                List<Point> searchPath = PathFinding.BFS(Position + temp, destination + temp, Map.WalkableMap);
-                foreach(Point point in searchPath){
+                List<Vector2> searchPath = PathFinding.BFS(Position + temp, destination + temp, Map.WalkableMap);
+                foreach(Vector2 point in searchPath){
                     _path.Enqueue(point - temp);
                 }
                 Walking = true;
@@ -86,12 +88,13 @@ namespace MonsterFarm.Game.Entites
             if (!_initialized) throw new Exception("Must call LoadContent before Update");
             if (_destination != null){
                 //Pawn has somewhere to go
-                Point dim = new Point(Map.TileWidth, Map.TileHeight);
-                Point delta = ((Point)_destination * dim) - ((Position * dim) + _offset);
+                Vector2 dim = new Vector2(Map.TileWidth, Map.TileHeight);
+                Vector2 delta = ((Vector2)_destination * dim) - ((Position * dim) + _offset);
                 if (Math.Abs(delta.X) < _speed && Math.Abs(delta.Y) < _speed){
+                    //Pawn is close enough to desitination
                     Map.Shift(delta);
-                    Position = (Point)_destination;
-                    _offset = new Point();
+                    Position = (Vector2)_destination;
+                    _offset = new Vector2();
                     _destination = null;
                     foreach(KeyValuePair<string, Transition> transition in Map.Transitions){
                         if(Position==transition.Value.Entry){
@@ -99,38 +102,40 @@ namespace MonsterFarm.Game.Entites
                         }
                     }
                 } else {
-                    _offset += ((Point)_destination - Position) * new Point(_speed, _speed);
+                    //Move Pawn closer to destination
+                    Vector2 shift = ((Vector2)_destination - Position) * new Vector2(_speed, _speed);
+                    _offset += shift;
+                    Map.Shift(-shift);
+
                 }
             } else if (_path.Count > 0) {
                 Walking = true;
                 _destination = _path.Dequeue();
-                Point p = (Point)_destination - Position;
+                Vector2 p = (Vector2)_destination - Position;
                 if (p.X < 0) Direction = "left";
                 if (p.X > 0) Direction = "right";
                 if (p.Y < 0) Direction = "up";
                 if (p.Y > 0) Direction = "down";
                 if (Animation != null) Animation.Start();
-                Map.Scroll(p * new Point(-_speed, -_speed));
             } else {
                 Walking = false;
                 if (Animation != null) Animation.Stop();
-                Map.Scroll(new Point());
             }
             if (Animation != null) Animation.Update(gameTime);
+            RenderPosition = new Vector2(
+                Map.Offset.X + (Position.X * Map.TileWidth) + _offset.X,
+                Map.Offset.Y + (Position.Y * Map.TileWidth) + _offset.Y - 16
+            );
         }
 
         public void Render(SpriteBatch spriteBatch, Viewport viewport){
             if (!_initialized) throw new Exception("Must call LoadContent before Render");
             spriteBatch.DrawString(testfont, Position.ToString(), new Vector2(20, 20), Color.Red);
             spriteBatch.DrawString(testfont, Map.Offset.ToString(), new Vector2(20, 40), Color.Red);
-            Vector2 rPos = new Vector2(
-                Map.Offset.X + (Map.TileWidth * Position.X) + _offset.X,
-                Map.Offset.Y + (Map.TileHeight * Position.Y) + _offset.Y - 16
-            );
             if(Animation != null){
-                Animation.Render(rPos, spriteBatch);
+                Animation.Render(RenderPosition, spriteBatch);
             } else {
-                spriteBatch.Draw(_placeholder, new Rectangle((int)rPos.X, (int)rPos.Y, 32, 48), Color.White);
+                spriteBatch.Draw(_placeholder, new Rectangle((int)RenderPosition.X, (int)RenderPosition.Y, 32, 48), Color.White);
             }
         }
     }

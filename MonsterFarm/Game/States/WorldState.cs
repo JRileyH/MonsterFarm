@@ -19,7 +19,7 @@ namespace MonsterFarm.Game.States
 
         public static KeyboardHandler keyboardHandler = new KeyboardHandler();
 
-        public static void transition(Pawn pawn, string map, Point entry){
+        public static void transition(Pawn pawn, string map, Vector2 entry){
             if(maps.ContainsKey(map)){
                 pawn.Stop();
                 pawn.Map = maps[map];

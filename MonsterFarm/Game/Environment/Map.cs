@@ -27,13 +27,13 @@ namespace MonsterFarm.Game.Environment
 
     public struct Transition
     {
-        public Transition(Point entry, Point exit)
+        public Transition(Vector2 entry, Vector2 exit)
         {
             Entry = entry;
             Exit = exit;
         }
-        public Point Entry { get; private set; }
-        public Point Exit { get; private set; }
+        public Vector2 Entry { get; private set; }
+        public Vector2 Exit { get; private set; }
     };
 
     public abstract class Map
@@ -41,7 +41,6 @@ namespace MonsterFarm.Game.Environment
         protected bool _initialized = false;
         protected string _root = @"Content/Environment/MapLibrary/";
         protected string _name;
-        protected Vector2 _scroll;
 
         protected List<TileNode> _tiles;
         protected List<TileNode> _overlay;
@@ -49,16 +48,16 @@ namespace MonsterFarm.Game.Environment
         public Map(string name)
         {
             Offset = new Vector2(200, 60);
-            _scroll = new Vector2(0, 0);
             _name = name;
             Transitions = new Dictionary<string, Transition>();
             if (name=="street"){
-                Transitions["tavern"] = new Transition(new Point(14, 5), new Point(8, 17));
+                Transitions["tavern"] = new Transition(new Vector2(14, 5), new Vector2(8, 17));
             }
             if(name=="tavern"){
-                Transitions["street"] = new Transition(new Point(8, 17), new Point(14, 5));
+                Transitions["street"] = new Transition(new Vector2(8, 17), new Vector2(14, 5));
             }
         }
+        public Vector2 Start { get; protected set; }
 
         public int XCount { get; protected set; }
         public int YCount { get; protected set; }
@@ -70,21 +69,16 @@ namespace MonsterFarm.Game.Environment
         public bool[,] WalkableMap { get; protected set; }
         public Dictionary<string, Transition> Transitions { get; protected set; }
 
-        public virtual void Shift(int x, int y)
-        {
-            Offset += new Vector2(x, y);
+        public void Shift(int x, int y) { Shift(new Vector2(x, y)); }
+        public void Shift(float x, float y) { Shift(new Vector2(x, y)); }
+        public void Shift(Point _amt) { Shift(_amt.ToVector2()); }
+        public virtual void Shift(Vector2 _amt) { Offset += _amt; }
 
-        }
-        public void Shift(Point p) { Shift(p.X, p.Y); }
-        public void Shift(Vector2 v) { Shift((int)v.X, (int)v.Y); }
 
-        public void Scroll(int x, int y)
-        {
-            _scroll.X = x;
-            _scroll.Y = y;
-        }
-        public void Scroll(Point p) { Scroll(p.X, p.Y); }
-        public void Scroll(Vector2 v) { Scroll((int)v.X, (int)v.Y); }
+        public void Move(int x, int y) { Move(new Vector2(x, y)); }
+        public void Move(float x, float y) { Move(new Vector2(x, y)); }
+        public void Move(Point p) { Move(p.ToVector2()); }
+        public virtual void Move(Vector2 v) { Offset = v; }
 
         public virtual Map LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
         {

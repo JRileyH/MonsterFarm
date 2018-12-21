@@ -10,12 +10,12 @@ namespace MonsterFarm.Game.Entites
     public class Controller
     {
         List<string> _directionInput;
-        Dictionary<string, Point> _ = new Dictionary<string, Point>()
+        Dictionary<string, Vector2> _ = new Dictionary<string, Vector2>()
         {
-            { "up", new Point(0,-1) },
-            { "down", new Point(0,1) },
-            { "left", new Point(-1,0) },
-            { "right", new Point(1,0) }
+            { "up", new Vector2(0,-1) },
+            { "down", new Vector2(0,1) },
+            { "left", new Vector2(-1,0) },
+            { "right", new Vector2(1,0) }
         };
         public Controller()
         {

@@ -24,6 +24,8 @@ namespace MonsterFarm.Game.Environment
             _background = new Background("WaterTile");
         }
 
+        public Vector2 Warp { get; private set; }
+
         private List<Vector2> _available(Vector2 v)
         {
             List<Vector2> options = new List<Vector2>();
@@ -110,6 +112,7 @@ namespace MonsterFarm.Game.Environment
             foreach (Vector2 v in _bluePrint){
                 tileGroups[(int)v.X + _mapSize, (int)v.Y + _mapSize] = "";
             }
+            List<Vector2> walkablePoints = new List<Vector2>();
             for(int y = 0; y < tileGroups.GetLength(1); y++) {
                 for (int x = 0; x < tileGroups.GetLength(0); x++) {
                     if(tileGroups[x, y] != null) {
@@ -128,7 +131,10 @@ namespace MonsterFarm.Game.Environment
                         foreach (TmxLayer layer in map.Layers){
                             if (layer.Name == "Walkable"){
                                 foreach (TmxLayerTile tile in layer.Tiles){
-                                    WalkableMap[(x*27) + tile.X, (y*27) + tile.Y] = tile.Gid != 0;
+                                    Vector2 p = new Vector2((x * 27) + tile.X, (y * 27) + tile.Y);
+                                    WalkableMap[(int)p.X, (int)p.Y] = tile.Gid != 0;
+                                    walkablePoints.Add(p- new Vector2(15 * 27, 15 * 27));
+
                                 }
                             } else {
                                 foreach (TmxLayerTile tile in layer.Tiles){
@@ -139,7 +145,7 @@ namespace MonsterFarm.Game.Environment
                                         if (tileSetIndex == map.Tilesets.Count) break;
                                         TmxTileset tileset = map.Tilesets[tileSetIndex++];
                                         if (gid < tileset.FirstGid + tileset.TileCount){
-                                            Point shift = new Point((x - _mapSize) * 27, (y - _mapSize) * 27);
+                                            Vector2 shift = new Vector2((x - _mapSize) * 27, (y - _mapSize) * 27);
                                             if (layer.Name == "Overlay"){
                                                 _overlay.Add(new TileNode(tileset, new Vector2(tile.X + shift.X, tile.Y + shift.Y), gid));
                                             } else {
@@ -154,27 +160,32 @@ namespace MonsterFarm.Game.Environment
                     }
                 }
             }
+            //Find start and warp spot
+            Start = Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
+            while (Warp == Start){
+                Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
+            }
+            walkablePoints = null;
+            Debug.WriteLine("Start: "+Start+" Warp: "+Warp);
             _initialized = true;
             return this;
         }
 
-        public override void Shift(int x, int y)
+        public override void Shift(Vector2 _amt)
         {
-            base.Shift(x, y);
-            _background.Shift(-x, -y);
+            base.Shift(_amt);
+            _background.Shift(_amt);
         }
 
         public override void Update(GameTime gameTime)
         {
-            Offset += _scroll;
-            _background.Shift(-_scroll);
             _background.Update(gameTime);
             base.Update(gameTime);
         }
 
         public override void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
-            _background.Render(spriteBatch, viewport);
+            //_background.Render(spriteBatch, viewport);
             base.Render(spriteBatch, viewport);
         }
     }
