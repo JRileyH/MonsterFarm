@@ -139,7 +139,7 @@ namespace MonsterFarm.Game.Entites
             if (!_initialized) throw new Exception("Must call LoadContent before Render");
             spriteBatch.DrawString(testfont, Position.ToString(), new Vector2(20, 20), Color.Red);
             spriteBatch.DrawString(testfont, Map.Offset.ToString(), new Vector2(20, 40), Color.Red);
-            if(Animation != null){
+            if (Animation != null){
                 Animation.Render(RenderPosition, spriteBatch);
             } else {
                 spriteBatch.Draw(_placeholder, new Rectangle((int)RenderPosition.X, (int)RenderPosition.Y, 32, 48), Color.White);

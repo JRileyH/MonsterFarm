@@ -166,6 +166,7 @@ namespace MonsterFarm.Game.Environment
                 Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
             }
             walkablePoints = null;
+            tileGroups = null;
             Debug.WriteLine("Start: "+Start+" Warp: "+Warp);
             _initialized = true;
             return this;

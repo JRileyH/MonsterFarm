@@ -225,6 +225,7 @@ namespace MonsterFarm.UI.Elements
                 {
                     ret.AppendLine(WrapText(font, line, maxLineWidth, fontSize));
                 }
+                lines = null;
 
                 // remove the last extra linebreak that was added in this process and return.
                 ret = ret.Remove(ret.Length - 1, 1);

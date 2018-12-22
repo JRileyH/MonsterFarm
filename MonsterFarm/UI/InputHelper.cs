@@ -37,6 +37,8 @@ namespace MonsterFarm.UI
     /// </summary>
     public class InputHelper
     {
+        Keys[] _allKeys = (Keys[])System.Enum.GetValues(typeof(Keys));
+
         // store current & previous keyboard states so we can detect key release
         KeyboardState _newKeyboardState;
         KeyboardState _oldKeyboardState;
@@ -152,8 +154,9 @@ namespace MonsterFarm.UI
                 _currCharacterInput = (char)SpecialChars.Null;
             }
 
+
             // send key-down events
-            foreach (Keys key in System.Enum.GetValues(typeof(Keys)))
+            foreach (Keys key in _allKeys)
             {
                 if (_newKeyboardState.IsKeyDown(key) && !_oldKeyboardState.IsKeyDown(key))
                 {
