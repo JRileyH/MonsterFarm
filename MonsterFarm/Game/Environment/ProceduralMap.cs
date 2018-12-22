@@ -16,11 +16,13 @@ namespace MonsterFarm.Game.Environment
         private int _mapSize = 15;
         private List<Vector2> _bluePrint;
         private Background _background;
+        private Texture2D _warpTexture;
+        private Vector2 _warpPosition;
+        private ContentManager _content;
+        private GraphicsDevice _graphicsDevice;
 
         public ProceduralMap(string name) : base(name)
         {
-            _bluePrint = new List<Vector2>();
-            _build((int)Math.Floor((double)_mapSize / 2));
             _background = new Background("WaterTile");
         }
 
@@ -61,6 +63,7 @@ namespace MonsterFarm.Game.Environment
 
         private void _build(int numberOfRooms)
         {
+            _bluePrint = new List<Vector2>();
             _bluePrint.Add(new Vector2(0, 0));
             _bluePrint.Add(new Vector2(1, 0));
             _bluePrint.Add(new Vector2(-1, 0));
@@ -92,64 +95,67 @@ namespace MonsterFarm.Game.Environment
             }
         }
 
-        public override Map LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
-        {
-            if (_initialized) throw new Exception("Cannot call LoadContent twice");
-            _background.LoadContent(content, graphicsDevice);
-            string[,] tileGroups = new string[_mapSize * 2, _mapSize * 2];
+        public void Rebuild() {
             _tiles = new List<TileNode>();
             _overlay = new List<TileNode>();
-
-            //Set public gettable values
-            GlobalTileModifier = new Vector2(_mapSize * 27, _mapSize * 27);
-            TileWidth = 32;//todo: dont you hard code, you filth
-            TileHeight = 32;
-            XCount = 27 * 2 * _mapSize;
-            YCount = 27 * 2 * _mapSize;
-            Width = XCount * TileWidth;
-            Height = YCount * TileHeight;
-            WalkableMap = new bool[XCount, YCount];
-
-            foreach (Vector2 v in _bluePrint){
+            _build((int)Math.Floor((double)_mapSize / 2));
+            string[,] tileGroups = new string[_mapSize * 2, _mapSize * 2];
+            foreach (Vector2 v in _bluePrint)
+            {
                 tileGroups[(int)v.X + _mapSize, (int)v.Y + _mapSize] = "";
             }
             List<Vector2> walkablePoints = new List<Vector2>();
-            for(int y = 0; y < tileGroups.GetLength(1); y++) {
-                for (int x = 0; x < tileGroups.GetLength(0); x++) {
-                    if(tileGroups[x, y] != null) {
+            for (int y = 0; y < tileGroups.GetLength(1); y++)
+            {
+                for (int x = 0; x < tileGroups.GetLength(0); x++)
+                {
+                    if (tileGroups[x, y] != null)
+                    {
                         //TODO: the order of this matters because its stupid. Alphebetize at some point
                         List<string> connections = new List<string>();
-                        if (y < tileGroups.GetLength(1)-1 && tileGroups[x, y + 1] != null) connections.Add("b2");
+                        if (y < tileGroups.GetLength(1) - 1 && tileGroups[x, y + 1] != null) connections.Add("b2");
                         if (x > 0 && tileGroups[x - 1, y] != null) connections.Add("l2");
                         if (x < tileGroups.GetLength(0) && tileGroups[x + 1, y] != null) connections.Add("r2");
                         if (y > 0 && tileGroups[x, y - 1] != null) connections.Add("t2");
                         string s = string.Join("-", connections.ToArray());
                         s = s.Length > 0 ? s : "b2-l2-r2-t2";
                         TmxMap map = new TmxMap(_root + "v1/" + s + ".tmx");
-                        foreach (TmxTileset tileset in map.Tilesets){
-                            tileset.LoadContent(content);//todo: figure out if this is loading content redudently
+                        foreach (TmxTileset tileset in map.Tilesets)
+                        {
+                            tileset.LoadContent(_content);//todo: figure out if this is loading content redudently
                         }
-                        foreach (TmxLayer layer in map.Layers){
-                            if (layer.Name == "Walkable"){
-                                foreach (TmxLayerTile tile in layer.Tiles){
+                        foreach (TmxLayer layer in map.Layers)
+                        {
+                            if (layer.Name == "Walkable")
+                            {
+                                foreach (TmxLayerTile tile in layer.Tiles)
+                                {
                                     Vector2 p = new Vector2((x * 27) + tile.X, (y * 27) + tile.Y);
                                     bool walkable = tile.Gid != 0;
                                     WalkableMap[(int)p.X, (int)p.Y] = walkable;
-                                    if(walkable) walkablePoints.Add(p - GlobalTileModifier);
+                                    if (walkable) walkablePoints.Add(p - GlobalTileModifier);
                                 }
-                            } else {
-                                foreach (TmxLayerTile tile in layer.Tiles){
+                            }
+                            else
+                            {
+                                foreach (TmxLayerTile tile in layer.Tiles)
+                                {
                                     int gid = tile.Gid;
                                     if (gid == 0) continue;
                                     int tileSetIndex = 0;
-                                    while (tileSetIndex <= map.Tilesets.Count){
+                                    while (tileSetIndex <= map.Tilesets.Count)
+                                    {
                                         if (tileSetIndex == map.Tilesets.Count) break;
                                         TmxTileset tileset = map.Tilesets[tileSetIndex++];
-                                        if (gid < tileset.FirstGid + tileset.TileCount){
+                                        if (gid < tileset.FirstGid + tileset.TileCount)
+                                        {
                                             Vector2 shift = new Vector2((x - _mapSize) * 27, (y - _mapSize) * 27);
-                                            if (layer.Name == "Overlay"){
+                                            if (layer.Name == "Overlay")
+                                            {
                                                 _overlay.Add(new TileNode(tileset, new Vector2(tile.X + shift.X, tile.Y + shift.Y), gid));
-                                            } else {
+                                            }
+                                            else
+                                            {
                                                 _tiles.Add(new TileNode(tileset, new Vector2(tile.X + shift.X, tile.Y + shift.Y), gid));
                                             }
                                             break;
@@ -163,13 +169,37 @@ namespace MonsterFarm.Game.Environment
             }
             //Find start and warp spot
             Start = Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
-            while (Warp == Start){
+            while (Warp == Start)
+            {
                 Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
             }
-            Offset = Start * new Vector2(-32, -32) + new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
+            Offset = Start * new Vector2(-32, -32) + new Vector2(_graphicsDevice.Viewport.Width / 2, _graphicsDevice.Viewport.Height / 2);
+            _warpPosition = new Vector2(32, 32) * (Warp + Offset);
             walkablePoints = null;
             tileGroups = null;
-            Debug.WriteLine("Start: "+Start+" Warp: "+Warp);
+            Debug.WriteLine("Start: " + Start + " Warp: " + Warp);
+        }
+
+        public override Map LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
+        {
+            if (_initialized) throw new Exception("Cannot call LoadContent twice");
+            _content = content;
+            _graphicsDevice = graphicsDevice;
+            _background.LoadContent(content, graphicsDevice);
+            _warpTexture = content.Load<Texture2D>(@"Environment/MapTextures/LavaTile");
+
+            //Set public gettable values
+            GlobalTileModifier = new Vector2(_mapSize * 27, _mapSize * 27);
+            TileWidth = 32;//todo: dont you hard code, you filth
+            TileHeight = 32;
+            XCount = 27 * 2 * _mapSize;
+            YCount = 27 * 2 * _mapSize;
+            Width = XCount * TileWidth;
+            Height = YCount * TileHeight;
+            WalkableMap = new bool[XCount, YCount];
+
+            Rebuild();
+
             _initialized = true;
             return this;
         }
@@ -184,12 +214,14 @@ namespace MonsterFarm.Game.Environment
         {
             _background.Update(gameTime);
             base.Update(gameTime);
+            _warpPosition = (new Vector2(32, 32) * Warp) + Offset;
         }
 
         public override void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
             _background.Render(spriteBatch, viewport);
             base.Render(spriteBatch, viewport);
+            spriteBatch.Draw(_warpTexture, _warpPosition, Color.White);
         }
     }
 }

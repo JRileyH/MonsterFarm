@@ -40,11 +40,11 @@
 #begin Environment/MapLibrary/outdoor.tsx
 /copy:Environment/MapLibrary/outdoor.tsx
 
-#begin Environment/MapLibrary/static/tavern.tmx
-/copy:Environment/MapLibrary/static/tavern.tmx
-
 #begin Environment/MapLibrary/static/street.tmx
 /copy:Environment/MapLibrary/static/street.tmx
+
+#begin Environment/MapLibrary/static/tavern.tmx
+/copy:Environment/MapLibrary/static/tavern.tmx
 
 #begin Environment/MapLibrary/test/b2.tmx
 /copy:Environment/MapLibrary/test/b2.tmx
@@ -240,6 +240,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Environment/MapTextures/interior.png
+
+#begin Environment/MapTextures/LavaTile.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Environment/MapTextures/LavaTile.png
 
 #begin Environment/MapTextures/outdoor.png
 /importer:TextureImporter

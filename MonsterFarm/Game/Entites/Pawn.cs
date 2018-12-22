@@ -118,6 +118,12 @@ namespace MonsterFarm.Game.Entites
                             WorldState.transition(this, transition.Key, transition.Value.Exit);
                         }
                     }
+                    if (Map.GetType().Equals(typeof(ProceduralMap))){
+                        if(((ProceduralMap)Map).Warp == Position) {
+                            ((ProceduralMap)Map).Rebuild();
+                            Position = Map.Start;
+                        }
+                    }
                 } else {
                     //Move Pawn closer to destination
                     _offset += ((Vector2)_destination - Position) * new Vector2(_speed, _speed);
