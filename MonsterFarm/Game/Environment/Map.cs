@@ -47,7 +47,7 @@ namespace MonsterFarm.Game.Environment
 
         public Map(string name)
         {
-            Offset = new Vector2(200, 60);
+            Offset = new Vector2(0, 0);
             _name = name;
             Transitions = new Dictionary<string, Transition>();
             if (name=="street"){
@@ -56,6 +56,7 @@ namespace MonsterFarm.Game.Environment
             if(name=="tavern"){
                 Transitions["street"] = new Transition(new Vector2(8, 17), new Vector2(14, 5));
             }
+            GlobalTileModifier = new Vector2(0, 0);
         }
         public Vector2 Start { get; protected set; }
 
@@ -68,6 +69,7 @@ namespace MonsterFarm.Game.Environment
         public Vector2 Offset { get; set; }
         public bool[,] WalkableMap { get; protected set; }
         public Dictionary<string, Transition> Transitions { get; protected set; }
+        public Vector2 GlobalTileModifier { get; protected set; }
 
         public void Shift(int x, int y) { Shift(new Vector2(x, y)); }
         public void Shift(float x, float y) { Shift(new Vector2(x, y)); }

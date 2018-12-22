@@ -29,21 +29,24 @@ namespace MonsterFarm.Game.Entites
             _running = false;
         }
 
-        public bool Running { get { return _running; }}
-        public void Start(){
-            if(!_running){
+        public bool Running { get { return _running; } }
+        public void Start() {
+            if (!_running) {
                 _running = true;
             }
         }
-        public void Stop(){
-            if(_running){
+        public void Stop() {
+            if (_running) {
                 _running = false;
             }
         }
 
-        public void Reset(){
+        public void Reset() {
             _currentFrame = _sequences[Sequence][0];
         }
+
+        public int Width { get { return _currentFrame.SourceRectangle.Width; } }
+        public int Height { get { return _currentFrame.SourceRectangle.Height; } }
 
         public string Sequence { get { return _sequence; } set
             {

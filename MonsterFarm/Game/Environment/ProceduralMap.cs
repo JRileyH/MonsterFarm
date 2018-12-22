@@ -101,6 +101,7 @@ namespace MonsterFarm.Game.Environment
             _overlay = new List<TileNode>();
 
             //Set public gettable values
+            GlobalTileModifier = new Vector2(_mapSize * 27, _mapSize * 27);
             TileWidth = 32;//todo: dont you hard code, you filth
             TileHeight = 32;
             XCount = 27 * 2 * _mapSize;
@@ -132,9 +133,9 @@ namespace MonsterFarm.Game.Environment
                             if (layer.Name == "Walkable"){
                                 foreach (TmxLayerTile tile in layer.Tiles){
                                     Vector2 p = new Vector2((x * 27) + tile.X, (y * 27) + tile.Y);
-                                    WalkableMap[(int)p.X, (int)p.Y] = tile.Gid != 0;
-                                    walkablePoints.Add(p- new Vector2(15 * 27, 15 * 27));
-
+                                    bool walkable = tile.Gid != 0;
+                                    WalkableMap[(int)p.X, (int)p.Y] = walkable;
+                                    if(walkable) walkablePoints.Add(p - GlobalTileModifier);
                                 }
                             } else {
                                 foreach (TmxLayerTile tile in layer.Tiles){
@@ -165,6 +166,7 @@ namespace MonsterFarm.Game.Environment
             while (Warp == Start){
                 Warp = walkablePoints[Global.rnd.Next(walkablePoints.Count)];
             }
+            Offset = Start * new Vector2(-32, -32) + new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
             walkablePoints = null;
             tileGroups = null;
             Debug.WriteLine("Start: "+Start+" Warp: "+Warp);
@@ -186,7 +188,7 @@ namespace MonsterFarm.Game.Environment
 
         public override void Render(SpriteBatch spriteBatch, Viewport viewport)
         {
-            //_background.Render(spriteBatch, viewport);
+            _background.Render(spriteBatch, viewport);
             base.Render(spriteBatch, viewport);
         }
     }

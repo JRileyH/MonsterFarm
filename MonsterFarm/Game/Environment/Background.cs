@@ -36,7 +36,7 @@ namespace MonsterFarm.Game.Environment
         public void Shift(float x, float y) { Shift(new Vector2(x, y)); }
         public void Shift(Point _amt) { Shift(_amt.ToVector2()); }
         public void Shift(Vector2 _amt) {
-            _offset = -_amt;
+            _offset += _amt;
             if (_offset.X >= TileWidth) _offset.X -= TileWidth;
             if (_offset.X <= TileWidth) _offset.X += TileWidth;
             if (_offset.Y >= TileHeight) _offset.Y -= TileHeight;
@@ -46,7 +46,6 @@ namespace MonsterFarm.Game.Environment
         public void Update(GameTime gameTime)
         {
             if (!_initialized) throw new Exception("Must call LoadContent before using TileGroup");
-
         }
 
         public void Render(SpriteBatch spriteBatch, Viewport viewport)

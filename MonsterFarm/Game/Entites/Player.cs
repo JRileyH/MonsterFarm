@@ -23,9 +23,9 @@ namespace MonsterFarm.Game.Entites
             get => Pawn.Map;
             set => Pawn.Map = value;
         }
+        Vector2 _centerScreen = new Vector2();
 
         public Player LoadContent(ContentManager content, GraphicsDevice graphicsDevice) {
-
             Controller.Pawn = Pawn.LoadContent(content, graphicsDevice);
             Animation = new Animation(content.Load<Texture2D>(@"Entities/player"));
             Animation.AddFrames("down", 0, 8, 32, 48, TimeSpan.FromSeconds(.15));
@@ -33,11 +33,19 @@ namespace MonsterFarm.Game.Entites
             Animation.AddFrames("left", 16, 8, 32, 48, TimeSpan.FromSeconds(.15));
             Animation.AddFrames("right", 16, 8, 32, 48, TimeSpan.FromSeconds(.15), true);
             Animation.Sequence = "down";
+            _centerScreen = new Vector2(
+                (graphicsDevice.Viewport.Width / 2) - (Pawn.Width / 2),
+                (graphicsDevice.Viewport.Height / 2) - (Pawn.Height / 2)
+            );
             return this;
         }
 
         public void Update(GameTime gameTime) {
             Pawn.Update(gameTime);
+            if(Pawn.RenderPosition != _centerScreen) {
+                Vector2 correctionShift = _centerScreen - Pawn.RenderPosition;
+                Pawn.Map.Shift(correctionShift);
+            }
             Controller.Update(gameTime);
         }
 

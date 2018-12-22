@@ -26,7 +26,6 @@ namespace MonsterFarm.Game.Entites
 
         public Pawn(Map map){
             Map = map;
-            Position = new Vector2(9, 9);
             _destination = null;
             _tileDim = new Vector2(Map.TileWidth, Map.TileHeight);
             _offset = new Vector2();
@@ -38,12 +37,25 @@ namespace MonsterFarm.Game.Entites
             if (_initialized) throw new Exception("Cannot call LoadContent twice");
             testfont = content.Load<SpriteFont>("UI/fonts/Regular");
             _placeholder = content.Load<Texture2D>(@"Environment/MapTextures/WaterTile");
+            Position = Map.Start;
             _initialized = true;
             return this;
         }
 
         public Map Map { get; set; }
         public Animation Animation { get; set; }
+        public int Width {
+            get {
+                if (Animation != null) return Animation.Width;
+                return _placeholder.Width;
+            }
+        }
+        public int Height {
+            get {
+                if (Animation != null) return Animation.Height;
+                return _placeholder.Height;
+            }
+        }
         public Vector2 Position { get; set; }
         public Vector2 RenderPosition { get; private set; }
         public bool Walking { get; private set; }
@@ -74,9 +86,8 @@ namespace MonsterFarm.Game.Entites
         }
 
         public void AddPath(Vector2 destination){
-            Vector2 temp = new Vector2(15 * 27, 15 * 27);//todo: ok this bad
-            Vector2 globalPosition = Position + temp;
-            Vector2 globalDestination = destination + temp;
+            Vector2 globalPosition = Position + Map.GlobalTileModifier;
+            Vector2 globalDestination = destination + Map.GlobalTileModifier;
             Vector2 globalDelta = globalPosition - globalDestination;
             if(CanWalkTo(globalDestination)){
                 if (Math.Abs((int)globalDelta.X) + Math.Abs((int)globalDelta.Y) == 1) {
@@ -84,7 +95,7 @@ namespace MonsterFarm.Game.Entites
                 } else {
                     List<Vector2> searchPath = PathFinding.BFS(globalPosition, globalDestination, Map.WalkableMap);
                     foreach (Vector2 point in searchPath) {
-                        _path.Enqueue(point - temp);
+                        _path.Enqueue(point - Map.GlobalTileModifier);
                     }
                 }
                 Walking = true;
@@ -99,7 +110,6 @@ namespace MonsterFarm.Game.Entites
                 Vector2 delta = ((Vector2)_destination * dim) - ((Position * dim) + _offset);
                 if (Math.Abs(delta.X) < _speed && Math.Abs(delta.Y) < _speed){
                     //Pawn is close enough to desitination
-                    Map.Shift(delta);
                     Position = (Vector2)_destination;
                     _offset = new Vector2();
                     _destination = null;
@@ -110,9 +120,7 @@ namespace MonsterFarm.Game.Entites
                     }
                 } else {
                     //Move Pawn closer to destination
-                    Vector2 shift = ((Vector2)_destination - Position) * new Vector2(_speed, _speed);
-                    _offset += shift;
-                    Map.Shift(-shift);
+                    _offset += ((Vector2)_destination - Position) * new Vector2(_speed, _speed);
 
                 }
             } else if (_path.Count > 0) {
