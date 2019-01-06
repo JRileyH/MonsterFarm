@@ -50,12 +50,6 @@ namespace MonsterFarm.Game.Environment
             Offset = new Vector2(0, 0);
             _name = name;
             Transitions = new Dictionary<string, Transition>();
-            if (name=="street"){
-                Transitions["tavern"] = new Transition(new Vector2(14, 5), new Vector2(8, 17));
-            }
-            if(name=="tavern"){
-                Transitions["street"] = new Transition(new Vector2(8, 17), new Vector2(14, 5));
-            }
             GlobalTileModifier = new Vector2(0, 0);
         }
         public Vector2 Start { get; protected set; }
@@ -104,22 +98,31 @@ namespace MonsterFarm.Game.Environment
                 tileset.LoadContent(content);
             }
             foreach (TmxLayer layer in map.Layers){
+                if (layer.Name == "Start" || layer.Name.StartsWith("-X-")) continue;
+
                 if (layer.Name == "Walkable"){
-                    foreach (TmxLayerTile tile in layer.Tiles){
+                    foreach (TmxLayerTile tile in layer.Tiles)
+                    {
                         WalkableMap[tile.X, tile.Y] = tile.Gid != 0;
                     }
                 } else {
-                    foreach (TmxLayerTile tile in layer.Tiles){
+                    foreach (TmxLayerTile tile in layer.Tiles)
+                    {
                         int gid = tile.Gid;
                         if (gid == 0) continue;
                         int tileSetIndex = 0;
-                        while (tileSetIndex <= map.Tilesets.Count){
+                        while (tileSetIndex <= map.Tilesets.Count)
+                        {
                             if (tileSetIndex == map.Tilesets.Count) break;
                             TmxTileset tileset = map.Tilesets[tileSetIndex++];
-                            if (gid < tileset.FirstGid + tileset.TileCount){
-                                if (layer.Name == "Overlay"){
+                            if (gid < tileset.FirstGid + tileset.TileCount)
+                            {
+                                if (layer.Name == "Overlay")
+                                {
                                     _overlay.Add(new TileNode(tileset, new Vector2(tile.X, tile.Y), gid));
-                                } else {
+                                }
+                                else
+                                {
                                     _tiles.Add(new TileNode(tileset, new Vector2(tile.X, tile.Y), gid));
                                 }
                                 break;

@@ -24,6 +24,9 @@ namespace MonsterFarm.Game.Entites
         private Texture2D _placeholder;
         private Queue<Vector2> _path;
 
+        public delegate void ReachDestinationDelegate(Vector2 destination);
+        public event ReachDestinationDelegate ReachDestination;
+
         public Pawn(Map map){
             Map = map;
             _destination = null;
@@ -113,17 +116,7 @@ namespace MonsterFarm.Game.Entites
                     Position = (Vector2)_destination;
                     _offset = new Vector2();
                     _destination = null;
-                    foreach(KeyValuePair<string, Transition> transition in Map.Transitions){
-                        if(Position==transition.Value.Entry){
-                            WorldState.transition(this, transition.Key, transition.Value.Exit);
-                        }
-                    }
-                    if (Map.GetType().Equals(typeof(ProceduralMap))){
-                        if(((ProceduralMap)Map).Warp == Position) {
-                            ((ProceduralMap)Map).Rebuild();
-                            Position = Map.Start;
-                        }
-                    }
+                    ReachDestination(Position);
                 } else {
                     //Move Pawn closer to destination
                     _offset += ((Vector2)_destination - Position) * new Vector2(_speed, _speed);

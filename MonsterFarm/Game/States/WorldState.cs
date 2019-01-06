@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,7 +16,7 @@ namespace MonsterFarm.Game.States
     {
         static Dictionary<string, StaticMap> maps;
         Player player;
-        Map activeMap;
+        public static Map activeMap;
 
         public static KeyboardHandler keyboardHandler = new KeyboardHandler();
 
@@ -24,6 +25,7 @@ namespace MonsterFarm.Game.States
                 pawn.Stop();
                 pawn.Map = maps[map];
                 pawn.Position = entry;
+                activeMap = maps[map];
             }
         }
 
@@ -34,7 +36,7 @@ namespace MonsterFarm.Game.States
                 {"tavern", new StaticMap("tavern")},
                 {"street", new StaticMap("street")}
             };
-            activeMap = new ProceduralMap("b2-l2-r2-t2");
+            activeMap = maps["street"];
             player = new Player(activeMap);
         }
 
@@ -42,19 +44,16 @@ namespace MonsterFarm.Game.States
             foreach(StaticMap map in maps.Values){
                 map.LoadContent(content, graphicsDevice);
             }
-            activeMap.LoadContent(content, graphicsDevice);
             player.LoadContent(content, graphicsDevice);
 
             return base.LoadContent(content, graphicsDevice, useRenderTarget);
         }
 
         public override State Start(){
-            //proceduralMap.Scroll(0, 0);
             return base.Start();
         }
 
         public override void Stop(){
-            //proceduralMap.Scroll(0, 0);
             base.Stop();
         }
 

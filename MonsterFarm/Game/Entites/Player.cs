@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonsterFarm.Game.Environment;
+using MonsterFarm.Game.States;
 
 namespace MonsterFarm.Game.Entites
 {
@@ -12,6 +15,23 @@ namespace MonsterFarm.Game.Entites
         {
             Pawn = new Pawn(map);
             Controller = new Controller();
+            Pawn.ReachDestination += (dest) =>
+            {
+                if (Map.GetType().Equals(typeof(StaticMap))) {
+                    foreach (KeyValuePair<string, Transition> transition in Map.Transitions) {
+                        if (dest == transition.Value.Entry) {
+                            WorldState.transition(Pawn, transition.Key, transition.Value.Exit);
+                            break;
+                        }
+                    }
+                }
+                if (Map.GetType().Equals(typeof(ProceduralMap))) {
+                    if (((ProceduralMap)Map).Warp == dest) {
+                        ((ProceduralMap)Map).Rebuild();
+                        dest = Map.Start;
+                    }
+                }
+            };
         }
         public Pawn Pawn { get; private set; }
         public Controller Controller { get; private set; }
