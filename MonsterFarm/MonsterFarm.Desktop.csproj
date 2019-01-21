@@ -106,6 +106,7 @@
     <Compile Include="Game\Util\PathFinding.cs" />
     <Compile Include="Game\Environment\ProceduralMap.cs" />
     <Compile Include="Game\Entites\Player.cs" />
+    <Compile Include="Game\Entites\Wardrobe.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -352,6 +353,14 @@
     <Folder Include="Game\Util\" />
     <Folder Include="Content\Environment\MapLibrary\static\" />
     <Folder Include="Game\Environment\Buildings\" />
+    <Folder Include="Content\Entities\Races\" />
+    <Folder Include="Content\Entities\Races\Rodentian\" />
+    <Folder Include="Content\Entities\Races\Elf\" />
+    <Folder Include="Content\Entities\Races\Human\" />
+    <Folder Include="Content\Entities\Races\Dwarf\" />
+    <Folder Include="Content\Entities\Races\Uborian\" />
+    <Folder Include="Content\Entities\Races\Tongo\" />
+    <Folder Include="Content\Entities\Races\Uborian\Skin\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
