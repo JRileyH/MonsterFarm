@@ -325,7 +325,6 @@
     <None Include="Content\Environment\MapLibrary\interior.tsx" />
     <None Include="Content\Environment\MapLibrary\static\street.tmx" />
     <None Include="Content\Environment\MapTextures\LavaTile.png" />
-    <None Include="Content\Entities\Races\Dwarf\Female\.DS_Store" />
     <None Include="Content\Entities\Races\Dwarf\Female\Hair\locks.png" />
     <None Include="Content\Entities\Races\Dwarf\Female\Hat\cap.png" />
     <None Include="Content\Entities\Races\Dwarf\Female\Pants\tights.png" />
