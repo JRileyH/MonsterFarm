@@ -116,11 +116,21 @@ namespace MonsterFarm.Game.Entites
                     position: position,
                     sourceRectangle: _currentFrame.SourceRectangle,
                     color: Color.White,
+                    scale: new Vector2(2, 2),
                     effects: SpriteEffects.FlipHorizontally
                 );
                 #pragma warning restore CS0618 // Type or member is obsolete
             } else {
-                spriteBatch.Draw(_sheet, position, _currentFrame.SourceRectangle, Color.White);
+                #pragma warning disable CS0618 // Type or member is obsolete
+                    spriteBatch.Draw(
+                        texture: _sheet,
+                        position: position,
+                        sourceRectangle: _currentFrame.SourceRectangle,
+                        color: Color.White,
+                        scale: new Vector2(2, 2),
+                        effects: SpriteEffects.None
+                    );
+                #pragma warning restore CS0618 // Type or member is obsolete
             }
         }
     }

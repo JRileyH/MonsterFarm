@@ -4,6 +4,7 @@ using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonsterFarm.Desktop;
 using MonsterFarm.Game.Environment;
 using MonsterFarm.Game.States;
 
@@ -47,11 +48,12 @@ namespace MonsterFarm.Game.Entites
 
         public Player LoadContent(ContentManager content, GraphicsDevice graphicsDevice) {
             Controller.Pawn = Pawn.LoadContent(content, graphicsDevice);
-            Animation = new Animation(content.Load<Texture2D>(@"Entities/player"));
-            Animation.AddFrames("down", 0, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("up", 8, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("left", 16, 8, 32, 48, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("right", 16, 8, 32, 48, TimeSpan.FromSeconds(.15), true);
+            //Animation = new Animation(content.Load<Texture2D>(@"Entities/player"));
+            Animation = new Animation(Global.Wardrobe.getSheet("Elf","Male"));
+            Animation.AddFrames("down", 0, 8, 16, 24, TimeSpan.FromSeconds(.15));
+            Animation.AddFrames("up", 8, 8, 16, 24, TimeSpan.FromSeconds(.15));
+            Animation.AddFrames("left", 16, 8, 16, 24, TimeSpan.FromSeconds(.15));
+            Animation.AddFrames("right", 16, 8, 16, 24, TimeSpan.FromSeconds(.15), true);
             Animation.Sequence = "down";
             _centerScreen = new Vector2(
                 (graphicsDevice.Viewport.Width / 2) - (Pawn.Width / 2),

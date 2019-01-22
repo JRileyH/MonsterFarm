@@ -59,6 +59,8 @@ namespace MonsterFarm.Desktop
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            Global.Wardrobe.LoadContent(Content, GraphicsDevice);
+
             allStates["World"].LoadContent(Content, GraphicsDevice);
             allStates["Menu"].LoadContent(Content, GraphicsDevice, true);
 
