@@ -98,7 +98,7 @@ namespace MonsterFarm.Desktop
 
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise);
             activeState.Render(spriteBatch, GraphicsDevice.Viewport);
             spriteBatch.End();
 

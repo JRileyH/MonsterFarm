@@ -49,7 +49,7 @@ namespace MonsterFarm.Game.Entites
         public Player LoadContent(ContentManager content, GraphicsDevice graphicsDevice) {
             Controller.Pawn = Pawn.LoadContent(content, graphicsDevice);
             //Animation = new Animation(content.Load<Texture2D>(@"Entities/player"));
-            Animation = new Animation(Global.Wardrobe.getSheet("Elf","Male"));
+            Animation = new Animation(Global.Wardrobe.GetSheet("Human","Male"));
             Animation.AddFrames("down", 0, 8, 16, 24, TimeSpan.FromSeconds(.15));
             Animation.AddFrames("up", 8, 8, 16, 24, TimeSpan.FromSeconds(.15));
             Animation.AddFrames("left", 16, 8, 16, 24, TimeSpan.FromSeconds(.15));
