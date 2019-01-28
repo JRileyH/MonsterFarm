@@ -50,10 +50,10 @@ namespace MonsterFarm.Game.Entites
             Controller.Pawn = Pawn.LoadContent(content, graphicsDevice);
             //Animation = new Animation(content.Load<Texture2D>(@"Entities/player"));
             Animation = new Animation(Global.Wardrobe.GetSheet("Human","Male"));
-            Animation.AddFrames("down", 0, 8, 16, 24, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("up", 8, 8, 16, 24, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("left", 16, 8, 16, 24, TimeSpan.FromSeconds(.15));
-            Animation.AddFrames("right", 16, 8, 16, 24, TimeSpan.FromSeconds(.15), true);
+            Animation.AddFrames("down", 0, 4, 16, 24, TimeSpan.FromSeconds(.25));
+            Animation.AddFrames("up", 4, 4, 16, 24, TimeSpan.FromSeconds(.25));
+            Animation.AddFrames("right", 8, 4, 16, 24, TimeSpan.FromSeconds(.25));
+            Animation.AddFrames("left", 12, 4, 16, 24, TimeSpan.FromSeconds(.25));
             Animation.Sequence = "down";
             _centerScreen = new Vector2(
                 (graphicsDevice.Viewport.Width / 2) - (Pawn.Width / 2),

@@ -28,19 +28,19 @@ function extractData (doc, data){
             if(!data.hasOwnProperty(raceName)){
                 data[raceName] = {
                     "Male":{
-                        "Hat":{},
+                        "Head":{},
                         "Hair":{},
-                        "Shirt":{},
-                        "Pants":{},
-                        "Shoes":{},
+                        "Face":{},
+                        "Top":{},
+                        "Bottom":{},
                         "Skin":{}
                     },
                     "Female":{
-                        "Hat":{},
+                        "Head":{},
                         "Hair":{},
-                        "Shirt":{},
-                        "Pants":{},
-                        "Shoes":{},
+                        "Face":{},
+                        "Top":{},
+                        "Bottom":{},
                         "Skin":{}
                     }
                 };

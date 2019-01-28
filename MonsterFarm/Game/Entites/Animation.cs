@@ -10,7 +10,6 @@ namespace MonsterFarm.Game.Entites
     {
         public Rectangle SourceRectangle { get; set; }
         public TimeSpan Duration { get; set; }
-        public bool Reverse { get; set; }
     }
 
     public class Animation
@@ -69,23 +68,22 @@ namespace MonsterFarm.Game.Entites
         private void _addSequence(string name){
             _sequences[name] = new List<AnimationFrame>();
         }
-        public void AddFrames(string sequence, int startingFrame, int frameCount, int frameWidth, int frameHeight, TimeSpan duration, bool reverse = false)
+        public void AddFrames(string sequence, int startingFrame, int frameCount, int frameWidth, int frameHeight, TimeSpan duration)
         {
             for (int i = startingFrame; i < startingFrame + frameCount; i++){
                 int x = i * frameWidth %_sheet.Width;
                 int y = i / (_sheet.Width / frameWidth) * frameHeight;
-                AddFrame(sequence, new Rectangle(x, y, frameWidth, frameHeight), duration, reverse);
+                AddFrame(sequence, new Rectangle(x, y, frameWidth, frameHeight), duration);
             }
         }
-        public void AddFrame(string sequence, Rectangle rectangle, TimeSpan duration, bool reverse = false)
+        public void AddFrame(string sequence, Rectangle rectangle, TimeSpan duration)
         {
             if(!_sequences.ContainsKey(sequence)){
                 _addSequence(sequence);
             }
             _sequences[sequence].Add(new AnimationFrame() {
                 SourceRectangle = rectangle,
-                Duration = duration,
-                Reverse = reverse
+                Duration = duration
             });
         }
 
@@ -109,29 +107,16 @@ namespace MonsterFarm.Game.Entites
         }
 
         public void Render(Vector2 position, SpriteBatch spriteBatch){
-            if (_currentFrame.Reverse){
-                #pragma warning disable CS0618 // Type or member is obsolete
+            #pragma warning disable CS0618 // Type or member is obsolete
                 spriteBatch.Draw(
                     texture: _sheet,
                     position: position,
                     sourceRectangle: _currentFrame.SourceRectangle,
                     color: Color.White,
                     scale: new Vector2(2, 2),
-                    effects: SpriteEffects.FlipHorizontally
+                    effects: SpriteEffects.None
                 );
-                #pragma warning restore CS0618 // Type or member is obsolete
-            } else {
-                #pragma warning disable CS0618 // Type or member is obsolete
-                    spriteBatch.Draw(
-                        texture: _sheet,
-                        position: position,
-                        sourceRectangle: _currentFrame.SourceRectangle,
-                        color: Color.White,
-                        scale: new Vector2(2, 2),
-                        effects: SpriteEffects.None
-                    );
-                #pragma warning restore CS0618 // Type or member is obsolete
-            }
+            #pragma warning restore CS0618 // Type or member is obsolete
         }
     }
 }
